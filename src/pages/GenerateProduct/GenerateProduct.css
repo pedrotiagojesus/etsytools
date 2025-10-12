@@ -1,0 +1,34 @@
+#generate-pdf-page .image-preview {
+    --bs-aspect-ratio: 100%;
+    position: relative;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: grab;
+}
+
+#generate-pdf-page .image-preview:before {
+    display: block;
+    padding-top: var(--bs-aspect-ratio);
+    content: "";
+}
+
+#generate-pdf-page .list-images {
+    --bs-gutter-y: 1.5rem;
+}
+
+#generate-pdf-page .btn.btn-remove {
+    position: absolute;
+    top: .25rem;
+    right: .25rem;
+    --bs-btn-padding-y: 0.25rem;
+    --bs-btn-padding-x: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+#generate-pdf-page .image-preview:hover .btn.btn-remove {
+    opacity: 1;
+}
