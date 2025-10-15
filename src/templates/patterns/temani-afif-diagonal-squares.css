@@ -1,0 +1,12 @@
+.temani-afif-diagonal-squares-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #00a0b0;
+  --c2: #eb6841;
+  
+  --_g: var(--c1) 0 25%,#0000 0 50%;
+  background:
+   repeating-conic-gradient(at 33% 33%,var(--_g)),
+   repeating-conic-gradient(at 66% 66%,var(--_g)),
+   var(--c2); 
+  background-size: var(--s) var(--s); 
+}

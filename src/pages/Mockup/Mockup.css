@@ -93,10 +93,18 @@
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     background-repeat: repeat;
-    background-position: center;
-    background-size: 25%;
     aspect-ratio: 1 / 1;
     width: 100%;
+}
+
+#mockup-page #pattern .pattern-preview.none-pattern {
+    background-color: #f5f5f5;
+    border: 1px dashed #ccc;
+    color: #555;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #mockup-page #pattern .pattern-preview:hover {
@@ -106,14 +114,14 @@
 
 #mockup-page #pattern .pattern-preview.active {
     border-color: var(--bs-primary);
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.3);
 }
 
-#mockup-page #pattern .pattern-block {
-    margin-bottom: 1rem;
+#mockup-page #pattern .accordion {
+    margin-block: 1rem;
+    --bs-accordion-body-padding-x: 0;
+    --bs-accordion-body-padding-y: 0;
 }
 
 #mockup-page #pattern .pattern-editor {
     height: 250px;
-    margin-top: 1rem;
 }

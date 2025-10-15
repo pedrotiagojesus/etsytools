@@ -1,0 +1,13 @@
+.temani-afif-elongated-hexagons-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #eedd99;
+  --c2: #bbbb88;
+  
+  --c:#0000 0 25%,var(--c1) 0 50%;
+  background:
+    repeating-conic-gradient(from -45deg at 75% 37.5%,var(--c)),
+    conic-gradient(var(--c2) 50%,#0000 0),
+    repeating-conic-gradient(from  45deg at 25% 87.5%,var(--c))
+    var(--c2);
+  background-size: var(--s) calc(2*var(--s));
+}

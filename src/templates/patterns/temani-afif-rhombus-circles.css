@@ -1,0 +1,12 @@
+.temani-afif-rhombus-circles-pattern {
+  --s: 90px; /* control the size*/
+  --c1: #ddd9ab;
+  --c2: #e5625c;
+  
+  --g:#0000 calc(125%/3),var(--c1) 0 calc(175%/3),#0000 0;
+  --p:calc(var(--s)/2) calc(var(--s)/2)/calc(2*var(--s)) calc(2*var(--s));
+  background:
+    radial-gradient(var(--c1) 34%,#0000 36%) 0 0/var(--s) var(--s),
+    linear-gradient( 45deg,var(--g)) var(--p),
+    linear-gradient(-45deg,var(--g)) var(--p) var(--c2);
+}

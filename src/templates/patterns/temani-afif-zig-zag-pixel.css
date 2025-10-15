@@ -1,0 +1,13 @@
+.temani-afif-zig-zag-pixel-pattern {
+  --s: 60px; /* control the size*/
+  --c1: #1c2130;
+  --c2: #d14334;
+  
+  --c:var(--c1) 0 25%,#0000 0;
+  --p:0 0/calc(3*var(--s)) calc(2*var(--s));
+  background:
+    conic-gradient(from -45deg at 75% 62.5%,var(--c)) var(--p),
+    conic-gradient(from 135deg at 25% 37.5%,var(--c)) var(--p),
+    repeating-conic-gradient(from 90deg,var(--c),var(--c2) 0 50%)
+     0 0/var(--s) var(--s);
+}

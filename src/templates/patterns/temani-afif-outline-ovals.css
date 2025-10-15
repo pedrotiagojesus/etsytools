@@ -1,0 +1,20 @@
+.temani-afif-outline-ovals-pattern {
+  --s: 29px; /* control the size*/
+  --c1: #615375;
+  --c2: #8eb2c5;
+  
+  --g:#0000 calc(100% - var(--s)/3 - 1px),var(--c1) 
+      calc(100% - var(--s)/3) calc(100% - 1px),#0000;
+  --r:calc(2.414*var(--s));
+  --p:calc(1.414*var(--s));
+  background:
+    radial-gradient(var(--r) at 0    0   ,var(--g)) var(--r) var(--r),
+    radial-gradient(var(--s) at 0    0   ,var(--g)) var(--p) var(--p),
+    radial-gradient(var(--r) at 0    100%,var(--g)) 0 var(--p),
+    radial-gradient(var(--s) at 0    100%,var(--g)) calc(-1*var(--s)) var(--r),
+    radial-gradient(var(--r) at 100% 0   ,var(--g)) var(--p) 0,
+    radial-gradient(var(--s) at 100% 0   ,var(--g)) var(--r) calc(-1*var(--s)),
+    radial-gradient(var(--r) at 100% 100%,var(--g)) calc(-1*var(--s)) calc(-1*var(--s)),
+    radial-gradient(var(--s) at 100% 100%,var(--g)) var(--c2);  
+  background-size: calc(2*var(--r)) calc(2*var(--r));
+}

@@ -18,26 +18,97 @@ interface Pattern {
 }
 
 const Mockup = () => {
+    const [mockupTemplate, setMockupTemplate] = useState<string[]>([]);
+    const [mockupTemplateSelected, setMockupTemplateSelected] = useState<string>("main");
     const [previewHtml, setPreviewHtml] = useState("");
     const [previewCss, setPreviewCss] = useState("");
     const [images, setImages] = useState<{ name: string; bg: string | null }[]>([]);
     const [patternsInput, setPatternsInput] = useState<{ name: string }[]>([]);
     const [patterns, setPatterns] = useState<Pattern[]>([]);
+    const [loadingTemplate, setLoadingTemplate] = useState(false);
 
-    // Carrega HTML e CSS padrão
+    // Carrega mockup template
+    useEffect(() => {
+        (async () => {
+            setLoadingTemplate(true);
+
+            try {
+                const mockupTemplateFiles = import.meta.glob("/src/templates/mockups/*/*", { as: "raw" });
+
+                for (const path in mockupTemplateFiles) {
+                    let htmlLoaded = false;
+                    let cssLoaded = false;
+
+                    if (path.includes(`/src/templates/mockups/${mockupTemplateSelected}/`)) {
+                        const loader = mockupTemplateFiles[path];
+                        const content = await loader();
+                        const extension = path.split("/")?.pop()?.split(".").pop() || "unknown";
+
+                        if (extension === "html" && !htmlLoaded) {
+                            setPreviewHtml(content);
+                            htmlLoaded = true;
+                        }
+
+                        if (extension === "css" && !cssLoaded) {
+                            setPreviewCss(content);
+                            cssLoaded = true;
+                        }
+
+                        if (htmlLoaded && cssLoaded) break;
+                    }
+                }
+            } catch (err) {
+                console.error(`Erro ao carregar o template "${mockupTemplateSelected}":`, err);
+                setPreviewHtml("<p>Erro ao carregar HTML do mockup.</p>");
+                setPreviewCss("body { background: red; }");
+            } finally {
+                setLoadingTemplate(false);
+            }
+        })();
+    }, [mockupTemplateSelected]);
+
     useEffect(() => {
         (async () => {
             try {
-                const html = await (await fetch(`/templates/mockups/main/example.html`)).text();
-                const css = await (await fetch(`/templates/mockups/main/example.css`)).text();
-                setPreviewHtml(html);
-                setPreviewCss(css);
+                const files = import.meta.glob("/src/templates/mockups/*/*");
+                const folders = new Set<string>();
 
-                const cssFiles = import.meta.glob("/src/templates/patterns/*.css", { eager: true });
-                const loadedPatterns: Pattern[] = Object.entries(cssFiles).map(([path, content]) => ({
-                    name: path.split("/").pop()?.split(".")[0] || "",
-                    css: content as string, // força TypeScript entender que é string
-                }));
+                Object.keys(files).forEach((path) => {
+                    const parts = path.split("/");
+                    const folder = parts[parts.length - 2]; // penúltima parte é o nome da pasta
+                    folders.add(folder);
+                });
+
+                setMockupTemplate(Array.from(folders).sort());
+
+                const cssFiles = import.meta.glob("/src/templates/patterns/*.css", { as: "raw" });
+
+                const loadedPatterns: Pattern[] = [];
+                const loadedPatternNames = new Set<string>();
+
+                for (const path in cssFiles) {
+
+                    const loader = cssFiles[path];
+                    const cssContent = await loader();
+                    const name = path.split("/").pop()?.replace(".css", "") || "unknown";
+
+                    if (!loadedPatternNames.has(name)) {
+                        // Se ainda não existe <link> no DOM
+                        if (!document.querySelector(`link[data-pattern="${name}"]`)) {
+                            const blob = new Blob([cssContent], { type: "text/css" });
+                            const href = URL.createObjectURL(blob);
+
+                            const link = document.createElement("link");
+                            link.rel = "stylesheet";
+                            link.href = href;
+                            link.setAttribute("data-pattern", name);
+                            document.head.appendChild(link);
+                        }
+
+                        loadedPatterns.push({ name, css: cssContent });
+                        loadedPatternNames.add(name);
+                    }
+                }
 
                 setPatterns(loadedPatterns);
             } catch (err) {
@@ -55,6 +126,29 @@ const Mockup = () => {
             <div id="sub-header">
                 <h1>Mockup</h1>
                 <div className="btn-list" role="tablist">
+                    <div className="dropdown">
+                        <button
+                            className="btn btn-transparent dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            {mockupTemplateSelected}
+                        </button>
+                        <ul className="dropdown-menu">
+                            {mockupTemplate.map((template) => (
+                                <li key={template}>
+                                    <a
+                                        className="dropdown-item"
+                                        href="#"
+                                        onClick={() => setMockupTemplateSelected(template)}
+                                    >
+                                        {template}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     <button
                         className="btn btn-transparent active"
                         data-bs-toggle="tab"
@@ -100,7 +194,15 @@ const Mockup = () => {
             <div className="container-fluid">
                 <div className="row main-row">
                     <div className="col-xl-7">
-                        <MockupPreview previewHtml={previewHtml} previewCss={previewCss} />
+                        {loadingTemplate ? (
+                            <div className="loading-overlay h-100 w-100 d-flex justify-content-center align-items-center">
+                                <div className="spinner-border text-primary fs-1" role="status">
+                                    <span className="visually-hidden">Carregando...</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <MockupPreview previewHtml={previewHtml} previewCss={previewCss} />
+                        )}
                     </div>
 
                     <div className="col-xl-5">

@@ -1,0 +1,11 @@
+.temani-afif-squares-rhombus-pattern {
+  --s: 104px; /* control the size*/
+  --c1: #73626e;
+  --c2: #add8e6;
+    
+  background:
+    conic-gradient(var(--c2) 25%,#0000 0 50%,var(--c1) 0 75%,#0000 0)
+    calc(var(--s)/4) calc(var(--s)/4),
+    repeating-conic-gradient(from 45deg,var(--c1) 0 25%,var(--c2) 0 50%);
+  background-size: var(--s) var(--s);
+}

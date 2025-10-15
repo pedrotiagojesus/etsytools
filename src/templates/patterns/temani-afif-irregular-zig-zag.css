@@ -1,0 +1,15 @@
+.temani-afif-irregular-zig-zag-pattern {
+  --s: 66px; /* control the size*/
+  --c1: #b38184;
+  --c2: #413e4a;
+  
+  --c: var(--c1) 25%;  
+  background: 
+    conic-gradient(from -45deg at 75% 12.5%,var(--c),#0000 0),
+    conic-gradient(from 135deg at 25% 87.5%,var(--c),#0000 0) 
+     0 calc(var(--s)/2),
+    conic-gradient(from 180deg at 50% 75%,#0000 62.5%,var(--c)),
+    conic-gradient(            at 50% 25%,#0000 62.5%,var(--c)) 
+     0 calc(var(--s)/2) var(--c2);
+  background-size: var(--s) calc(2*var(--s));
+}

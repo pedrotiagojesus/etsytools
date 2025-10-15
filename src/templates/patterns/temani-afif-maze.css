@@ -1,0 +1,14 @@
+.temani-afif-maze-pattern {
+  --s: 80px; /* control the size*/
+  --c1: #e9e0d1;
+  --c2: #59a80f;
+  
+  --c:#0000 75%,var(--c1) 0;
+  --g:/calc(2*var(--s)) var(--s) 
+    conic-gradient(at 62.5% 25%,var(--c));
+  background:
+    calc(  var(--s)/4) calc(var(--s)/ 4) var(--g),
+    calc(5*var(--s)/4) calc(var(--s)/-4) var(--g),
+    linear-gradient(90deg,var(--c)) 0/var(--s) var(--s)
+    var(--c2);
+}}

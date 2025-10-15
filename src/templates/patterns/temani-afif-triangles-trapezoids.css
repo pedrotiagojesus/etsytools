@@ -1,0 +1,14 @@
+.temani-afif-triangles-trapezoids-pattern {
+  --s: 76px; /* control the size*/
+  --c1: #f77825;
+  --c2: #60b99a;
+  --c3: #f1efa5;
+  --c4: #554236;
+  
+  background:
+    conic-gradient(from 150deg,var(--c1)    60deg,#0000 0 180deg,
+                               var(--c2) 0 240deg,#0000 0) var(--s) 0,
+    conic-gradient(from -30deg,var(--c1)    60deg,var(--c3) 0 120deg,var(--c4) 0 180deg,
+                               var(--c2) 0 240deg,var(--c3) 0 300deg,var(--c4) 0);
+  background-size: calc(2*var(--s)) var(--s);
+}

@@ -1,0 +1,15 @@
+.temani-afif-folded-zig-zag-pattern {
+  --s: 84px; /* control the size*/
+  --c1: #ffffff;
+  --c2: #71e9a0;
+  --c3: #2a6a9b;
+  
+  --a:from -30deg at;
+  background:
+    linear-gradient(#0000 50%,#0004 0),
+    conic-gradient(var(--a) 90%,var(--c1) 240deg,#0000     0),
+    conic-gradient(var(--a) 75%,var(--c2) 240deg,#0000     0),
+    conic-gradient(var(--a) 25%,#0000     240deg,var(--c1) 0),
+    conic-gradient(var(--a) 40%,var(--c1) 240deg,var(--c3) 0);
+  background-size: calc(1.5*var(--s)) var(--s);
+}

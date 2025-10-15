@@ -1,0 +1,13 @@
+.temani-afif-nested-triangles-pattern {
+  --s: 80px; /* control the size*/
+  --c1: #d95b43;
+  --c2: #a7dbd8;
+    
+  background:
+    conic-gradient(from -30deg at 50% calc(100% - var(--s)/2),var(--c1) 60deg,#0000 0)
+     calc(var(--s)/2) calc(var(--s)/6),
+    conic-gradient(from 150deg at 50% calc(var(--s)/2)       ,var(--c2) 60deg,#0000 0)
+     0 calc(var(--s)/-6),
+    conic-gradient(from 150deg at 50% 0,var(--c1) 60deg,var(--c2) 0);
+  background-size: var(--s) calc(var(--s)*cos(30deg));
+}

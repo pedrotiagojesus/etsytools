@@ -38,6 +38,11 @@ main {
     height: 100%;
 }
 
+#sub-header .btn-list {
+    display: flex;
+    gap: 0.5rem;
+}
+
 #sub-header .nav-tabs button {
     height: 100%;
     color: #fff;

@@ -1,0 +1,11 @@
+.temani-afif-circles-diagonals-pattern {
+  --s: 120px; /* control the size*/
+  --c1: #53777a;
+  --c2: #fc9d9a;
+    
+  background:
+    radial-gradient(var(--c1) 14%,var(--c2) 15% 30%,var(--c1) 31% 44%,var(--c2) 45% 60%,#0000 61%),
+    linear-gradient( 45deg,#0000 46%,var(--c2) 0 54%,#0000 0),
+    linear-gradient(-45deg,#0000 46%,var(--c2) 0 54%,#0000 0) var(--c1);
+  background-size: var(--s) var(--s);
+}

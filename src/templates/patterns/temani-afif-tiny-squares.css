@@ -1,0 +1,13 @@
+.temani-afif-tiny-squares-pattern {
+  --s: 30px; /* control the size*/
+  --c1: #8c2318;
+  --c2: #f2c45a;
+  
+  background:
+    conic-gradient(at 60% 60%,var(--c1) 75%,#0000 0)
+     0 0/calc(5*var(--s)/2) calc(5*var(--s)/2),
+    repeating-conic-gradient(var(--c1) 0 25%,#0000 0 50%)
+     0 0/calc(5*var(--s)) calc(5*var(--s)),
+    repeating-conic-gradient(var(--c2) 0 25%,var(--c1) 0 50%)
+     0 0/var(--s) var(--s);
+}

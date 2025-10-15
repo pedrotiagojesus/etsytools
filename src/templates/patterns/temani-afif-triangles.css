@@ -1,0 +1,12 @@
+.temani-afif-triangles-pattern {
+  --s: 76px; /* control the size*/
+  --c1: #f6d86b;
+  --c2: #f10c49;
+  
+  background:
+    conic-gradient(
+      var(--c2) atan(2), var(--c1) 0 calc(180deg - atan(2)),
+      var(--c2) 0 180deg,var(--c1) 0 calc(180deg + atan(2)),
+      var(--c2) 0 calc(360deg - atan(2)),var(--c1) 0);
+  background-size: calc(2*var(--s)) var(--s);
+}

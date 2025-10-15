@@ -1,0 +1,11 @@
+.temani-afif-intersecting-rhombus-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #1bb0ce;
+  --c2: #dad6ca;
+    
+  --_l:#0000 34%,var(--c1) 0 41%,#0000 0 59%,var(--c1) 0 66%,#0000 0;
+  background:
+    linear-gradient(-45deg,var(--_l)),
+    linear-gradient( 45deg,var(--_l)) var(--c2);
+  background-size: var(--s) var(--s);
+}

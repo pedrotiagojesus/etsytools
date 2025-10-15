@@ -1,0 +1,15 @@
+.temani-afif-chevron-stripes-pattern {
+  --s: 65px; /* control the size*/
+  --c1: #ecd078;
+  --c2: #0b486b;
+  
+  --g: calc(var(--s)/5); /* control the gap */
+  --_l: #0000 calc(33% - .866*var(--g)),var(--c1) calc(33.2% - .866*var(--g)) 33%,#0000 34%;
+  background:
+    repeating-linear-gradient(var(--c1) 0 var(--g), #0000 0 50%)
+     0 calc(.866*var(--s) - var(--g)/2),
+    conic-gradient(from -150deg at var(--g) 50%,var(--c1) 120deg,#0000 0),
+    linear-gradient(-120deg,var(--_l)),linear-gradient( -60deg,var(--_l))
+    var(--c2);
+  background-size: var(--s) calc(3.466*var(--s))
+}

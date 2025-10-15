@@ -1,0 +1,12 @@
+.temani-afif-rectangles-3d-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #f6edb3;
+  --c2: #acc4a3;
+  --c3: #55897c;
+    
+  background: 
+    repeating-conic-gradient(#0000 0 25%,var(--c1) 0 50%)
+    0 0/calc(2*var(--s)) var(--s),
+    linear-gradient(-45deg,var(--c2) 33.3%,var(--c3) 0)
+    0 0/var(--s) calc(var(--s)/2)
+}

@@ -1,0 +1,10 @@
+.temani-afif-diagonal-chevrons-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #7a6a53;
+  --c2: #d9ceb2;
+  
+  background:
+    conic-gradient(var(--c1)   135deg,var(--c2) 0 270deg,
+                   var(--c1) 0 315deg,var(--c2) 0)
+    0/var(--s) var(--s);
+}

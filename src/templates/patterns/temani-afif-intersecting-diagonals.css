@@ -1,0 +1,12 @@
+.temani-afif-intersecting-diagonals-pattern {
+  --s: 150px; /* control the size*/
+  --c1: #0d6759;
+  --c2: #e5edb8;
+    
+  background:
+    linear-gradient(45deg,var(--c1) 12.5%,var(--c2) 0 25%,#0000 0 75%,var(--c2) 0 87.5%,var(--c1) 0)
+     calc(var(--s)/2) calc(var(--s)/2),
+    linear-gradient(45deg,var(--c2) 12.5%,var(--c1) 0 25%,#0000 0 75%,var(--c1) 0 87.5%,var(--c2) 0),
+    repeating-linear-gradient(-45deg,var(--c1) 0 12.5%,var(--c2) 0 25%,var(--c1) 0 37.5%,var(--c2) 0 62.5%);
+  background-size: var(--s) var(--s);
+}

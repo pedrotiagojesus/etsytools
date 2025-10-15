@@ -1,0 +1,13 @@
+.temani-afif-double-arrows-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #e8bf56;
+  --c2: #91204d;
+    
+  --_l:#0000 43.75%,var(--c1) 0 56.25%,#0000 0;
+  --_s:calc(var(--s)/4) calc(var(--s)/-4)/
+       calc(var(--s)*2) calc(var(--s)*2);
+  background:
+    linear-gradient(-45deg,var(--_l)) var(--_s),
+    linear-gradient( 45deg,var(--_l)) var(--_s),
+    conic-gradient(var(--c2) 75%,var(--c1) 0) 0 0/var(--s) var(--s);
+}

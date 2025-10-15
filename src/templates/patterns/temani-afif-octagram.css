@@ -1,0 +1,14 @@
+.temani-afif-octagram-pattern {
+  --s: 150px; /* control the size*/
+  --c1: #d5ded9;
+  --c2: #7a6a53;
+    
+  --_l:#0000 43.75%,var(--c1) 0 56.25%,#0000 0;
+  background:
+    conic-gradient(#0000 75%,var(--c1) 0) 
+     calc(var(--s)/-8) calc(var(--s)/-8)/calc(var(--s)/2) calc(var(--s)/2),
+    repeating-conic-gradient(var(--c2) 0 25%,#0000 0 50%) 
+     calc(var(--s)/-4) calc(var(--s)/-4)/var(--s) var(--s),
+    linear-gradient(-45deg,var(--_l))0 0/var(--s) var(--s),
+    linear-gradient( 45deg,var(--_l))0 0/var(--s) var(--s) var(--c2);
+}

@@ -1,0 +1,14 @@
+.temani-afif-colorful-circles-pattern {
+  --s: 120px; /* control the size*/
+  --c1: #1a2030;
+  --c2: #0f9177;
+  --c3: #fdebad;
+  --c4: #d34434;
+  --c5: #b5d999;
+  
+  --_g: radial-gradient(#0000 70%,var(--c1) 71%);
+  background:
+    var(--_g),var(--_g) calc(var(--s)/2) calc(var(--s)/2),
+    conic-gradient(var(--c2) 25%,var(--c3) 0 50%,var(--c4) 0 75%,var(--c5) 0);
+  background-size: var(--s) var(--s);
+}

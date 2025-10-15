@@ -1,0 +1,14 @@
+.temani-afif-zig-zag-stripes-pattern {
+  --s: 120px; /* control the size*/
+  --c1: #403b33;
+  --c2: #e3ad40;
+  
+  --g:,var(--c1) 25%,#0000 0;
+  background:
+    conic-gradient(from  45deg at 75% 75%var(--g)),
+    conic-gradient(from 135deg at 25% 75%var(--g)),
+    conic-gradient(from -45deg at 75% 25%var(--g)),
+    conic-gradient(from 225deg at 25% 25%var(--g)),
+    repeating-conic-gradient(from -45deg,var(--c1) 0 45deg,var(--c2) 0 50%);
+  background-size: var(--s) var(--s);
+}

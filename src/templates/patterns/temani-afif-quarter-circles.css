@@ -1,0 +1,12 @@
+.temani-afif-quarter-circles-pattern {
+  --s: 64px; /* control the size*/
+  --c1: #036564;
+  --c2: #e8ddcb;
+  
+  --_g: var(--c1) 35%, #0000 36%;
+  background: 
+    radial-gradient(at 100% 100%, var(--_g)),
+    radial-gradient(at 0    0   , var(--_g))
+    var(--c2);
+  background-size: var(--s) var(--s);
+}

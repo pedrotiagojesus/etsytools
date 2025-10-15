@@ -1,0 +1,12 @@
+.temani-afif-diagonal-arc-pattern {
+  --s: 52px; /* control the size*/
+  --c1: #dfba69;
+  --c2: #5a2e2e;
+  
+  --p:35%,#0000 calc(35% + 1px);
+  background:
+    radial-gradient(at 0 100%,var(--c1) var(--p)) var(--s) 0,
+    radial-gradient(at 0 100%,var(--c2) var(--p)) 0 var(--s),
+    repeating-conic-gradient(from 45deg,var(--c2) 0 25%,var(--c1) 0 50%);
+  background-size: calc(2*var(--s)) calc(2*var(--s));
+}

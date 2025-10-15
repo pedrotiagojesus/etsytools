@@ -1,0 +1,16 @@
+.temani-afif-overlapping-squares-pattern {
+  --s: 50px; /* control the size*/
+  --c1: #87bdb1;
+  --c2: #d3e2b6;
+    
+  --c:#0000 75%,var(--c1) 0;
+  --g1:conic-gradient(at calc(200%/3) 10%,var(--c));
+  --g2:conic-gradient(at 10% calc(200%/3),var(--c));
+  background:
+    var(--g1), var(--g2),
+    var(--g1) var(--s) var(--s),
+    var(--g2) var(--s) var(--s),
+    var(--g1) calc(2*var(--s)) calc(2*var(--s)),
+    var(--g2) calc(2*var(--s)) calc(2*var(--s)) var(--c2);
+  background-size: calc(3*var(--s)) calc(3*var(--s));
+}

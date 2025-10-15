@@ -1,0 +1,11 @@
+.temani-afif-diagonal-lines-pattern {
+  --s: 86px; /* control the size*/
+  --c1: #88abc2;
+  --c2: #fad3b2;
+  
+  --g:#0000 45%,var(--c1) 46% 54%,#0000 55%;
+  background:
+    linear-gradient( 60deg,var(--g)),
+    linear-gradient(-60deg,var(--g)) var(--c2);
+  background-size: var(--s) calc(tan(60deg)*var(--s));
+}

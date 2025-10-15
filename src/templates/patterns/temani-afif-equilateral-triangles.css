@@ -1,0 +1,12 @@
+.temani-afif-equilateral-triangles-pattern {
+  --s: 120px; /* control the size*/
+  --c1: #fa6900;
+  --c2: #d95b43;
+  --c3: #ecd078;
+  
+  background:
+    conic-gradient(from 150deg at 50% 33%,#0000,var(--c1) .5deg 60deg,#0000 60.5deg) 
+      calc(var(--s)/2) calc(var(--s)/sqrt(2)),
+    conic-gradient(from -30deg at 50% 66%,#0000,var(--c2) .5deg 60deg,var(--c3) 60.5deg);
+  background-size: var(--s) calc(.5*var(--s)/tan(30deg));
+}

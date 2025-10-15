@@ -1,0 +1,12 @@
+.temani-afif-rhombus-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #f8edd1;
+  --c2: #d88a8a;
+  --c3: #9d9d93;
+  
+  --c:#0000 48%,var(--c1) 0 52%,#0000 0;
+  background:
+    linear-gradient(-45deg,var(--c)),linear-gradient( 45deg,var(--c)),
+    repeating-conic-gradient(from 45deg,var(--c2) 0 25%,var(--c3) 0 50%);
+  background-size: var(--s) var(--s);
+}

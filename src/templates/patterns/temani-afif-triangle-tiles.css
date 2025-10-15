@@ -1,0 +1,9 @@
+.temani-afif-triangle-tiles-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #f2e9e1;
+  --c2: #99b2b7;
+  
+  background:
+    repeating-conic-gradient(var(--c1) 0 45deg,var(--c2) 0 90deg)
+    0/var(--s) var(--s);
+}

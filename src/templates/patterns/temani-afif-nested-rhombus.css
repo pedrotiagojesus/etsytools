@@ -1,0 +1,22 @@
+.temani-afif-nested-rhombus-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #1bb0ce;
+  --c2: #dad6ca;
+  
+  --_g1: 
+    var(--c1)   calc(25%/3) ,#0000 0 calc(50%/3),
+    var(--c1) 0 25%         ,#0000 0 75%,
+    var(--c1) 0 calc(250%/3),#0000 0 calc(275%/3),
+    var(--c1) 0;
+  --_g2: 
+    #0000   calc(25%/3) ,var(--c1) 0 calc(50%/3),
+    #0000 0 calc(250%/3),var(--c1) 0 calc(275%/3),
+    #0000 0;
+  background:
+    linear-gradient( 45deg,var(--_g2)),linear-gradient( 45deg,var(--_g1)),
+    linear-gradient(-45deg,var(--_g2)),linear-gradient(-45deg,var(--_g1))
+    var(--c2); /* second color */
+  background-position: 0 0,var(--s) var(--s);
+  background-size: calc(2*var(--s)) calc(2*var(--s));
+}
+}

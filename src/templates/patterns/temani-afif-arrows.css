@@ -1,0 +1,10 @@
+.temani-afif-arrows-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #cff09e;
+  --c2: #3b8686;
+  
+  background:
+    conic-gradient(#0000 75%,var(--c1) 0) 0 calc(var(--s)/4),
+    conic-gradient(from 45deg,var(--c1) 25%,var(--c2) 0);
+  background-size: var(--s) var(--s);
+}

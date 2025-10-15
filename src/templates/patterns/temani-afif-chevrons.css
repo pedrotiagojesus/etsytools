@@ -1,0 +1,13 @@
+.temani-afif-chevrons-pattern {
+  --s: 150px; /* control the size*/
+  --c1: #633d2e;
+  --c2: #f7af63;
+  
+  --l:var(--c1) 20%,#0000 0;
+  --g:35%,var(--c2) 0 45%,var(--c1) 0;
+  background:
+    linear-gradient(45deg,var(--l) 45%,var(--c1) 0 70%,#0000 0),
+    linear-gradient(-45deg,var(--l) var(--g) 70%,#0000 0),
+    linear-gradient(45deg,var(--c1) var(--g));
+  background-size: var(--s) var(--s);
+}

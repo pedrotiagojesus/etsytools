@@ -1,0 +1,12 @@
+.temani-afif-pixel-pattern {
+  --s: 50px; /* control the size*/
+  --c1: #e08e79;
+  --c2: #774f38;
+  
+  --c: var(--c1) 0 25%,var(--c2) 0 50%,#0000 0;
+  background:
+    conic-gradient(from 180deg,var(--c)) 
+    0/var(--s) var(--s),
+    repeating-conic-gradient(from 90deg,var(--c))
+    0/calc(3*var(--s)) calc(3*var(--s));
+}

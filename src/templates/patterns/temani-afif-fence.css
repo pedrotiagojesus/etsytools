@@ -1,0 +1,12 @@
+.temani-afif-fence-pattern {
+  --s: 100px; /* control the size*/
+  --c1: #88c425;
+  --c2: #1b676b;
+  
+  --g:var(--c2) -5% 5%,#0000 0 45%;
+  background:
+    linear-gradient(45deg,#0000 10%,var(--c1) 0 40%,#0000 0),
+    repeating-linear-gradient( 45deg,var(--g)),
+    repeating-linear-gradient(-45deg,var(--g)) var(--c1);
+  background-size: var(--s) var(--s);
+}

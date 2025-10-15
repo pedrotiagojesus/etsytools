@@ -1,0 +1,13 @@
+.temani-afif-circles-curved-lines-pattern {
+  --s: 70px; /* control the size*/
+  --c1: #6b5344;
+  --c2: #f8ecc9;
+  
+  --_l: #0000 46%,var(--c1) 47% 53%,#0000 54%;
+  background:
+    radial-gradient(100% 100% at 100% 100%,var(--_l)) var(--s) var(--s),
+    radial-gradient(100% 100% at 0    0   ,var(--_l)) var(--s) var(--s),
+    radial-gradient(100% 100%,#0000 22%,var(--c1) 23% 29%, #0000 30% 34%,var(--c1) 35% 41%,#0000 42%),
+    var(--c2);
+  background-size: calc(var(--s)*2) calc(var(--s)*2);
+}
