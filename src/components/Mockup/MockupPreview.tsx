@@ -4,11 +4,15 @@ import { centerContent } from "../../utils/centerMockuptPreview";
 import MockupToolbar from "./MockupToolbar";
 
 interface MockupPreviewProps {
+    previewId?: string;
+    previewDisplayId?: string;
     previewHtml: string;
     previewCss: string;
 }
 
 const MockupPreview: React.FC<MockupPreviewProps> = ({
+    previewId = "preview-content",
+    previewDisplayId = "preview-display",
     previewHtml,
     previewCss,
 }) => {
@@ -24,12 +28,12 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
     const [guideLine, setGuideLine] = useState(false);
 
     return (
-        <div id="preview-section">
+        <div id={previewId} className="preview-section">
             <TransformWrapper
                 minScale={0.1}
                 centerOnInit
                 limitToBounds={false}
-                onInit={({ setTransform }) => centerContent(setTransform)}
+                onInit={({ setTransform }) => centerContent(setTransform, previewId)}
             >
                 {({ zoomIn, zoomOut, setTransform }) => (
                     <>
@@ -42,7 +46,7 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                         />
                         <TransformComponent>
                             <div
-                                id="preview-content"
+                                id={previewDisplayId}
                                 className="preview-content"
                                 dangerouslySetInnerHTML={{ __html: previewHtml }}
                             ></div>

@@ -1,7 +1,10 @@
 // Função utilitária — centraliza o conteúdo dentro do preview
-export const centerContent = (setTransform: (x: number, y: number, scale: number) => void) => {
+export const centerContent = (
+    setTransform: (x: number, y: number, scale: number) => void,
+    previewId?: string | "preview-section"
+) => {
     setTimeout(() => {
-        const container = document.querySelector("#preview-section") as HTMLDivElement;
+        const container = document.querySelector(`#${previewId}`) as HTMLDivElement;
         const content = container?.querySelector(".preview-content") as HTMLDivElement;
         if (!container || !content) return;
 

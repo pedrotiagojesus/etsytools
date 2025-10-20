@@ -118,7 +118,7 @@ const Mockup = () => {
     }, []);
 
     const handleDownload = async () => {
-        await downloadPng("preview-content");
+        await downloadPng("preview-display");
     };
 
     return (
@@ -223,6 +223,7 @@ const Mockup = () => {
                             </div>
                             <div className="tab-pane h-100" id="pattern" role="tabpanel">
                                 <MockupPatterns
+                                    previewCss={previewCss}
                                     previewHtml={previewHtml}
                                     setPreviewHtml={setPreviewHtml}
                                     setPatternsInput={setPatternsInput}
