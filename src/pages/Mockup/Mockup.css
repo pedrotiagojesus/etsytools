@@ -1,10 +1,5 @@
-#mockup-page {
-    height: 100%;
-    max-height: 100%;
-}
-
 #mockup-page .container-fluid {
-    height: calc(100% - var(--sub-header-height));
+    height: calc(100% - var(--sub-header-height) - var(--sub-header-margin-bottom));
 }
 
 #mockup-page > .container-fluid > .row.main-row {
@@ -86,43 +81,16 @@
     opacity: 0.6;
 }
 
-#mockup-page #pattern .pattern-preview {
-    border: 1px solid #ccc;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    background-repeat: repeat;
-    aspect-ratio: 1 / 1;
-    width: 100%;
-}
-
-#mockup-page #pattern .pattern-preview.none-pattern {
-    background-color: #f5f5f5;
-    border: 1px dashed #ccc;
-    color: #555;
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#mockup-page #pattern .pattern-preview:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    border-color: var(--bs-primary);
-}
-
-#mockup-page #pattern .pattern-preview.active {
-    border-color: var(--bs-primary);
-}
-
-#mockup-page #pattern .pattern-block {
+#mockup-page .pattern-block {
     margin-bottom: 1.5rem;
 }
 
-#mockup-page #pattern .pattern-block .btn-list {
+#mockup-page .pattern-block .btn-list {
     display: flex;
     gap: 0.5rem;
 }
+
+/** MODAL **/
 
 #modal-patterns .main-row {
     height: 100%;
@@ -152,4 +120,23 @@
 
 #modal-patterns .pattern-editor {
     flex: 1 auto;
+}
+
+#modal-patterns .pattern-preview {
+    border: 7px solid #ccc;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    background-repeat: repeat;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+}
+
+#modal-patterns .pattern-preview:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    border-color: var(--bs-primary);
+}
+
+#modal-patterns .pattern-preview.active {
+    border-color: var(--bs-primary);
 }

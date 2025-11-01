@@ -1,0 +1,25 @@
+Mockup
+
+* Lista de padrões de fundo
+* Ser possivel selecionar padrao de fundo
+* Ser possivel editar padrao de fundo
+
+* Ser possivel exportar a configuração das escolhas feitas
+* Ser possivel importar ficheiro com a configuração das escolhas feitas
+
+* Ver se é possivel gravar uma especie de video...
+
+
+    Padrões
+
+    Slider com os vários padrões
+    Ter a opção de "sem padrão"
+    Ao selecionar um padrão, deverá apresentar o padrao na view e por baixo deve aparecer o HTML
+    Tem de existir um templates/patterns com todos os css dos padrões
+
+
+
+Gerar produto
+
+* Tem de fazer o download de um zip com as várias imagens
+* Duvida, devo fazer o download de zip com pdf + pasta com imagens ou o download de pdf + zip com imagens
