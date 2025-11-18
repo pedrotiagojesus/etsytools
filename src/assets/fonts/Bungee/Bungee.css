@@ -1,0 +1,97 @@
+@font-face {
+    font-family: "Bungee";
+    font-weight: 100;
+    font-style: normal;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 300;
+    font-style: normal;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 400;
+    font-style: normal;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 500;
+    font-style: normal;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 700;
+    font-style: normal;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 900;
+    font-style: normal;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+/* Italic */
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 100;
+    font-style: italic;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 300;
+    font-style: italic;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 400;
+    font-style: italic;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 500;
+    font-style: italic;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 700;
+    font-style: italic;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bungee";
+    font-weight: 900;
+    font-style: italic;
+    src: local("Bungee"), url(./Bungee-Regular.ttf) format("opentype");
+    font-display: swap;
+}

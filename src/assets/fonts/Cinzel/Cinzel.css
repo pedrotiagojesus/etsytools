@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 100;
+  font-style: normal;
+  src: url("./Cinzel-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 200;
+  font-style: normal;
+  src: url("./Cinzel-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 300;
+  font-style: normal;
+  src: url("./Cinzel-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 400;
+  font-style: normal;
+  src: url("./Cinzel-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 500;
+  font-style: normal;
+  src: url("./Cinzel-Medium.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 600;
+  font-style: normal;
+  src: url("./Cinzel-SemiBold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 700;
+  font-style: normal;
+  src: url("./Cinzel-Bold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 800;
+  font-style: normal;
+  src: url("./Cinzel-ExtraBold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 900;
+  font-style: normal;
+  src: url("./Cinzel-Black.ttf") format("opentype");
+  font-display: swap;
+}

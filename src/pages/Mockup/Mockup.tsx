@@ -5,6 +5,7 @@ import MockupPreview from "./../../components/Mockup/MockupPreview";
 import MockupEditor from "./../../components/Mockup/MockupEditor";
 import MockupImages from "./../../components/Mockup/MockupImages";
 import MockupPatterns from "./../../components/Mockup/MockupPatterns";
+import MockupFonts from "../../components/Mockup/MockupFonts";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 // CSS
@@ -192,13 +193,22 @@ const Mockup = () => {
                     >
                         Padrões
                     </button>
+                    <button
+                        className="btn btn-transparent"
+                        data-bs-toggle="tab"
+                        data-bs-target="#fonts"
+                        type="button"
+                        role="tab"
+                    >
+                        Fontes
+                    </button>
                     <button className="btn btn-transparent" onClick={handleDownload}>
                         Download
                     </button>
                 </div>
             </div>
 
-            <div className="container-fluid">
+            <div id="mockup-page" className="container-fluid">
                 <div className="row main-row">
                     <div className="col-xl-7 h-100">
                         {loadingTemplate ? (
@@ -210,13 +220,13 @@ const Mockup = () => {
 
                     <div className="col-xl-5 h-100">
                         <div className="tab-content h-100">
-                            <div className="tab-pane show active h-100" id="html" role="tabpanel">
+                            <div className="tab-pane h-100 overflow-auto show active>" id="html" role="tabpanel">
                                 <MockupEditor mode="html" preview={previewHtml} setPreview={setPreviewHtml} />
                             </div>
-                            <div className="tab-pane h-100" id="css" role="tabpanel">
+                            <div className="tab-pane h-100 overflow-auto" id="css" role="tabpanel">
                                 <MockupEditor mode="css" preview={previewCss} setPreview={setPreviewCss} />
                             </div>
-                            <div className="tab-pane h-100" id="image" role="tabpanel">
+                            <div className="tab-pane h-100 overflow-auto" id="image" role="tabpanel">
                                 <MockupImages
                                     images={images}
                                     setImages={setImages}
@@ -224,7 +234,7 @@ const Mockup = () => {
                                     setPreviewHtml={setPreviewHtml}
                                 />
                             </div>
-                            <div className="tab-pane h-100" id="pattern" role="tabpanel">
+                            <div className="tab-pane h-100 overflow-auto" id="pattern" role="tabpanel">
                                 <MockupPatterns
                                     previewCss={previewCss}
                                     previewHtml={previewHtml}
@@ -233,6 +243,9 @@ const Mockup = () => {
                                     patternsInput={patternsInput}
                                     patterns={patterns}
                                 />
+                            </div>
+                            <div className="tab-pane h-100 overflow-auto" id="fonts" role="tabpanel">
+                                <MockupFonts />
                             </div>
                         </div>
                     </div>

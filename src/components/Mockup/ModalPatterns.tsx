@@ -159,9 +159,8 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                         {patterns.map((pattern, i) => (
                                             <div className="col-3" key={i}>
                                                 <div
-                                                    className={`pattern-preview ${pattern.name}-pattern ${
-                                                        selectedPatternName === pattern.name ? "active" : ""
-                                                    }`}
+                                                    className={`pattern-preview ${pattern.name}-pattern ${_selectedPatternName === pattern.name ? "active" : ""
+                                                        }`}
                                                     onClick={() =>
                                                         editingIndex !== null &&
                                                         applyPatternToIndex(pattern, editingIndex)

@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 100;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-Thin.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 200;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-ExtraLight.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 300;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-Light.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 400;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 500;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-Medium.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 600;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-SemiBold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 700;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-Bold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 800;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-ExtraBold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BitcountGridSingleCursive";
+  font-weight: 900;
+  font-style: normal;
+  src: url("./BitcountGridSingleCursive-Black.ttf") format("opentype");
+  font-display: swap;
+}

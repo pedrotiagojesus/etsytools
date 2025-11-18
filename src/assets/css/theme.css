@@ -5,7 +5,7 @@
 
 /* Component-specific Variables */
 :root {
-    --bs-header-height: 56px;
+    --bs-header-height: 62px;
     --sub-header-height: 48px;
     --sub-header-margin-bottom: 1rem;
 }
@@ -341,20 +341,4 @@ section,
 section + section,
 .section + .section {
     margin-top: var(--spacing-lg);
-}
-
-/* Container Spacing */
-.container,
-.container-fluid {
-    padding-top: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-}
-
-/* Row Spacing */
-.row {
-    margin-bottom: var(--spacing-md);
-}
-
-.row:last-child {
-    margin-bottom: 0;
 }

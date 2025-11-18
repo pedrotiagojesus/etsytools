@@ -1,0 +1,145 @@
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 100;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 200;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 300;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 400;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Medium.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 500;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 600;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 700;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Bold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 800;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-ExtraBold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 900;
+    font-style: normal;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-ExtraBold.ttf) format("opentype");
+    font-display: swap;
+}
+
+/* Italic */
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 100;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 200;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 300;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 400;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-MediumItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 500;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Italic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 600;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-Italic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 700;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-BoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 800;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-ExtraBoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansCondensed";
+    font-weight: 900;
+    font-style: italic;
+    src: local("OpenSansCondensed"), url(./OpenSansCondensed-ExtraBoldItalic.ttf) format("opentype");
+    font-display: swap;
+}

@@ -1,0 +1,145 @@
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 100;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 200;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 300;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 400;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Medium.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 500;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 600;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 700;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Bold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 800;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-ExtraBold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 900;
+    font-style: normal;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-ExtraBold.ttf) format("opentype");
+    font-display: swap;
+}
+
+/* Italic */
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 100;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 200;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 300;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 400;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-MediumItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 500;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Italic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 600;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-Italic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 700;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-BoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 800;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-ExtraBoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "OpenSansSemiCondensed";
+    font-weight: 900;
+    font-style: italic;
+    src: local("OpenSansSemiCondensed"), url(./OpenSansSemiCondensed-ExtraBoldItalic.ttf) format("opentype");
+    font-display: swap;
+}

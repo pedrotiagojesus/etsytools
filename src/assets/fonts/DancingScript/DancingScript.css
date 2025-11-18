@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 100;
+  font-style: normal;
+  src: url("./DancingScript-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 200;
+  font-style: normal;
+  src: url("./DancingScript-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 300;
+  font-style: normal;
+  src: url("./DancingScript-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 400;
+  font-style: normal;
+  src: url("./DancingScript-Regular.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 500;
+  font-style: normal;
+  src: url("./DancingScript-Medium.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 600;
+  font-style: normal;
+  src: url("./DancingScript-SemiBold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 700;
+  font-style: normal;
+  src: url("./DancingScript-Bold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 800;
+  font-style: normal;
+  src: url("./DancingScript-Bold.ttf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DancingScript";
+  font-weight: 900;
+  font-style: normal;
+  src: url("./DancingScript-Bold.ttf") format("opentype");
+  font-display: swap;
+}

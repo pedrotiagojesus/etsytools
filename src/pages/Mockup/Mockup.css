@@ -1,8 +1,8 @@
-#mockup-page .container-fluid {
+#mockup-page {
     height: calc(100% - var(--sub-header-height) - var(--sub-header-margin-bottom));
 }
 
-#mockup-page > .container-fluid > .row.main-row {
+#mockup-page .row.main-row {
     height: calc(100% - var(--sub-header-margin-bottom));
 }
 

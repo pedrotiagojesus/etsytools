@@ -1,0 +1,145 @@
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 100;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-Thin.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 200;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-ExtraLight.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 300;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-Light.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 400;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-Medium.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 500;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-Regular.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 600;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-SemiBold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 700;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-Bold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 800;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-ExtraBold.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 900;
+    font-style: normal;
+    src: local("Inter18pt"), url(./Inter18pt-Black.ttf) format("opentype");
+    font-display: swap;
+}
+
+/* Italic */
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 100;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-ThinItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 200;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-ExtraLightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 300;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-LightItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 400;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-MediumItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 500;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-Italic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 600;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-SemiBoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 700;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-BoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 800;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-ExtraBoldItalic.ttf) format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter18pt";
+    font-weight: 900;
+    font-style: italic;
+    src: local("Inter18pt"), url(./Inter18pt-BlackItalic.ttf) format("opentype");
+    font-display: swap;
+}
