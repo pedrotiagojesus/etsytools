@@ -1,29 +1,24 @@
-// Função utilitária — centraliza o conteúdo dentro do preview
 export const centerContent = (
     setTransform: (x: number, y: number, scale: number) => void,
-    previewId?: string | "preview-section"
+    previewId = "preview-section"
 ) => {
-    setTimeout(() => {
-        const container = document.querySelector(`#${previewId}`) as HTMLDivElement;
-        const content = container?.querySelector(".preview-content") as HTMLDivElement;
-        if (!container || !content) return;
+    const container = document.querySelector(`#${previewId}`) as HTMLDivElement | null;
+    const content = container?.querySelector(".preview-content") as HTMLDivElement | null;
+    if (!container || !content) return { x: 0, y: 0, scale: 1 };
 
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+    const margin = 40;
+    const containerRect = container.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
 
-        const margin = 40;
+    const availableWidth = containerRect.width - margin * 2;
+    const availableHeight = containerRect.height - margin * 2;
+    const scaleX = availableWidth / contentRect.width;
+    const scaleY = availableHeight / contentRect.height;
+    const scale = Math.min(scaleX, scaleY, 1);
 
-        const contentWidth = content.scrollWidth + margin * 2;
-        const contentHeight = content.scrollHeight + margin * 2;
+    const x = (containerRect.width - contentRect.width * scale) / 2;
+    const y = (containerRect.height - contentRect.height * scale) / 2;
 
-        const scaleX = containerWidth / (contentWidth + margin * 2);
-        const scaleY = containerHeight / (contentHeight + margin * 2);
-
-        const scale = Math.min(scaleX, scaleY, 1);
-
-        const offsetX = (containerWidth - contentWidth * scale) / 2;
-        const offsetY = (containerHeight - contentHeight * scale) / 2;
-
-        setTransform(offsetX, offsetY, scale);
-    }, 200);
+    setTransform(x, y, scale);
+    return { x, y, scale };
 };

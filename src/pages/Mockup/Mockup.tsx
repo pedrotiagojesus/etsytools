@@ -94,7 +94,6 @@ const Mockup = () => {
                 const loadedPatternNames = new Set<string>();
 
                 for (const path in cssFiles) {
-
                     const loader = cssFiles[path];
                     const cssContent = await loader();
                     const name = path.split("/").pop()?.replace(".css", "") || "unknown";
@@ -130,7 +129,7 @@ const Mockup = () => {
     };
 
     return (
-        <div id="mockup-page">
+        <>
             <div id="sub-header">
                 <h1>Mockup</h1>
                 <div className="btn-list" role="tablist">
@@ -201,7 +200,7 @@ const Mockup = () => {
 
             <div className="container-fluid">
                 <div className="row main-row">
-                    <div className="col-xl-7">
+                    <div className="col-xl-7 h-100">
                         {loadingTemplate ? (
                             <LoadingSpinner overlay size="lg" />
                         ) : (
@@ -209,7 +208,7 @@ const Mockup = () => {
                         )}
                     </div>
 
-                    <div className="col-xl-5">
+                    <div className="col-xl-5 h-100">
                         <div className="tab-content h-100">
                             <div className="tab-pane show active h-100" id="html" role="tabpanel">
                                 <MockupEditor mode="html" preview={previewHtml} setPreview={setPreviewHtml} />
@@ -239,7 +238,7 @@ const Mockup = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

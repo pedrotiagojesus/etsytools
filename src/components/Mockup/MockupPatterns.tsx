@@ -28,7 +28,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
     const [patternCssList, setPatternCssList] = useState<string[]>([]);
     const [currentEditingIndex, setCurrentEditingIndex] = useState<number | null>(null);
 
-    // Detecta padrões existentes no HTML e inicializa inputs
+    // Detecta padrões no HTML e inicializa estado
     useEffect(() => {
         if (!previewHtml) return;
 
@@ -36,29 +36,27 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
         const doc = parser.parseFromString(previewHtml, "text/html");
         const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
 
+        // Inicializa lista de inputs
         const ptns = divs.map((div, i) => ({
             name: div.getAttribute("data-title") ?? `Padrão ${i + 1}`,
         }));
         setPatternsInput(ptns);
 
-        const currentActive = divs.map((div) => {
-            const patternClass = Array.from(div.classList).find((cls) => cls.startsWith("pattern-"));
-            return patternClass ? patternClass.replace("pattern-", "") : "";
-        });
+        // Inicializa arrays de estado
+        setActivePatterns((prev) => (prev.length ? prev : divs.map(() => "")));
+        setPatternCssList((prev) => (prev.length ? prev : divs.map(() => "")));
+    }, [previewHtml, setPatternsInput]);
 
-        setActivePatterns(currentActive);
-        setPatternCssList((prev) => {
-            return prev.length === 0 ? divs.map(() => "") : prev;
-        });
-    }, [previewHtml]);
-
-    // Injeção dinâmica de CSS customizado por instância
+    // Injeção de CSS dinâmico
     useEffect(() => {
-        patternCssList.forEach((cssContent, index) => {
-            if (!cssContent) return;
-
-            const styleId = `pattern-style-${index}`;
-            injectPatternStyle(cssContent, styleId);
+        patternCssList.forEach((css, idx) => {
+            const id = `pattern-style-${idx}`;
+            if (!css) {
+                const existing = document.getElementById(id);
+                if (existing) existing.remove();
+                return;
+            }
+            injectPatternStyle(css, id);
         });
     }, [patternCssList]);
 
@@ -66,42 +64,33 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
         const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
-
         const targetDiv = divs[index];
-        if (targetDiv) {
-            // Remove qualquer classe pattern-*
-            targetDiv.classList.forEach((cls) => {
-                if (cls.startsWith("pattern-")) {
-                    targetDiv.classList.remove(cls);
-                }
-            });
+        if (!targetDiv) return;
 
-            // Atualiza HTML do preview
-            setPreviewHtml(doc.documentElement.innerHTML);
+        Array.from(targetDiv.classList).forEach((cls) => {
+            if (cls.startsWith("pattern-")) targetDiv.classList.remove(cls);
+        });
 
-            // Limpa estado
-            setActivePatterns((prev) => {
-                const newState = [...prev];
-                newState[index] = "";
-                return newState;
-            });
+        setPreviewHtml(doc.documentElement.innerHTML);
 
-            setPatternCssList((prev) => {
-                const newState = [...prev];
-                newState[index] = "";
-                return newState;
-            });
+        setActivePatterns((prev) => {
+            const n = [...prev];
+            n[index] = "";
+            return n;
+        });
 
-            // Remove style do head
-            const styleEl = document.getElementById(`pattern-style-${index}`);
-            if (styleEl) {
-                styleEl.remove();
-            }
-        }
+        setPatternCssList((prev) => {
+            const n = [...prev];
+            n[index] = "";
+            return n;
+        });
+
+        const styleEl = document.getElementById(`pattern-style-${index}`);
+        if (styleEl) styleEl.remove();
     };
 
     return (
-        <div className="pattern-slider">
+        <>
             {patternsInput.length ? (
                 <>
                     {patternsInput.map((data, patternIndex) => (
@@ -117,7 +106,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
                                     Selecionar padrão
                                 </button>
                                 <button
-                                    className={"btn btn-danger"}
+                                    className="btn btn-danger"
                                     disabled={!activePatterns[patternIndex]}
                                     onClick={() => handlePatternRemove(patternIndex)}
                                 >
@@ -126,18 +115,23 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
                             </div>
                         </div>
                     ))}
+
                     <ModalPatterns
                         previewCss={previewCss}
                         previewHtml={previewHtml}
                         setPreviewHtml={setPreviewHtml}
                         patterns={patterns}
                         editingIndex={currentEditingIndex}
+                        activePatterns={activePatterns}
+                        setActivePatterns={setActivePatterns}
+                        patternCssList={patternCssList}
+                        setPatternCssList={setPatternCssList}
                     />
                 </>
             ) : (
                 <p className="text-muted">Nenhum padrão encontrado.</p>
             )}
-        </div>
+        </>
     );
 };
 
