@@ -1,0 +1,111 @@
+/* Toast Component Styles */
+
+.toast-item {
+  width: 320px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  animation: slideInRight var(--transition-slow) var(--ease-out);
+  margin-bottom: var(--spacing-sm);
+}
+
+.toast-item.toast-exit {
+  animation: slideOutRight var(--transition-base) var(--ease-in);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.toast-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  word-wrap: break-word;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity var(--transition-base) var(--ease-in-out);
+  flex-shrink: 0;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+/* Toast Type Styles - Light Theme
+ * All contrast ratios meet WCAG AAA standards (7:1+)
+ * Information conveyed through: color + icon + border + text
+ * See CONTRAST_VERIFICATION.md for detailed audit
+ */
+.toast-success {
+  background-color: #d1e7dd;
+  color: #0f5132; /* 7.2:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #198754;
+}
+
+.toast-error {
+  background-color: #f8d7da;
+  color: #842029; /* 7.1:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #dc3545;
+}
+
+.toast-warning {
+  background-color: #fff3cd;
+  color: #664d03; /* 7.5:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #ffc107;
+}
+
+.toast-info {
+  background-color: #cff4fc;
+  color: #055160; /* 7.5:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #0dcaf0;
+}
+
+/* Toast Type Styles - Dark Theme
+ * All contrast ratios meet WCAG AAA standards (7:1+)
+ * Information conveyed through: color + icon + border + text
+ * See CONTRAST_VERIFICATION.md for detailed audit
+ */
+[data-bs-theme="dark"] .toast-success {
+  background-color: #0f5132;
+  color: #d1e7dd; /* 7.2:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #198754;
+}
+
+[data-bs-theme="dark"] .toast-error {
+  background-color: #842029;
+  color: #f8d7da; /* 7.1:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #dc3545;
+}
+
+[data-bs-theme="dark"] .toast-warning {
+  background-color: #664d03;
+  color: #fff3cd; /* 7.5:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #ffc107;
+}
+
+[data-bs-theme="dark"] .toast-info {
+  background-color: #055160;
+  color: #cff4fc; /* 7.5:1 contrast ratio ✓ AAA */
+  border-left: 4px solid #0dcaf0;
+}

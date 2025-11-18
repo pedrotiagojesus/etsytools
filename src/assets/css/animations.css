@@ -1,0 +1,175 @@
+/* Animation and Transition Variables */
+
+:root {
+  /* Transition Durations */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+
+  /* Easing Functions */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Keyframe Animations */
+/* All animations optimized for 60fps using transform and opacity only */
+
+/* Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade Out */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Slide In from Right */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%) translateZ(0);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) translateZ(0);
+    opacity: 1;
+  }
+}
+
+/* Slide Out to Right */
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0) translateZ(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%) translateZ(0);
+    opacity: 0;
+  }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Highlight Flash - optimized for performance */
+@keyframes highlightFlash {
+  0% {
+    background-color: rgba(13, 110, 253, 0.2);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* Rotate */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    transform: rotate(180deg) translateZ(0);
+  }
+}
+
+/* Scale Up */
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95) translateZ(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateZ(0);
+    opacity: 1;
+  }
+}
+
+/* Utility Classes for Common Animations */
+
+.fade-in {
+  animation: fadeIn var(--transition-slow) var(--ease-out);
+}
+
+.fade-out {
+  animation: fadeOut var(--transition-base) var(--ease-in);
+}
+
+.slide-in-right {
+  animation: slideInRight var(--transition-slow) var(--ease-out);
+}
+
+.slide-out-right {
+  animation: slideOutRight var(--transition-base) var(--ease-in);
+}
+
+.pulse {
+  animation: pulse 1.5s var(--ease-in-out) infinite;
+}
+
+.highlight-flash {
+  animation: highlightFlash 500ms var(--ease-out);
+}
+
+/* Transition Utilities */
+
+.transition-colors {
+  transition: color var(--transition-base) var(--ease-in-out),
+              background-color var(--transition-base) var(--ease-in-out),
+              border-color var(--transition-base) var(--ease-in-out);
+}
+
+.transition-transform {
+  transition: transform var(--transition-base) var(--ease-in-out);
+}
+
+.transition-opacity {
+  transition: opacity var(--transition-base) var(--ease-in-out);
+}
+
+.transition-shadow {
+  transition: box-shadow var(--transition-base) var(--ease-in-out);
+}
+
+.transition-all {
+  transition: all var(--transition-base) var(--ease-in-out);
+}
+
+/* Hover Effects */
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,92 @@
+.calculator-card {
+  background-color: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  transition: box-shadow var(--transition-base) ease-in-out;
+}
+
+.calculator-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.calculator-card-label {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--bs-secondary);
+  margin-bottom: var(--spacing-sm);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  line-height: var(--line-height-base);
+}
+
+.calculator-card-value {
+  width: 100%;
+}
+
+.calculator-card-value .input-group {
+  width: 100%;
+}
+
+.calculator-card-value input {
+  min-height: 44px;
+  font-size: var(--font-size-base);
+}
+
+.calculator-card-value .input-group-text {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+}
+
+/* Success/Danger/Warning states for profit card */
+.calculator-card.card-success {
+  background-color: var(--bs-success-bg-subtle);
+  border-color: var(--bs-success-border-subtle);
+}
+
+.calculator-card.card-danger {
+  background-color: var(--bs-danger-bg-subtle);
+  border-color: var(--bs-danger-border-subtle);
+}
+
+.calculator-card.card-warning {
+  background-color: var(--bs-warning-bg-subtle);
+  border-color: var(--bs-warning-border-subtle);
+}
+
+.calculator-card.card-success .calculator-card-label,
+.calculator-card.card-danger .calculator-card-label,
+.calculator-card.card-warning .calculator-card-label {
+  color: var(--bs-body-color);
+}
+
+/* Two-column layout for commission table on mobile */
+.calculator-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.calculator-card-grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.calculator-card-grid-item label {
+  font-size: var(--font-size-xs);
+  color: var(--bs-secondary);
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-base);
+}
+
+.calculator-card-grid-item .input-group {
+  width: 100%;
+}

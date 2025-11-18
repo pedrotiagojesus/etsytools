@@ -1,0 +1,96 @@
+/* ========== MOCKUP DIGITAL E IMPRESSO ========== */
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    background-color: #e8e8e8;
+    font-family: "Lato", sans-serif;
+}
+
+/* Texto no topo central */
+.text-container {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #333;
+    line-height: 1.1;
+}
+
+.text1 {
+    font-family: "PWPerspective", sans-serif;
+    font-size: 260px;
+    display: block;
+    letter-spacing: 0.05em;
+}
+.text2 {
+    font-size: 90px;
+    font-weight: 500;
+    color: #555;
+    display: block;
+}
+.text3 {
+    font-size: 70px;
+    font-weight: 700;
+    color: #777;
+    display: block;
+}
+
+/* Tablet */
+.mockup.tablet {
+    width: 40%;
+    aspect-ratio: 3 / 4;
+    background: #111;
+    border-radius: 30px;
+    position: absolute;
+    top: 50%;
+    left: 18%;
+    transform: translateY(-30%);
+    box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+.mockup.tablet::before {
+    content: "";
+    position: absolute;
+    top: 1%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6%;
+    height: 1%;
+    border-radius: 10px;
+    background: #333;
+}
+.mockup.tablet .screen {
+    width: 90%;
+    height: 90%;
+    margin: 5%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    border-radius: 15px;
+}
+
+/* Papel */
+.mockup.paper {
+    width: 38%;
+    aspect-ratio: 595 / 842;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    transform: translateY(-20%) rotate(6deg);
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+    border: 2px solid #ccc;
+}
+.mockup.paper .page {
+    width: 94%;
+    height: 94%;
+    margin: 3%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}

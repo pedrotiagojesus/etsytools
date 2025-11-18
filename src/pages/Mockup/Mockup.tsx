@@ -5,12 +5,16 @@ import MockupPreview from "./../../components/Mockup/MockupPreview";
 import MockupEditor from "./../../components/Mockup/MockupEditor";
 import MockupImages from "./../../components/Mockup/MockupImages";
 import MockupPatterns from "./../../components/Mockup/MockupPatterns";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 // CSS
 import "./Mockup.css";
 
 // Utils
 import downloadPng from "../../utils/downloadFiles";
+
+// Hooks
+import { useToast } from "../../hooks/useToast";
 
 interface Pattern {
     name: string;
@@ -26,6 +30,8 @@ const Mockup = () => {
     const [patternsInput, setPatternsInput] = useState<{ name: string }[]>([]);
     const [patterns, setPatterns] = useState<Pattern[]>([]);
     const [loadingTemplate, setLoadingTemplate] = useState(false);
+
+    const { showError } = useToast();
 
     // Carrega mockup template
     useEffect(() => {
@@ -61,6 +67,7 @@ const Mockup = () => {
                 console.error(`Erro ao carregar o template "${mockupTemplateSelected}":`, err);
                 setPreviewHtml("<p>Erro ao carregar HTML do mockup.</p>");
                 setPreviewCss("body { background: red; }");
+                showError(`Erro ao carregar o template "${mockupTemplateSelected}"`);
             } finally {
                 setLoadingTemplate(false);
             }
@@ -113,6 +120,7 @@ const Mockup = () => {
                 setPatterns(loadedPatterns);
             } catch (err) {
                 console.error("Erro ao carregar template:", err);
+                showError("Erro ao carregar templates e padrões");
             }
         })();
     }, []);
@@ -195,11 +203,7 @@ const Mockup = () => {
                 <div className="row main-row">
                     <div className="col-xl-7">
                         {loadingTemplate ? (
-                            <div className="loading-overlay h-100 w-100 d-flex justify-content-center align-items-center">
-                                <div className="spinner-border text-primary fs-1" role="status">
-                                    <span className="visually-hidden">Carregando...</span>
-                                </div>
-                            </div>
+                            <LoadingSpinner overlay size="lg" />
                         ) : (
                             <MockupPreview previewHtml={previewHtml} previewCss={previewCss} />
                         )}

@@ -11,6 +11,10 @@ import "bootstrap-icons/font/bootstrap-icons.min.css";
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/theme.css";
 
+// Context
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ToastProvider } from "./contexts/ToastContext";
+
 // Pages
 import App from "./App";
 import Calculator from "./pages/Calculator/Calculator";
@@ -58,7 +62,11 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
+    </ThemeProvider>
   </StrictMode>,
 )
 

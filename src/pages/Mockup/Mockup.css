@@ -19,11 +19,11 @@
 
 #mockup-page .preview-section .tools {
     display: flex;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
     position: absolute;
-    right: 1rem;
+    right: var(--spacing-md);
     z-index: 1;
-    top: 1rem;
+    top: var(--spacing-md);
 }
 
 #mockup-page .preview-section .react-transform-wrapper {
@@ -49,13 +49,13 @@
 #mockup-page #image {
     height: 100%;
     overflow-y: auto;
-    padding-inline: 1rem;
+    padding-inline: var(--spacing-md);
 }
 
 #mockup-page #image .image-input {
     border: 1px solid var(--bs-gray-400);
-    margin-bottom: 1.5rem;
-    padding: 1rem;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
 }
 
 #mockup-page #image .image-input:last-child {
@@ -74,40 +74,40 @@
     aspect-ratio: 1/1;
     background-size: cover;
     background-position: center;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #mockup-page #image .image-input .image-preview i {
-    font-size: 3rem;
-    color: #aaa;
+    font-size: var(--font-size-2xl);
+    color: var(--text-secondary);
     opacity: 0.6;
 }
 
 #mockup-page #pattern .pattern-preview {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
     background-repeat: repeat;
     aspect-ratio: 1 / 1;
     width: 100%;
 }
 
 #mockup-page #pattern .pattern-preview.none-pattern {
-    background-color: #f5f5f5;
-    border: 1px dashed #ccc;
-    color: #555;
-    font-size: 0.75rem;
+    background-color: var(--surface);
+    border: 1px dashed var(--border);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #mockup-page #pattern .pattern-preview:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
     border-color: var(--bs-primary);
 }
 
@@ -116,23 +116,23 @@
 }
 
 #mockup-page #pattern .pattern-block {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 #mockup-page #pattern .pattern-block .btn-list {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
 }
 
 #modal-patterns .main-row {
     height: 100%;
-    --bs-gutter-x: 1rem;
+    --bs-gutter-x: var(--spacing-md);
 }
 
 #modal-patterns .left-side {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
     height: 100%;
 }
 
@@ -142,7 +142,7 @@
 }
 
 #modal-patterns .pattern-list {
-    --bs-gutter-x: 0.5rem;
+    --bs-gutter-x: var(--spacing-sm);
     --bs-gutter-y: calc(var(--bs-gutter-x));
 }
 

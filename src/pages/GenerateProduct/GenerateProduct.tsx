@@ -6,31 +6,48 @@ import "./GenerateProduct.css";
 // Components
 import ImageUploader from "../../components/ImageUploader/ImageUploader";
 import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
-import EndpointFeedback from "../../components/EndpointFeedback/EndpointFeedback";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import Tooltip from "../../components/Tooltip/Tooltip";
+import ValidationFeedback from "../../components/ValidationFeedback/ValidationFeedback";
+
+// Hooks
+import { useToast } from "../../hooks/useToast";
 
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [images, setImages] = useState<File[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [btnSumbit, setBtnSubmit] = useState({
         disabled: false,
         value: "Gerar Produto",
     });
 
-    const [feedback, setFeedback] = useState({
-        message: "",
-        status: null as "success" | "error" | "warning" | "info" | "danger" | null,
-    });
+    // Validation states
+    const [titleValidation, setTitleValidation] = useState({ isValid: true, message: "" });
+
+    const { showSuccess, showError, showWarning, showInfo } = useToast();
+
+    const handleTitleChange = (value: string) => {
+        setTitle(value);
+
+        // Simple validation: title should not be empty if provided
+        if (value.trim() && value.length < 3) {
+            setTitleValidation({
+                isValid: false,
+                message: "O título deve ter pelo menos 3 caracteres"
+            });
+        } else {
+            setTitleValidation({ isValid: true, message: "" });
+        }
+    };
 
     const handleResize = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!images || images.length === 0) {
-            setFeedback({
-                message: "Selecione pelo menos uma imagem.",
-                status: "warning",
-            });
+            showWarning("Selecione pelo menos uma imagem.");
             return;
         }
 
@@ -42,17 +59,16 @@ const GenerateProduct = () => {
         formData.append("pdfSubject", description);
 
         try {
+            setIsLoading(true);
             setBtnSubmit({
                 value: "A gerar...",
                 disabled: true,
             });
 
-            setFeedback({
-                message: "A gerar o produto...",
-                status: "info",
-            });
+            showInfo("A gerar o produto...");
 
-            const endpoint = `${import.meta.env.VITE_API_URL}/etsytools/generate-product`;
+            const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+            const endpoint = `${baseUrl}/etsytools/generate-product`;
             const response = await fetch(endpoint, {
                 method: "POST",
                 body: formData,
@@ -79,17 +95,12 @@ const GenerateProduct = () => {
             a.click();
             URL.revokeObjectURL(url);
 
-            setFeedback({
-                message: "Produto gerado!",
-                status: "success",
-            });
+            showSuccess("Produto gerado com sucesso!");
         } catch (error) {
             console.error(error);
-            setFeedback({
-                message: error instanceof Error ? error.message : "Processing failure",
-                status: "danger",
-            });
+            showError(error instanceof Error ? error.message : "Erro ao processar pedido");
         } finally {
+            setIsLoading(false);
             setBtnSubmit({
                 value: "Gerar Produto",
                 disabled: false,
@@ -104,28 +115,42 @@ const GenerateProduct = () => {
             </div>
 
             <div className="container-fluid">
+                {isLoading && <LoadingSpinner overlay size="lg" />}
+
                 <form onSubmit={handleResize}>
                     <div className="mb-3">
+                        <Tooltip content="Selecione as imagens do produto que deseja incluir no PDF">
+                            <label className="form-label">Imagens</label>
+                        </Tooltip>
                         <ImageUploader onChange={setImages} />
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="title" className="form-label">
-                            Título
-                        </label>
+                        <Tooltip content="Digite o título do produto (mínimo 3 caracteres)">
+                            <label htmlFor="title" className="form-label">
+                                Título
+                            </label>
+                        </Tooltip>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`form-control ${!titleValidation.isValid ? 'is-invalid' : titleValidation.isValid && title ? 'is-valid' : ''}`}
                             id="title"
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) => handleTitleChange(e.target.value)}
+                        />
+                        <ValidationFeedback
+                            isValid={titleValidation.isValid}
+                            message={titleValidation.message}
+                            showValidState={false}
                         />
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="description" className="form-label">
-                            Descrição
-                        </label>
+                        <Tooltip content="Digite uma descrição detalhada do produto">
+                            <label htmlFor="description" className="form-label">
+                                Descrição
+                            </label>
+                        </Tooltip>
                         <textarea
                             className="form-control"
                             id="description"
@@ -137,8 +162,6 @@ const GenerateProduct = () => {
 
                     <ButtonSubmit disabled={btnSumbit.disabled} description={btnSumbit.value} />
                 </form>
-
-                <EndpointFeedback status={feedback.status} description={feedback.message} />
             </div>
         </div>
     );

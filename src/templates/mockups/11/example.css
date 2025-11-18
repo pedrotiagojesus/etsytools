@@ -1,0 +1,70 @@
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    background-color: #fff3e0;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #bf360c;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.text1 {
+    font-family: "PWPerspective";
+    font-size: 380px;
+}
+.text2 {
+    font-size: 85px;
+    font-weight: 700;
+}
+.text3 {
+    font-size: 55px;
+    font-weight: 700;
+}
+
+.image {
+    width: 430px;
+    aspect-ratio: 595/842;
+    background-color: #fff;
+    border: 1px solid #d84315;
+    position: absolute;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.25);
+}
+
+.image-1 {
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+}
+.image-2 {
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+}
+.image-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+.image-4 {
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%) rotate(10deg);
+}
+.image-5 {
+    top: 50%;
+    left: 70%;
+    transform: translate(-50%, -50%) rotate(20deg);
+}

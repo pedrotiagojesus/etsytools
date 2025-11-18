@@ -1,3 +1,144 @@
+#calculator-page h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
 #calculator-page .last-table-row {
-    font-size: 1.5rem;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Responsive layout transitions */
+.calculator-cards-container {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Value change animations */
+.calculated-value {
+    transition: background-color 500ms var(--ease-out);
+    /* Performance optimization: use GPU acceleration */
+    will-change: background-color;
+}
+
+.calculated-value.value-changed {
+    animation: highlightFlash 500ms var(--ease-out);
+}
+
+/* Remove will-change after animation to free resources */
+.calculated-value:not(.value-changed) {
+    will-change: auto;
+}
+
+/* Profit result emphasis */
+.lucro-resultado {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    transition: font-size 300ms var(--ease-out), font-weight 300ms var(--ease-out);
+}
+
+/* Enhanced animation for profit value changes */
+.lucro-resultado.value-changed {
+    animation: profitValueChange 500ms var(--ease-out);
+}
+
+@keyframes profitValueChange {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+        font-size: var(--font-size-xl);
+        font-weight: 800;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Profit result container with icon */
+.profit-result-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.profit-icon {
+    font-size: var(--font-size-xl);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: transform 300ms var(--ease-out);
+}
+
+/* Animate icon when profit changes */
+.value-changed ~ .profit-icon,
+.profit-result-container:has(.value-changed) .profit-icon {
+    animation: iconPulse 500ms var(--ease-out);
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.profit-result-container .input-group {
+    flex: 1;
+}
+
+/* Ensure smooth transition between layouts */
+@media (max-width: 767px) {
+    #calculator-page .container-fluid {
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+
+    #calculator-page h3 {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-md);
+    }
+
+    /* Increase touch target sizes for mobile */
+    #calculator-page input,
+    #calculator-page .input-group-text,
+    #calculator-page button {
+        min-height: 44px;
+        font-size: var(--font-size-base);
+    }
+
+    #calculator-page .input-group-text {
+        min-width: 44px;
+    }
+
+    /* Adjust profit result for mobile */
+    .lucro-resultado {
+        font-size: var(--font-size-lg);
+    }
+
+    @keyframes profitValueChange {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.08);
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+}
+
+/* Desktop table styling */
+@media (min-width: 768px) {
+    #calculator-page table {
+        transition: opacity 0.3s ease-in-out;
+    }
 }

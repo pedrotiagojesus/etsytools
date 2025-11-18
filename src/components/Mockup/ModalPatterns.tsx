@@ -21,7 +21,7 @@ interface ModalPatternsProps {
 const ModalPatterns = ({ previewCss, previewHtml, setPreviewHtml, patterns, editingIndex }: ModalPatternsProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPatternCss, setSelectedPatternCss] = useState<string>("");
-    const [selectedPatternName, setSelectedPatternName] = useState<string>("");
+    const [_selectedPatternName, setSelectedPatternName] = useState<string>("");
 
     useEffect(() => {
         const modalElement = document.getElementById("modal-patterns");

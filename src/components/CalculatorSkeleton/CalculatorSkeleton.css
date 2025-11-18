@@ -1,0 +1,84 @@
+/* Base skeleton styles */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 0%,
+        var(--skeleton-highlight) 50%,
+        var(--skeleton-base) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+/* Skeleton color variables */
+:root {
+    --skeleton-base: #e0e0e0;
+    --skeleton-highlight: #f0f0f0;
+}
+
+[data-bs-theme="dark"] {
+    --skeleton-base: #2a2a2a;
+    --skeleton-highlight: #3a3a3a;
+}
+
+/* Pulsing animation */
+@keyframes skeleton-pulse {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton element sizes */
+.skeleton-title {
+    height: var(--font-size-2xl);
+    width: 200px;
+    margin-bottom: var(--spacing-md);
+}
+
+.skeleton-heading {
+    height: var(--font-size-xl);
+    width: 250px;
+    margin-bottom: var(--spacing-md);
+}
+
+.skeleton-text {
+    height: var(--font-size-base);
+    width: 100%;
+    max-width: 200px;
+}
+
+.skeleton-text-sm {
+    height: var(--font-size-sm);
+    width: 100%;
+    max-width: 120px;
+}
+
+.skeleton-input {
+    height: 38px;
+    width: 100%;
+}
+
+.skeleton-input-sm {
+    height: 31px;
+    width: 100%;
+}
+
+/* Ensure no layout shift */
+.skeleton-title,
+.skeleton-heading,
+.skeleton-text,
+.skeleton-text-sm {
+    display: inline-block;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+        background: var(--skeleton-base);
+    }
+}

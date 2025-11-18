@@ -24,6 +24,8 @@
     display: flex;
     flex-direction: column;
     background-color: #5e728d;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.2rem;
 }
 
 .preview-dispay .text1 {
@@ -53,7 +55,7 @@
     width: calc((595 / 800 * 100%) / 4);
     aspect-ratio: 595 / 842;
     display: inline-block;
-    box-shadow: 0 0.5rem 3rem 7px rgb(0 0 0 / 25%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 3px 6px rgba(0, 0, 0, 0.15);
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -62,6 +64,7 @@
     font-size: 100px;
     text-align: center;
     background-color: #fff;
+    border-radius: 6px;
 }
 
 .preview-dispay .image.image-1 {

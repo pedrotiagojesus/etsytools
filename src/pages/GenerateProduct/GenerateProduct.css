@@ -16,17 +16,17 @@
 }
 
 #generate-pdf-page .list-images {
-    --bs-gutter-y: 1.5rem;
+    --bs-gutter-y: var(--spacing-lg);
 }
 
 #generate-pdf-page .btn.btn-remove {
     position: absolute;
-    top: .25rem;
-    right: .25rem;
-    --bs-btn-padding-y: 0.25rem;
-    --bs-btn-padding-x: 0.75rem;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    --bs-btn-padding-y: var(--spacing-xs);
+    --bs-btn-padding-x: var(--spacing-sm);
     opacity: 0;
-    transition: opacity 0.15s ease-in-out;
+    transition: opacity var(--transition-fast) ease-in-out;
 }
 
 #generate-pdf-page .image-preview:hover .btn.btn-remove {
