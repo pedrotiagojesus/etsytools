@@ -67,8 +67,8 @@ const GenerateProduct = () => {
 
             showInfo("A gerar o produto...");
 
-            const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-            const endpoint = `${baseUrl}/etsytools/generate-product`;
+            const baseUrl = import.meta.env.VITE_API_URL || "http://192.168.50.104:4001/imgtools";
+            const endpoint = `${baseUrl}/generate-product`;
             const response = await fetch(endpoint, {
                 method: "POST",
                 body: formData,
