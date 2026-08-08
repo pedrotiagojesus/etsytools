@@ -5,6 +5,7 @@
 This design document outlines the comprehensive visual improvements for the EstyTOOLS application. The improvements focus on creating a modern, accessible, and user-friendly interface while maintaining the existing functionality. The design follows Bootstrap 5 conventions and leverages React hooks for state management.
 
 The improvements are organized into several key areas:
+
 - Theme system (light/dark mode)
 - Enhanced footer and navigation
 - Toast notification system
@@ -57,10 +58,10 @@ src/
     └── validation.ts (new)
 ```
 
-
 ### State Management
 
 The application will use React Context API for global state management of:
+
 - Theme preferences (light/dark mode)
 - Toast notifications queue
 - Loading states
@@ -82,37 +83,38 @@ Local component state will be managed using React hooks (useState, useEffect, us
 
 ```typescript
 interface ThemeContextType {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
+    theme: "light" | "dark";
+    toggleTheme: () => void;
 }
 
 interface ThemeProviderProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 ```
 
 **Responsibilities:**
+
 - Detect system theme preference on initial load
 - Persist theme preference to localStorage
 - Apply theme class to document root
 - Provide theme state and toggle function to all components
 
 **Implementation Details:**
+
 - Uses `window.matchMedia('(prefers-color-scheme: dark)')` for system detection
 - Stores preference in `localStorage` with key `'estytools-theme'`
 - Applies `data-bs-theme="dark"` or `data-bs-theme="light"` to `<html>` element
 - Listens for system theme changes and updates if user hasn't set preference
 
-
 #### useTheme Hook
 
 ```typescript
 const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
-  }
-  return context;
+    const context = useContext(ThemeContext);
+    if (!context) {
+        throw new Error("useTheme must be used within ThemeProvider");
+    }
+    return context;
 };
 ```
 
@@ -122,54 +124,56 @@ const useTheme = () => {
 
 ```typescript
 interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  duration?: number;
+    id: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+    duration?: number;
 }
 
 interface ToastContextType {
-  toasts: Toast[];
-  addToast: (message: string, type: Toast['type'], duration?: number) => void;
-  removeToast: (id: string) => void;
+    toasts: Toast[];
+    addToast: (message: string, type: Toast["type"], duration?: number) => void;
+    removeToast: (id: string) => void;
 }
 ```
 
 **Responsibilities:**
+
 - Manage queue of active toast notifications
 - Auto-dismiss toasts after specified duration (default 5000ms)
 - Provide methods to add and remove toasts
 - Limit maximum number of visible toasts (max 3)
 
 **Implementation Details:**
+
 - Uses `useReducer` for toast queue management
 - Generates unique IDs using `crypto.randomUUID()` or timestamp fallback
 - Positions toasts in top-right corner with fixed positioning
 - Stacks toasts vertically with 8px gap
 - Implements slide-in animation from right
 
-
 #### Toast Component
 
 ```typescript
 interface ToastProps {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  onClose: (id: string) => void;
+    id: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+    onClose: (id: string) => void;
 }
 ```
 
 **Visual Design:**
+
 - Width: 320px
 - Padding: 16px
 - Border-radius: 8px
 - Box-shadow: 0 4px 12px rgba(0,0,0,0.15)
 - Background colors:
-  - Success: #d1e7dd (light) / #0f5132 (dark)
-  - Error: #f8d7da (light) / #842029 (dark)
-  - Warning: #fff3cd (light) / #664d03 (dark)
-  - Info: #cff4fc (light) / #055160 (dark)
+    - Success: #d1e7dd (light) / #0f5132 (dark)
+    - Error: #f8d7da (light) / #842029 (dark)
+    - Warning: #fff3cd (light) / #664d03 (dark)
+    - Info: #cff4fc (light) / #055160 (dark)
 - Includes icon (Bootstrap Icons) and close button
 - Slide-in animation from right (300ms ease-out)
 - Fade-out animation on dismiss (200ms ease-in)
@@ -180,20 +184,22 @@ interface ToastProps {
 
 ```typescript
 interface TooltipProps {
-  content: string;
-  children: React.ReactNode;
-  position?: 'top' | 'bottom' | 'left' | 'right';
-  delay?: number;
+    content: string;
+    children: React.ReactNode;
+    position?: "top" | "bottom" | "left" | "right";
+    delay?: number;
 }
 ```
 
 **Responsibilities:**
+
 - Display contextual help text on hover
 - Position tooltip relative to trigger element
 - Handle viewport boundary detection
 - Support keyboard navigation (show on focus)
 
 **Implementation Details:**
+
 - Uses CSS positioning with `position: absolute`
 - Calculates position using `getBoundingClientRect()`
 - Shows after 200ms delay (configurable)
@@ -202,21 +208,23 @@ interface TooltipProps {
 - Max-width: 250px with text wrapping
 - Z-index: 1070 (above most content, below modals)
 
-
 ### 4. Enhanced Header Component
 
 **New Features:**
+
 - Theme toggle button with sun/moon icon
 - Bootstrap Icons for navigation items
 - Improved mobile menu with smooth transitions
 - Active state highlighting for current route
 
 **Icon Mapping:**
+
 - Calculadora: `bi-calculator`
 - Gerador do Produto: `bi-box-seam`
 - Mockup: `bi-image`
 
 **Theme Toggle Button:**
+
 - Position: Right side of navbar, before navigation items
 - Icon: `bi-sun-fill` (light mode) / `bi-moon-fill` (dark mode)
 - Smooth rotation animation on toggle (180deg, 300ms)
@@ -225,6 +233,7 @@ interface TooltipProps {
 ### 5. Enhanced Footer Component
 
 **Content Structure:**
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  EstyTOOLS © 2024 | Version 1.0.0              │
@@ -233,6 +242,7 @@ interface TooltipProps {
 ```
 
 **Styling:**
+
 - Background: Light gray (#f8f9fa) in light mode, dark gray (#212529) in dark mode
 - Padding: 24px vertical, 16px horizontal
 - Border-top: 1px solid border color
@@ -244,22 +254,22 @@ interface TooltipProps {
 
 ```typescript
 interface BreadcrumbItem {
-  label: string;
-  path: string;
+    label: string;
+    path: string;
 }
 
 interface BreadcrumbProps {
-  items: BreadcrumbItem[];
+    items: BreadcrumbItem[];
 }
 ```
 
 **Behavior:**
+
 - Automatically generated from current route
 - Hidden on home page
 - Last item is not clickable (current page)
 - Separator: `/` or `bi-chevron-right` icon
 - Responsive: Collapses to "..." on mobile for long paths
-
 
 ### 7. Loading States
 
@@ -267,17 +277,19 @@ interface BreadcrumbProps {
 
 ```typescript
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  overlay?: boolean;
+    size?: "sm" | "md" | "lg";
+    overlay?: boolean;
 }
 ```
 
 **Variants:**
+
 - Small (16px): Inline loading indicators
 - Medium (32px): Default size for content areas
 - Large (48px): Full-page loading
 
 **Overlay Mode:**
+
 - Semi-transparent backdrop (rgba(255,255,255,0.8) light / rgba(0,0,0,0.8) dark)
 - Centered spinner
 - Prevents interaction with underlying content
@@ -286,6 +298,7 @@ interface LoadingSpinnerProps {
 #### Skeleton Screens
 
 Used for Calculator page initial load:
+
 - Mimics table structure with gray rectangles
 - Pulsing animation (1.5s ease-in-out infinite)
 - Maintains layout to prevent content shift
@@ -293,6 +306,7 @@ Used for Calculator page initial load:
 ### 8. Responsive Design
 
 #### Breakpoints (Bootstrap 5 standard)
+
 - xs: < 576px
 - sm: ≥ 576px
 - md: ≥ 768px
@@ -303,16 +317,19 @@ Used for Calculator page initial load:
 #### Calculator Page Responsive Behavior
 
 **Desktop (≥ 768px):**
+
 - Two-column layout (8-4 grid)
 - Tables display normally
 
 **Mobile (< 768px):**
+
 - Single column layout
 - Tables transform to card-based layout
 - Each row becomes a card with label-value pairs
 - Improved touch targets (minimum 44x44px)
 
 **Card Layout Structure:**
+
 ```
 ┌─────────────────────────┐
 │ Label                   │
@@ -320,21 +337,23 @@ Used for Calculator page initial load:
 └─────────────────────────┘
 ```
 
-
 ### 9. Input Validation
 
 #### Validation Rules
 
 **Price Fields:**
+
 - Must be non-negative
 - Maximum 2 decimal places
 - Maximum value: 999999.99
 
 **Discount Field:**
+
 - Must be between 0 and 100
 - Integer values only
 
 **Validation States:**
+
 - Valid: Green border (#198754)
 - Invalid: Red border (#dc3545)
 - Neutral: Default border
@@ -343,12 +362,13 @@ Used for Calculator page initial load:
 
 ```typescript
 interface ValidationFeedbackProps {
-  isValid: boolean;
-  message?: string;
+    isValid: boolean;
+    message?: string;
 }
 ```
 
 **Visual Feedback:**
+
 - Border color change (200ms transition)
 - Icon indicator (checkmark or X)
 - Error message below input (fade-in 150ms)
@@ -361,53 +381,56 @@ interface ValidationFeedbackProps {
 
 ```css
 :root {
-  --transition-fast: 150ms;
-  --transition-base: 200ms;
-  --transition-slow: 300ms;
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out: cubic-bezier(0.0, 0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --transition-fast: 150ms;
+    --transition-base: 200ms;
+    --transition-slow: 300ms;
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
 }
 ```
 
 #### Animation Specifications
 
 **Page Transitions:**
+
 - Fade effect: opacity 0 → 1
 - Duration: 300ms
 - Easing: ease-out
 
 **Hover Effects:**
+
 - Color transitions: 200ms ease-in-out
 - Scale on buttons: scale(1.02)
 - Box-shadow on cards: 200ms ease-out
 
 **Value Changes (Calculator):**
+
 - Highlight flash: background color pulse
 - Duration: 500ms
 - Color: rgba(primary, 0.2) → transparent
 
 **Respect User Preferences:**
+
 ```css
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 ```
-
 
 ## Data Models
 
 ### Theme Preference
 
 ```typescript
-type Theme = 'light' | 'dark' | 'system';
+type Theme = "light" | "dark" | "system";
 
 interface ThemePreference {
-  theme: Theme;
-  lastUpdated: number;
+    theme: Theme;
+    lastUpdated: number;
 }
 ```
 
@@ -417,11 +440,11 @@ Stored in localStorage as JSON string with key `'estytools-theme'`.
 
 ```typescript
 interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  duration: number;
-  timestamp: number;
+    id: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+    duration: number;
+    timestamp: number;
 }
 ```
 
@@ -429,8 +452,8 @@ interface Toast {
 
 ```typescript
 interface ValidationResult {
-  isValid: boolean;
-  message?: string;
+    isValid: boolean;
+    message?: string;
 }
 
 type ValidatorFunction = (value: any) => ValidationResult;
@@ -441,6 +464,7 @@ type ValidatorFunction = (value: any) => ValidationResult;
 ### Toast Notifications for Errors
 
 All user-facing errors should be displayed using the toast system:
+
 - API errors: "Erro ao processar pedido. Tente novamente."
 - Validation errors: Specific field-level messages
 - Network errors: "Sem conexão à internet. Verifique sua rede."
@@ -454,23 +478,25 @@ All user-facing errors should be displayed using the toast system:
 ### Error Boundaries
 
 Implement React Error Boundary for component-level error handling:
+
 - Catch rendering errors
 - Display user-friendly error message
 - Log error details to console
 - Provide "Reload" button
-
 
 ## Testing Strategy
 
 ### Unit Tests
 
 **Components to Test:**
+
 - ThemeContext: theme toggle, persistence, system detection
 - ToastContext: add/remove toasts, auto-dismiss, queue management
 - Tooltip: positioning, show/hide behavior, keyboard navigation
 - Validation utilities: all validation rules
 
 **Testing Tools:**
+
 - React Testing Library for component tests
 - Jest for unit tests
 - Mock localStorage and matchMedia APIs
@@ -478,6 +504,7 @@ Implement React Error Boundary for component-level error handling:
 ### Integration Tests
 
 **Scenarios:**
+
 - Theme toggle updates all components
 - Toast notifications appear and dismiss correctly
 - Form validation prevents invalid submissions
@@ -492,6 +519,7 @@ Implement React Error Boundary for component-level error handling:
 ### Accessibility Tests
 
 **Requirements:**
+
 - All interactive elements keyboard accessible
 - ARIA labels for icon-only buttons
 - Color contrast meets WCAG AA standards
@@ -499,6 +527,7 @@ Implement React Error Boundary for component-level error handling:
 - Focus indicators visible and clear
 
 **Tools:**
+
 - axe-core for automated accessibility testing
 - Manual keyboard navigation testing
 - Screen reader testing (NVDA/JAWS)
@@ -506,17 +535,18 @@ Implement React Error Boundary for component-level error handling:
 ### Performance Tests
 
 **Metrics:**
+
 - Theme toggle response time < 100ms
 - Toast animation smooth (60fps)
 - Page transition < 300ms
 - No layout shift during loading
-
 
 ## Design System
 
 ### Color Palette
 
 #### Light Theme
+
 ```css
 --primary: #0d6efd;
 --secondary: #6c757d;
@@ -534,6 +564,7 @@ Implement React Error Boundary for component-level error handling:
 ```
 
 #### Dark Theme
+
 ```css
 --primary: #0d6efd;
 --secondary: #6c757d;
@@ -553,12 +584,12 @@ Implement React Error Boundary for component-level error handling:
 ### Typography Scale
 
 ```css
---font-size-xs: 0.75rem;    /* 12px */
---font-size-sm: 0.875rem;   /* 14px */
---font-size-base: 1rem;     /* 16px */
---font-size-lg: 1.25rem;    /* 20px */
---font-size-xl: 1.5rem;     /* 24px */
---font-size-2xl: 2rem;      /* 32px */
+--font-size-xs: 0.75rem; /* 12px */
+--font-size-sm: 0.875rem; /* 14px */
+--font-size-base: 1rem; /* 16px */
+--font-size-lg: 1.25rem; /* 20px */
+--font-size-xl: 1.5rem; /* 24px */
+--font-size-2xl: 2rem; /* 32px */
 
 --font-weight-normal: 400;
 --font-weight-medium: 600;
@@ -572,32 +603,31 @@ Implement React Error Boundary for component-level error handling:
 ### Spacing Scale
 
 ```css
---spacing-xs: 0.25rem;   /* 4px */
---spacing-sm: 0.5rem;    /* 8px */
---spacing-md: 1rem;      /* 16px */
---spacing-lg: 1.5rem;    /* 24px */
---spacing-xl: 2rem;      /* 32px */
---spacing-2xl: 3rem;     /* 48px */
+--spacing-xs: 0.25rem; /* 4px */
+--spacing-sm: 0.5rem; /* 8px */
+--spacing-md: 1rem; /* 16px */
+--spacing-lg: 1.5rem; /* 24px */
+--spacing-xl: 2rem; /* 32px */
+--spacing-2xl: 3rem; /* 48px */
 ```
 
 ### Border Radius
 
 ```css
---radius-sm: 0.25rem;    /* 4px */
---radius-md: 0.5rem;     /* 8px */
---radius-lg: 1rem;       /* 16px */
---radius-full: 9999px;   /* Fully rounded */
+--radius-sm: 0.25rem; /* 4px */
+--radius-md: 0.5rem; /* 8px */
+--radius-lg: 1rem; /* 16px */
+--radius-full: 9999px; /* Fully rounded */
 ```
 
 ### Shadows
 
 ```css
---shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
---shadow-md: 0 4px 6px rgba(0,0,0,0.1);
---shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
---shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+--shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+--shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+--shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
 ```
-
 
 ## Implementation Notes
 
@@ -611,62 +641,62 @@ Implement React Error Boundary for component-level error handling:
 ### Performance Considerations
 
 1. **CSS Optimization:**
-   - Use CSS variables for theme switching (no class recalculation)
-   - Minimize repaints with transform/opacity animations
-   - Use will-change sparingly for animations
+    - Use CSS variables for theme switching (no class recalculation)
+    - Minimize repaints with transform/opacity animations
+    - Use will-change sparingly for animations
 
 2. **JavaScript Optimization:**
-   - Debounce validation checks (300ms)
-   - Memoize expensive calculations
-   - Use React.memo for pure components
-   - Lazy load non-critical components
+    - Debounce validation checks (300ms)
+    - Memoize expensive calculations
+    - Use React.memo for pure components
+    - Lazy load non-critical components
 
 3. **Asset Optimization:**
-   - Use Bootstrap Icons (already included)
-   - No additional icon libraries needed
-   - Minimize custom CSS by leveraging Bootstrap utilities
+    - Use Bootstrap Icons (already included)
+    - No additional icon libraries needed
+    - Minimize custom CSS by leveraging Bootstrap utilities
 
 ### Accessibility Guidelines
 
 1. **Keyboard Navigation:**
-   - All interactive elements must be keyboard accessible
-   - Logical tab order
-   - Visible focus indicators
-   - Escape key closes modals/tooltips
+    - All interactive elements must be keyboard accessible
+    - Logical tab order
+    - Visible focus indicators
+    - Escape key closes modals/tooltips
 
 2. **Screen Readers:**
-   - Semantic HTML elements
-   - ARIA labels for icon-only buttons
-   - Live regions for dynamic content (toasts, validation)
-   - Skip navigation links
+    - Semantic HTML elements
+    - ARIA labels for icon-only buttons
+    - Live regions for dynamic content (toasts, validation)
+    - Skip navigation links
 
 3. **Visual:**
-   - Minimum contrast ratio 4.5:1 for text
-   - Minimum touch target 44x44px
-   - No information conveyed by color alone
-   - Respect prefers-reduced-motion
+    - Minimum contrast ratio 4.5:1 for text
+    - Minimum touch target 44x44px
+    - No information conveyed by color alone
+    - Respect prefers-reduced-motion
 
 ### Migration Strategy
 
 1. **Phase 1: Foundation**
-   - Implement theme system and context
-   - Add CSS variables and design tokens
-   - Update root layout with providers
+    - Implement theme system and context
+    - Add CSS variables and design tokens
+    - Update root layout with providers
 
 2. **Phase 2: Core Components**
-   - Implement toast system
-   - Enhance header with theme toggle and icons
-   - Implement new footer
+    - Implement toast system
+    - Enhance header with theme toggle and icons
+    - Implement new footer
 
 3. **Phase 3: Enhanced UX**
-   - Add tooltips to Calculator page
-   - Implement validation feedback
-   - Add loading states
+    - Add tooltips to Calculator page
+    - Implement validation feedback
+    - Add loading states
 
 4. **Phase 4: Responsive & Polish**
-   - Implement responsive layouts
-   - Add animations and transitions
-   - Add breadcrumb navigation
-   - Final polish and testing
+    - Implement responsive layouts
+    - Add animations and transitions
+    - Add breadcrumb navigation
+    - Final polish and testing
 
 Each phase should be tested before moving to the next.

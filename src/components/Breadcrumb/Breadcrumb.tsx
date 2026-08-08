@@ -25,15 +25,18 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
                     return (
                         <li
                             key={item.path}
-                            className={`breadcrumb-item ${isLast ? 'active' : ''}`}
-                            aria-current={isLast ? 'page' : undefined}
+                            className={`breadcrumb-item ${isLast ? "active" : ""}`}
+                            aria-current={isLast ? "page" : undefined}
                         >
                             {isLast ? (
                                 <span>{item.label}</span>
                             ) : (
                                 <>
                                     <Link to={item.path}>{item.label}</Link>
-                                    <i className="bi bi-chevron-right breadcrumb-separator" aria-hidden="true"></i>
+                                    <i
+                                        className="bi bi-chevron-right breadcrumb-separator"
+                                        aria-hidden="true"
+                                    ></i>
                                 </>
                             )}
                         </li>

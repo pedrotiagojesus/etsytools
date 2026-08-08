@@ -1,9 +1,13 @@
 export const centerContent = (
     setTransform: (x: number, y: number, scale: number) => void,
-    previewId = "preview-section"
+    previewId = "preview-section",
 ) => {
-    const container = document.querySelector(`#${previewId}`) as HTMLDivElement | null;
-    const content = container?.querySelector(".preview-content") as HTMLDivElement | null;
+    const container = document.querySelector(
+        `#${previewId}`,
+    ) as HTMLDivElement | null;
+    const content = container?.querySelector(
+        ".preview-content",
+    ) as HTMLDivElement | null;
     if (!container || !content) return { x: 0, y: 0, scale: 1 };
 
     const margin = 40;

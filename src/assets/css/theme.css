@@ -1,7 +1,7 @@
 /* Import Design System */
-@import './variables.css';
-@import './animations.css';
-@import './accessibility.css';
+@import "./variables.css";
+@import "./animations.css";
+@import "./accessibility.css";
 
 /* Component-specific Variables */
 :root {
@@ -83,7 +83,9 @@ main {
 }
 
 .modal .modal-boody {
-    height: calc(100% - var(--bs-modal-header-height) - var(--bs-modal-footer-height));
+    height: calc(
+        100% - var(--bs-modal-header-height) - var(--bs-modal-footer-height)
+    );
 }
 
 .modal .modal-footer {
@@ -130,7 +132,12 @@ body {
 }
 
 /* Typography Hierarchy */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     line-height: var(--line-height-tight);
@@ -149,7 +156,9 @@ h3 {
     font-size: var(--font-size-lg);
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
     font-size: var(--font-size-base);
 }
 
@@ -208,11 +217,12 @@ p {
 /* Buttons */
 .btn {
     font-weight: var(--font-weight-medium);
-    transition: color var(--transition-base) var(--ease-in-out),
-                background-color var(--transition-base) var(--ease-in-out),
-                border-color var(--transition-base) var(--ease-in-out),
-                transform var(--transition-base) var(--ease-in-out),
-                box-shadow var(--transition-base) var(--ease-in-out);
+    transition:
+        color var(--transition-base) var(--ease-in-out),
+        background-color var(--transition-base) var(--ease-in-out),
+        border-color var(--transition-base) var(--ease-in-out),
+        transform var(--transition-base) var(--ease-in-out),
+        box-shadow var(--transition-base) var(--ease-in-out);
     /* Performance optimization: use GPU acceleration for transforms */
     transform: translateZ(0);
 }
@@ -230,8 +240,9 @@ p {
     background-color: var(--surface);
     border-color: var(--border);
     box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-base) var(--ease-in-out),
-                transform var(--transition-base) var(--ease-in-out);
+    transition:
+        box-shadow var(--transition-base) var(--ease-in-out),
+        transform var(--transition-base) var(--ease-in-out);
     /* Performance optimization: use GPU acceleration */
     transform: translateZ(0);
 }
@@ -253,8 +264,9 @@ p {
 /* Links */
 a {
     color: var(--primary);
-    transition: color var(--transition-base) var(--ease-in-out),
-                opacity var(--transition-base) var(--ease-in-out);
+    transition:
+        color var(--transition-base) var(--ease-in-out),
+        opacity var(--transition-base) var(--ease-in-out);
 }
 
 a:hover {
@@ -269,8 +281,9 @@ a:hover {
 .nav-link {
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-normal);
-    transition: color var(--transition-base) var(--ease-in-out),
-                background-color var(--transition-base) var(--ease-in-out);
+    transition:
+        color var(--transition-base) var(--ease-in-out),
+        background-color var(--transition-base) var(--ease-in-out);
 }
 
 .navbar-brand {
@@ -286,14 +299,16 @@ a:hover {
 /* Form controls */
 .form-control,
 .form-select {
-    transition: border-color var(--transition-base) var(--ease-in-out),
-                box-shadow var(--transition-base) var(--ease-in-out);
+    transition:
+        border-color var(--transition-base) var(--ease-in-out),
+        box-shadow var(--transition-base) var(--ease-in-out);
 }
 
 /* Input groups */
 .input-group-text {
-    transition: background-color var(--transition-base) var(--ease-in-out),
-                border-color var(--transition-base) var(--ease-in-out);
+    transition:
+        background-color var(--transition-base) var(--ease-in-out),
+        border-color var(--transition-base) var(--ease-in-out);
 }
 
 /* Tables */
@@ -325,12 +340,24 @@ a:hover {
 }
 
 /* Spacing Utilities */
-.gap-xs { gap: var(--spacing-xs); }
-.gap-sm { gap: var(--spacing-sm); }
-.gap-md { gap: var(--spacing-md); }
-.gap-lg { gap: var(--spacing-lg); }
-.gap-xl { gap: var(--spacing-xl); }
-.gap-2xl { gap: var(--spacing-2xl); }
+.gap-xs {
+    gap: var(--spacing-xs);
+}
+.gap-sm {
+    gap: var(--spacing-sm);
+}
+.gap-md {
+    gap: var(--spacing-md);
+}
+.gap-lg {
+    gap: var(--spacing-lg);
+}
+.gap-xl {
+    gap: var(--spacing-xl);
+}
+.gap-2xl {
+    gap: var(--spacing-2xl);
+}
 
 /* Section Spacing */
 section,

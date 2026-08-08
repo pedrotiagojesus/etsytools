@@ -2,7 +2,9 @@
     font-family: "OpenSans";
     font-weight: 100;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Light.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Light.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -10,7 +12,9 @@
     font-family: "OpenSans";
     font-weight: 200;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Light.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Light.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -18,7 +22,9 @@
     font-family: "OpenSans";
     font-weight: 300;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Light.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Light.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -26,7 +32,9 @@
     font-family: "OpenSans";
     font-weight: 400;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Medium.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Medium.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -34,7 +42,9 @@
     font-family: "OpenSans";
     font-weight: 500;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Regular.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -42,7 +52,9 @@
     font-family: "OpenSans";
     font-weight: 600;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Regular.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -50,7 +62,9 @@
     font-family: "OpenSans";
     font-weight: 700;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-Bold.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Bold.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -58,7 +72,9 @@
     font-family: "OpenSans";
     font-weight: 800;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-ExtraBold.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-ExtraBold.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -66,7 +82,9 @@
     font-family: "OpenSans";
     font-weight: 900;
     font-style: normal;
-    src: local("OpenSans"), url(./OpenSans-ExtraBold.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-ExtraBold.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -76,7 +94,9 @@
     font-family: "OpenSans";
     font-weight: 100;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-LightItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-LightItalic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -84,7 +104,9 @@
     font-family: "OpenSans";
     font-weight: 200;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-LightItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-LightItalic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -92,7 +114,9 @@
     font-family: "OpenSans";
     font-weight: 300;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-LightItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-LightItalic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -100,7 +124,9 @@
     font-family: "OpenSans";
     font-weight: 400;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-MediumItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-MediumItalic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -108,7 +134,9 @@
     font-family: "OpenSans";
     font-weight: 500;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-Italic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -116,7 +144,9 @@
     font-family: "OpenSans";
     font-weight: 600;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-Italic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -124,7 +154,9 @@
     font-family: "OpenSans";
     font-weight: 700;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-BoldItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-BoldItalic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -132,7 +164,9 @@
     font-family: "OpenSans";
     font-weight: 800;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-ExtraBoldItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-ExtraBoldItalic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -140,6 +174,8 @@
     font-family: "OpenSans";
     font-weight: 900;
     font-style: italic;
-    src: local("OpenSans"), url(./OpenSans-ExtraBoldItalic.ttf) format("opentype");
+    src:
+        local("OpenSans"),
+        url(./OpenSans-ExtraBoldItalic.ttf) format("opentype");
     font-display: swap;
 }

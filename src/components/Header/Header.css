@@ -51,7 +51,9 @@
     color: rgba(255, 255, 255, 0.85);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-normal);
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    transition:
+        color 0.2s ease-in-out,
+        background-color 0.2s ease-in-out;
     border-radius: var(--radius-md);
     position: relative;
 }
@@ -77,7 +79,7 @@
 }
 
 .nav-link.active::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 1rem;

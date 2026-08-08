@@ -1,5 +1,7 @@
 #mockup-page {
-    height: calc(100% - var(--sub-header-height) - var(--sub-header-margin-bottom));
+    height: calc(
+        100% - var(--sub-header-height) - var(--sub-header-margin-bottom)
+    );
 }
 
 #mockup-page .row.main-row {
@@ -85,7 +87,10 @@
     border: 1px solid var(--border);
     overflow: hidden;
     cursor: pointer;
-    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    transition:
+        transform var(--transition-base),
+        box-shadow var(--transition-base),
+        border-color var(--transition-base);
     background-repeat: repeat;
     aspect-ratio: 1 / 1;
     width: 100%;
@@ -155,7 +160,10 @@
     border: 7px solid #ccc;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
     background-repeat: repeat;
     aspect-ratio: 1 / 1;
     width: 100%;

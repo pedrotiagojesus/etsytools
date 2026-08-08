@@ -63,7 +63,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
             if (found) {
                 const scoped = found.css.replace(
                     new RegExp(`\\.${found.name}-pattern`, "g"),
-                    `.pattern-${editingIndex}`
+                    `.pattern-${editingIndex}`,
                 );
                 setSelectedPatternCss(scoped);
             } else {
@@ -79,7 +79,9 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
+        const divs = Array.from(
+            doc.querySelectorAll("div[data-pattern]"),
+        ) as HTMLDivElement[];
         const targetDiv = divs[index];
         if (!targetDiv) return;
 
@@ -91,7 +93,10 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
         targetDiv.classList.add(scopedClass);
         setPreviewHtml(doc.documentElement.innerHTML);
 
-        const scopedCss = pattern.css.replace(new RegExp(`\\.${pattern.name}-pattern`, "g"), `.${scopedClass}`);
+        const scopedCss = pattern.css.replace(
+            new RegExp(`\\.${pattern.name}-pattern`, "g"),
+            `.${scopedClass}`,
+        );
 
         injectPatternStyle(scopedCss, `pattern-style-${index}`);
 
@@ -124,7 +129,11 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                             {/* LEFT SIDE */}
                             <div className="col-7 left-side">
                                 {isModalOpen && (
-                                    <Suspense fallback={<div>Carregando preview...</div>}>
+                                    <Suspense
+                                        fallback={
+                                            <div>Carregando preview...</div>
+                                        }
+                                    >
                                         <MockupPreview
                                             previewId="modal-pattern-preview"
                                             previewDisplayId="modal-pattern-display"
@@ -145,7 +154,10 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                                     n[editingIndex] = newCss;
                                                     return n;
                                                 });
-                                                injectPatternStyle(newCss, `pattern-style-${editingIndex}`);
+                                                injectPatternStyle(
+                                                    newCss,
+                                                    `pattern-style-${editingIndex}`,
+                                                );
                                             }
                                         }}
                                     />
@@ -159,11 +171,18 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                         {patterns.map((pattern, i) => (
                                             <div className="col-3" key={i}>
                                                 <div
-                                                    className={`pattern-preview ${pattern.name}-pattern ${_selectedPatternName === pattern.name ? "active" : ""
-                                                        }`}
+                                                    className={`pattern-preview ${pattern.name}-pattern ${
+                                                        _selectedPatternName ===
+                                                        pattern.name
+                                                            ? "active"
+                                                            : ""
+                                                    }`}
                                                     onClick={() =>
                                                         editingIndex !== null &&
-                                                        applyPatternToIndex(pattern, editingIndex)
+                                                        applyPatternToIndex(
+                                                            pattern,
+                                                            editingIndex,
+                                                        )
                                                     }
                                                 ></div>
                                             </div>
@@ -175,7 +194,11 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                     </div>
 
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            data-bs-dismiss="modal"
+                        >
                             Fechar
                         </button>
                     </div>

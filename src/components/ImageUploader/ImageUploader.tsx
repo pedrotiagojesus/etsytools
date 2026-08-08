@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import type { DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -51,6 +52,7 @@ function SortableImage({
                     e.preventDefault();
                     onRemove(id);
                 }}
+                aria-label="Remover imagem"
             >
                 ×
             </button>
@@ -70,6 +72,7 @@ function SortableImage({
                     cursor: "grab",
                     userSelect: "none",
                 }}
+                aria-label="Reordenar imagem"
             >
                 ☰
             </div>
@@ -95,15 +98,23 @@ const ImageUploader: React.FC<Props> = ({ onChange, renderOverlay }) => {
         const updated = [...images, ...fileArray];
         setImages(updated);
         onChange(updated.map((img) => img.file));
+
+        // Permite selecionar o mesmo ficheiro outra vez, se removido e re-adicionado
+        e.target.value = "";
     };
 
     const handleRemove = (id: string) => {
+        const removed = images.find((img) => img.id === id);
+        if (removed) {
+            URL.revokeObjectURL(removed.preview);
+        }
+
         const updated = images.filter((img) => img.id !== id);
         setImages(updated);
         onChange(updated.map((img) => img.file));
     };
 
-    const handleDragEnd = (event: any) => {
+    const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
 
@@ -114,6 +125,15 @@ const ImageUploader: React.FC<Props> = ({ onChange, renderOverlay }) => {
         setImages(reordered);
         onChange(reordered.map((img) => img.file));
     };
+
+    // Liberta todos os object URLs ao desmontar o componente
+    // (ex: navegação para outra página com imagens ainda por remover)
+    useEffect(() => {
+        return () => {
+            images.forEach((img) => URL.revokeObjectURL(img.preview));
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div>

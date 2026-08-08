@@ -23,7 +23,9 @@ function App() {
             setTransitionStage("fade-out");
 
             // Check if user prefers reduced motion
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const prefersReducedMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)",
+            ).matches;
 
             // If reduced motion is preferred, skip animation and update immediately
             if (prefersReducedMotion) {

@@ -48,7 +48,9 @@
 
 .breadcrumb-item.active {
     color: var(--text-primary); /* Light: 14.8:1, Dark: 11.7:1 ✓ AAA */
-    font-weight: var(--font-weight-medium); /* Non-color indicator for active state */
+    font-weight: var(
+        --font-weight-medium
+    ); /* Non-color indicator for active state */
 }
 
 .breadcrumb-separator {
@@ -73,7 +75,7 @@
     }
 
     /* Show only the last two items on mobile */
-    .breadcrumb-item:not(:nth-last-child(-n+2)) {
+    .breadcrumb-item:not(:nth-last-child(-n + 2)) {
         display: none;
     }
 
@@ -85,11 +87,13 @@
     }
 
     /* Only show ellipsis if there are more than 2 items */
-    .breadcrumb:has(.breadcrumb-item:nth-child(3)) .breadcrumb-item:nth-last-child(2)::before {
+    .breadcrumb:has(.breadcrumb-item:nth-child(3))
+        .breadcrumb-item:nth-last-child(2)::before {
         content: "... ";
     }
 
-    .breadcrumb:not(:has(.breadcrumb-item:nth-child(3))) .breadcrumb-item:nth-last-child(2)::before {
+    .breadcrumb:not(:has(.breadcrumb-item:nth-child(3)))
+        .breadcrumb-item:nth-last-child(2)::before {
         content: "";
     }
 }

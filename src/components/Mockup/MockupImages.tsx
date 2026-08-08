@@ -15,13 +15,20 @@ const fileToBase64 = (file: File): Promise<string> =>
         reader.readAsDataURL(file);
     });
 
-const MockupImages: React.FC<MockupImagesProps> = ({ images, setImages, previewHtml, setPreviewHtml }) => {
+const MockupImages: React.FC<MockupImagesProps> = ({
+    images,
+    setImages,
+    previewHtml,
+    setPreviewHtml,
+}) => {
     useEffect(() => {
         if (!previewHtml) return;
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(doc.querySelectorAll("div[data-img]")) as HTMLDivElement[];
+        const divs = Array.from(
+            doc.querySelectorAll("div[data-img]"),
+        ) as HTMLDivElement[];
 
         const imgs = divs.map((div, i) => ({
             name: div.getAttribute("data-title") || `Imagem ${i + 1}`,
@@ -36,7 +43,10 @@ const MockupImages: React.FC<MockupImagesProps> = ({ images, setImages, previewH
                 images.map((img, index) => (
                     <div key={index} className="row image-input">
                         <div className="col-3">
-                            <div className="image-preview" style={{ backgroundImage: img.bg || "none" }}>
+                            <div
+                                className="image-preview"
+                                style={{ backgroundImage: img.bg || "none" }}
+                            >
                                 {!img.bg && <i className="bi bi-image"></i>}
                             </div>
                         </div>
@@ -51,15 +61,22 @@ const MockupImages: React.FC<MockupImagesProps> = ({ images, setImages, previewH
                                         const base64 = await fileToBase64(file);
 
                                         const parser = new DOMParser();
-                                        const doc = parser.parseFromString(previewHtml, "text/html");
+                                        const doc = parser.parseFromString(
+                                            previewHtml,
+                                            "text/html",
+                                        );
                                         const divs = Array.from(
-                                            doc.querySelectorAll("div[data-img]")
+                                            doc.querySelectorAll(
+                                                "div[data-img]",
+                                            ),
                                         ) as HTMLDivElement[];
 
                                         const div = divs[index];
                                         div.style.backgroundImage = `url(${base64})`;
 
-                                        setPreviewHtml(doc.documentElement.innerHTML);
+                                        setPreviewHtml(
+                                            doc.documentElement.innerHTML,
+                                        );
                                     }
                                 }}
                             />

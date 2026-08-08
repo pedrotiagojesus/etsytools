@@ -1,7 +1,7 @@
 // CSS
 import "./EndpointFeedback.css";
 
-type StatusType = "success" | "error" | "warning" | "info"  | "danger" | null;
+type StatusType = "success" | "error" | "warning" | "info" | "danger" | null;
 type EndpointFeedbackProps = {
     status: StatusType;
     description: string | null;

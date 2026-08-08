@@ -6,7 +6,13 @@ interface ToolbarProps {
     center: () => void;
 }
 
-const MockupToolbar: React.FC<ToolbarProps> = ({ guideLine, setGuideLine, zoomIn, zoomOut, center }) => {
+const MockupToolbar: React.FC<ToolbarProps> = ({
+    guideLine,
+    setGuideLine,
+    zoomIn,
+    zoomOut,
+    center,
+}) => {
     return (
         <div className="tools">
             <button

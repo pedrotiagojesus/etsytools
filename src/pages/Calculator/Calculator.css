@@ -35,7 +35,9 @@
 .lucro-resultado {
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-lg);
-    transition: font-size 300ms var(--ease-out), font-weight 300ms var(--ease-out);
+    transition:
+        font-size 300ms var(--ease-out),
+        font-weight 300ms var(--ease-out);
 }
 
 /* Enhanced animation for profit value changes */
@@ -80,7 +82,8 @@
 }
 
 @keyframes iconPulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
     }
     50% {

@@ -47,3 +47,5 @@ coverage/
 
 # Optional: Ignore vite-plugin cache if you use plugins with cache
 .cache/
+
+.kiro/

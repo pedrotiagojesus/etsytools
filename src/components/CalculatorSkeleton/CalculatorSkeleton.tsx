@@ -1,5 +1,5 @@
-import React from 'react';
-import './CalculatorSkeleton.css';
+import React from "react";
+import "./CalculatorSkeleton.css";
 
 const CalculatorSkeleton: React.FC = () => {
     return (
@@ -16,7 +16,7 @@ const CalculatorSkeleton: React.FC = () => {
                                 {/* 7 rows to match the Calculator table */}
                                 {[...Array(7)].map((_, index) => (
                                     <tr key={index}>
-                                        <th style={{ width: '40%' }}>
+                                        <th style={{ width: "40%" }}>
                                             <div className="skeleton skeleton-text"></div>
                                         </th>
                                         <td>
@@ -44,7 +44,7 @@ const CalculatorSkeleton: React.FC = () => {
                                 {/* 3 data rows to match the rates table */}
                                 {[...Array(3)].map((_, index) => (
                                     <tr key={index}>
-                                        <th style={{ width: '40%' }}>
+                                        <th style={{ width: "40%" }}>
                                             <div className="skeleton skeleton-text"></div>
                                         </th>
                                         <td>

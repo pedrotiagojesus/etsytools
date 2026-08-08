@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import injectPatternStyle from "../../utils/injectPatternStyle";
+import { useEffect } from "react";
 import ModalPatterns from "./ModalPatterns";
 
 interface Pattern {
@@ -14,6 +13,13 @@ interface MockupPatternsProps {
     patternsInput: { name: string }[];
     setPatternsInput: (patterns: { name: string }[]) => void;
     patterns: Pattern[];
+    // Elevado para o componente pai para poder ser incluído no export/import
+    activePatterns: string[];
+    setActivePatterns: (patterns: string[]) => void;
+    patternCssList: string[];
+    setPatternCssList: (list: string[]) => void;
+    currentEditingIndex: number | null;
+    setCurrentEditingIndex: (index: number | null) => void;
 }
 
 const MockupPatterns: React.FC<MockupPatternsProps> = ({
@@ -23,11 +29,13 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
     patternsInput,
     setPatternsInput,
     patterns,
+    activePatterns,
+    setActivePatterns,
+    patternCssList,
+    setPatternCssList,
+    currentEditingIndex,
+    setCurrentEditingIndex,
 }) => {
-    const [activePatterns, setActivePatterns] = useState<string[]>([]);
-    const [patternCssList, setPatternCssList] = useState<string[]>([]);
-    const [currentEditingIndex, setCurrentEditingIndex] = useState<number | null>(null);
-
     // Detecta padrões no HTML e inicializa estado
     useEffect(() => {
         if (!previewHtml) return;
@@ -36,29 +44,15 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
         const doc = parser.parseFromString(previewHtml, "text/html");
         const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
 
-        // Inicializa lista de inputs
         const ptns = divs.map((div, i) => ({
             name: div.getAttribute("data-title") ?? `Padrão ${i + 1}`,
         }));
         setPatternsInput(ptns);
 
-        // Inicializa arrays de estado
-        setActivePatterns((prev) => (prev.length ? prev : divs.map(() => "")));
-        setPatternCssList((prev) => (prev.length ? prev : divs.map(() => "")));
+        setActivePatterns(activePatterns.length ? activePatterns : divs.map(() => ""));
+        setPatternCssList(patternCssList.length ? patternCssList : divs.map(() => ""));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [previewHtml, setPatternsInput]);
-
-    // Injeção de CSS dinâmico
-    useEffect(() => {
-        patternCssList.forEach((css, idx) => {
-            const id = `pattern-style-${idx}`;
-            if (!css) {
-                const existing = document.getElementById(id);
-                if (existing) existing.remove();
-                return;
-            }
-            injectPatternStyle(css, id);
-        });
-    }, [patternCssList]);
 
     const handlePatternRemove = (index: number) => {
         const parser = new DOMParser();
@@ -73,17 +67,13 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
 
         setPreviewHtml(doc.documentElement.innerHTML);
 
-        setActivePatterns((prev) => {
-            const n = [...prev];
-            n[index] = "";
-            return n;
-        });
+        const n = [...activePatterns];
+        n[index] = "";
+        setActivePatterns(n);
 
-        setPatternCssList((prev) => {
-            const n = [...prev];
-            n[index] = "";
-            return n;
-        });
+        const c = [...patternCssList];
+        c[index] = "";
+        setPatternCssList(c);
 
         const styleEl = document.getElementById(`pattern-style-${index}`);
         if (styleEl) styleEl.remove();

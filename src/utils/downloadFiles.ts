@@ -10,7 +10,7 @@ import { toPng, toJpeg } from "html-to-image";
 const downloadHtmlAsImage = async (
     elementId: string,
     fileName: string = "mockup",
-    format: "png" | "jpeg" = "png"
+    format: "png" | "jpeg" = "png",
 ): Promise<void> => {
     const element = document.getElementById(elementId);
 

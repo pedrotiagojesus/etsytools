@@ -25,7 +25,10 @@ const GenerateProduct = () => {
     });
 
     // Validation states
-    const [titleValidation, setTitleValidation] = useState({ isValid: true, message: "" });
+    const [titleValidation, setTitleValidation] = useState({
+        isValid: true,
+        message: "",
+    });
 
     const { showSuccess, showError, showWarning, showInfo } = useToast();
 
@@ -36,7 +39,7 @@ const GenerateProduct = () => {
         if (value.trim() && value.length < 3) {
             setTitleValidation({
                 isValid: false,
-                message: "O título deve ter pelo menos 3 caracteres"
+                message: "O título deve ter pelo menos 3 caracteres",
             });
         } else {
             setTitleValidation({ isValid: true, message: "" });
@@ -51,6 +54,12 @@ const GenerateProduct = () => {
             return;
         }
 
+        const baseUrl = import.meta.env.VITE_API_URL;
+        if (!baseUrl) {
+            showError("VITE_API_URL não está configurado. Verifique o ficheiro .env.");
+            return;
+        }
+
         const formData = new FormData();
         Array.from(images).forEach((image) => {
             formData.append("images", image);
@@ -60,19 +69,20 @@ const GenerateProduct = () => {
 
         try {
             setIsLoading(true);
-            setBtnSubmit({
-                value: "A gerar...",
-                disabled: true,
-            });
-
+            setBtnSubmit({ value: "A gerar...", disabled: true });
             showInfo("A gerar o produto...");
 
-            const baseUrl = import.meta.env.VITE_API_URL || "http://192.168.50.104:4001/imgtools";
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // timeout 30s
+
             const endpoint = `${baseUrl}/generate-product`;
             const response = await fetch(endpoint, {
                 method: "POST",
                 body: formData,
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -80,12 +90,9 @@ const GenerateProduct = () => {
             }
 
             const blob = await response.blob();
-
-            // Tenta obter o nome do ficheiro do header
             const contentDisposition = response.headers.get("Content-Disposition");
             const headerFilename = contentDisposition?.match(/filename="?([^"]+)"?/)?.[1];
             const fallbackFilename = response.headers.get("X-Filename") || "output.pdf";
-
             const filename = headerFilename || fallbackFilename;
 
             const url = URL.createObjectURL(blob);
@@ -98,13 +105,14 @@ const GenerateProduct = () => {
             showSuccess("Produto gerado com sucesso!");
         } catch (error) {
             console.error(error);
-            showError(error instanceof Error ? error.message : "Erro ao processar pedido");
+            if (error instanceof DOMException && error.name === "AbortError") {
+                showError("O pedido demorou demasiado tempo (timeout de 30s).");
+            } else {
+                showError(error instanceof Error ? error.message : "Erro ao processar pedido");
+            }
         } finally {
             setIsLoading(false);
-            setBtnSubmit({
-                value: "Gerar Produto",
-                disabled: false,
-            });
+            setBtnSubmit({ value: "Gerar Produto", disabled: false });
         }
     };
 
@@ -133,7 +141,7 @@ const GenerateProduct = () => {
                         </Tooltip>
                         <input
                             type="text"
-                            className={`form-control ${!titleValidation.isValid ? 'is-invalid' : titleValidation.isValid && title ? 'is-valid' : ''}`}
+                            className={`form-control ${!titleValidation.isValid ? "is-invalid" : titleValidation.isValid && title ? "is-valid" : ""}`}
                             id="title"
                             value={title}
                             onChange={(e) => handleTitleChange(e.target.value)}

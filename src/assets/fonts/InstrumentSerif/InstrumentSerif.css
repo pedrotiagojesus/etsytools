@@ -2,7 +2,9 @@
     font-family: "InstrumentSerif";
     font-weight: 100;
     font-style: normal;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Regular.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -10,7 +12,9 @@
     font-family: "InstrumentSerif";
     font-weight: 300;
     font-style: normal;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Regular.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -18,7 +22,9 @@
     font-family: "InstrumentSerif";
     font-weight: 400;
     font-style: normal;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Regular.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -26,7 +32,9 @@
     font-family: "InstrumentSerif";
     font-weight: 500;
     font-style: normal;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Regular.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -34,7 +42,9 @@
     font-family: "InstrumentSerif";
     font-weight: 700;
     font-style: normal;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Regular.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -42,7 +52,9 @@
     font-family: "InstrumentSerif";
     font-weight: 900;
     font-style: normal;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Regular.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Regular.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -52,7 +64,9 @@
     font-family: "InstrumentSerif";
     font-weight: 100;
     font-style: italic;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Italic.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -60,7 +74,9 @@
     font-family: "InstrumentSerif";
     font-weight: 300;
     font-style: italic;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Italic.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -68,7 +84,9 @@
     font-family: "InstrumentSerif";
     font-weight: 400;
     font-style: italic;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Italic.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -76,7 +94,9 @@
     font-family: "InstrumentSerif";
     font-weight: 500;
     font-style: italic;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Italic.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -84,7 +104,9 @@
     font-family: "InstrumentSerif";
     font-weight: 700;
     font-style: italic;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Italic.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Italic.ttf) format("opentype");
     font-display: swap;
 }
 
@@ -92,6 +114,8 @@
     font-family: "InstrumentSerif";
     font-weight: 900;
     font-style: italic;
-    src: local("InstrumentSerif"), url(./InstrumentSerif-Italic.ttf) format("opentype");
+    src:
+        local("InstrumentSerif"),
+        url(./InstrumentSerif-Italic.ttf) format("opentype");
     font-display: swap;
 }

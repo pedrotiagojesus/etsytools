@@ -1,8 +1,8 @@
-import './Footer.css';
+import "./Footer.css";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
-    const version = '0.0.0'; // From package.json
+    const version = "0.0.0"; // From package.json
 
     return (
         <footer className="app-footer">
@@ -20,7 +20,8 @@ const Footer = () => {
                         className="footer-link"
                         aria-label="Visit EstyTOOLS on GitHub"
                     >
-                        <i className="bi bi-github" aria-hidden="true"></i> GitHub
+                        <i className="bi bi-github" aria-hidden="true"></i>{" "}
+                        GitHub
                     </a>
                     <a
                         href="#"
@@ -28,7 +29,8 @@ const Footer = () => {
                         onClick={(e) => e.preventDefault()}
                         aria-label="View documentation"
                     >
-                        <i className="bi bi-book" aria-hidden="true"></i> Documentação
+                        <i className="bi bi-book" aria-hidden="true"></i>{" "}
+                        Documentação
                     </a>
                     <a
                         href="#"
@@ -36,7 +38,11 @@ const Footer = () => {
                         onClick={(e) => e.preventDefault()}
                         aria-label="Get support"
                     >
-                        <i className="bi bi-question-circle" aria-hidden="true"></i> Suporte
+                        <i
+                            className="bi bi-question-circle"
+                            aria-hidden="true"
+                        ></i>{" "}
+                        Suporte
                     </a>
                 </div>
             </div>
