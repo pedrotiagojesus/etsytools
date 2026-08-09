@@ -11,7 +11,12 @@ interface MockupEditorProps {
     debounceMs?: number;
 }
 
-const MockupEditor: React.FC<MockupEditorProps> = ({ mode, preview, setPreview, debounceMs = 300 }) => {
+const MockupEditor: React.FC<MockupEditorProps> = ({
+    mode,
+    preview,
+    setPreview,
+    debounceMs = 300,
+}) => {
     const [localValue, setLocalValue] = useState(preview);
     const debounceTimer = useRef<number | null>(null);
     const isInternalChange = useRef(false);

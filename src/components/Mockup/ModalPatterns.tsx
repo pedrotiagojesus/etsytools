@@ -1,4 +1,11 @@
-import { useEffect, useState, lazy, Suspense } from "react";
+import {
+    useEffect,
+    useState,
+    lazy,
+    Suspense,
+    type Dispatch,
+    type SetStateAction,
+} from "react";
 import MockupEditor from "./MockupEditor";
 import injectPatternStyle from "../../utils/injectPatternStyle";
 
@@ -16,9 +23,9 @@ interface ModalPatternsProps {
     patterns: Pattern[];
     editingIndex: number | null;
     activePatterns: string[];
-    setActivePatterns: (patterns: string[]) => void;
+    setActivePatterns: Dispatch<SetStateAction<string[]>>;
     patternCssList: string[];
-    setPatternCssList: (list: string[]) => void;
+    setPatternCssList: Dispatch<SetStateAction<string[]>>;
 }
 
 const ModalPatterns: React.FC<ModalPatternsProps> = ({
@@ -34,9 +41,8 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPatternCss, setSelectedPatternCss] = useState<string>("");
-    const [_selectedPatternName, setSelectedPatternName] = useState<string>("");
+    const [selectedPatternName, setSelectedPatternName] = useState<string>("");
 
-    // Controla evento de abertura/fecho do modal
     useEffect(() => {
         const modal = document.getElementById("modal-patterns");
         const handleShow = () => setIsModalOpen(true);
@@ -49,7 +55,6 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
         };
     }, []);
 
-    // Sincroniza modal com padrão ativo no pai
     useEffect(() => {
         if (!isModalOpen || editingIndex === null) return;
 
@@ -126,7 +131,6 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
 
                     <div className="modal-body">
                         <div className="row main-row">
-                            {/* LEFT SIDE */}
                             <div className="col-7 left-side">
                                 {isModalOpen && (
                                     <Suspense
@@ -164,15 +168,15 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                 </div>
                             </div>
 
-                            {/* RIGHT SIDE */}
                             <div className="col-5 right-side">
                                 <div className="pattern-list-scroll">
                                     <div className="row pattern-list">
                                         {patterns.map((pattern, i) => (
                                             <div className="col-3" key={i}>
-                                                <div
+                                                <button
+                                                    type="button"
                                                     className={`pattern-preview ${pattern.name}-pattern ${
-                                                        _selectedPatternName ===
+                                                        selectedPatternName ===
                                                         pattern.name
                                                             ? "active"
                                                             : ""
@@ -184,7 +188,12 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                                             editingIndex,
                                                         )
                                                     }
-                                                ></div>
+                                                    aria-label={`Aplicar padrão ${pattern.name}`}
+                                                    aria-pressed={
+                                                        selectedPatternName ===
+                                                        pattern.name
+                                                    }
+                                                ></button>
                                             </div>
                                         ))}
                                     </div>

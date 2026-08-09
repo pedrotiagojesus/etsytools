@@ -10,7 +10,7 @@ import type { ValidationResult } from "../../utils/validation";
 import "./Calculator.css";
 
 function Calculator() {
-    const isMobile = useMediaQuery('(max-width: 767px)');
+    const isMobile = useMediaQuery("(max-width: 767px)");
 
     const COMMISSION_PER_ADVERTISEMENT = 0.19;
     const COMMISSION_TRANSACTION = 6.5;
@@ -35,15 +35,23 @@ function Calculator() {
     const [precoComDesconto, setPrecoComDesconto] = useState<number>(0);
     const [desconto, setDesconto] = useState<number>(0);
 
-    const [precoVendaValidation, setPrecoVendaValidation] = useState<ValidationResult>({ isValid: true });
-    const [descontoValidation, setDescontoValidation] = useState<ValidationResult>({ isValid: true });
-    const [variablePaymentValidation, setVariablePaymentValidation] = useState<ValidationResult>({ isValid: true });
-    const [fixedPaymentValidation, setFixedPaymentValidation] = useState<ValidationResult>({ isValid: true });
-    const [transactionValidation, setTransactionValidation] = useState<ValidationResult>({ isValid: true });
-    const [advertisementValidation, setAdvertisementValidation] = useState<ValidationResult>({ isValid: true });
+    const [precoVendaValidation, setPrecoVendaValidation] =
+        useState<ValidationResult>({ isValid: true });
+    const [descontoValidation, setDescontoValidation] =
+        useState<ValidationResult>({ isValid: true });
+    const [variablePaymentValidation, setVariablePaymentValidation] =
+        useState<ValidationResult>({ isValid: true });
+    const [fixedPaymentValidation, setFixedPaymentValidation] =
+        useState<ValidationResult>({ isValid: true });
+    const [transactionValidation, setTransactionValidation] =
+        useState<ValidationResult>({ isValid: true });
+    const [advertisementValidation, setAdvertisementValidation] =
+        useState<ValidationResult>({ isValid: true });
 
-    const [animatePrecoComDesconto, setAnimatePrecoComDesconto] = useState(false);
-    const [animatePaymentProcessing, setAnimatePaymentProcessing] = useState(false);
+    const [animatePrecoComDesconto, setAnimatePrecoComDesconto] =
+        useState(false);
+    const [animatePaymentProcessing, setAnimatePaymentProcessing] =
+        useState(false);
     const [animateTransaction, setAnimateTransaction] = useState(false);
     const [animateProfit, setAnimateProfit] = useState(false);
 
@@ -61,13 +69,17 @@ function Calculator() {
             setAnimatePrecoComDesconto(true);
         }
 
-        const transactionResult = (rate.transaction / 100) * valPrecoComDesconto;
+        const transactionResult =
+            (rate.transaction / 100) * valPrecoComDesconto;
         const prevTransaction = profitMargin.transactionRateResult;
 
-        const paymentProcessingResult = (rate.variablePaymentProcessing / 100) * valPrecoComDesconto + rate.fixedPaymentProcessing;
+        const paymentProcessingResult =
+            (rate.variablePaymentProcessing / 100) * valPrecoComDesconto +
+            rate.fixedPaymentProcessing;
         const prevPaymentProcessing = profitMargin.paymentProcessingRateResult;
 
-        const calculatedProfit = valPrecoComDesconto -
+        const calculatedProfit =
+            valPrecoComDesconto -
             (rate.advertisement + transactionResult + paymentProcessingResult);
         const prevProfit = profitMargin.profit;
 

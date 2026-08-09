@@ -18,17 +18,21 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
     previewCss,
 }) => {
     useEffect(() => {
-        const styleTag = document.getElementById("mockup-style") || document.createElement("style");
+        const styleTag =
+            document.getElementById("mockup-style") ||
+            document.createElement("style");
         styleTag.id = "mockup-style";
         styleTag.innerHTML = `${previewCss} ?? ""}`;
         document.head.appendChild(styleTag);
 
-        // Carrega automaticamente qualquer font-family referenciado no CSS do template
         loadFontsFromCss(previewCss);
     }, [previewCss]);
 
     const [guideLine, setGuideLine] = useState(false);
     const initialScaleRef = useRef<number>(1);
+    // Guarda o scale atual fora do render prop dos children,
+    // já que o tipo ReactZoomPanPinchContentRef não expõe "state" diretamente.
+    const currentScaleRef = useRef<number>(1);
     const MARGIN = 40;
 
     return (
@@ -39,11 +43,14 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                 onInit={({ setTransform }) => {
                     const { scale } = centerContent(setTransform, previewId);
                     initialScaleRef.current = scale;
+                    currentScaleRef.current = scale;
                 }}
                 minScale={initialScaleRef.current}
                 maxScale={3}
+                onTransformed={(_ref, state) => {
+                    currentScaleRef.current = state.scale;
+                }}
                 onPanningStop={({ state, setTransform }) => {
-                    // ✅ impede arrastar para além da margem
                     const container = document.querySelector(
                         `#${previewId}`,
                     ) as HTMLDivElement;
@@ -58,7 +65,6 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                         height: content.scrollHeight * state.scale,
                     };
 
-                    // limites de deslocamento
                     const minX =
                         containerRect.width - contentRect.width - MARGIN;
                     const maxX = MARGIN;
@@ -86,23 +92,24 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                             guideLine={guideLine}
                             setGuideLine={setGuideLine}
                             zoomIn={() => {
-                                // impede zoom out abaixo do inicial
                                 zoomIn();
                             }}
                             zoomOut={() => {
                                 if (
                                     initialScaleRef.current &&
-                                    state.scale <= initialScaleRef.current
+                                    currentScaleRef.current <=
+                                        initialScaleRef.current
                                 )
                                     return;
                                 zoomOut();
                             }}
                             center={() => {
-                                const { x, y, scale } = centerContent(
+                                const { scale } = centerContent(
                                     setTransform,
                                     previewId,
                                 );
                                 initialScaleRef.current = scale;
+                                currentScaleRef.current = scale;
                             }}
                         />
                         <TransformComponent>

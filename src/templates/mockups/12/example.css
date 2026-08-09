@@ -4,8 +4,14 @@
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
     position: relative;
-    background: linear-gradient(135deg, #fdfbfb, #ebedee);
     font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
 }
 
 .text-container {
@@ -16,10 +22,11 @@
     text-align: center;
     color: #333;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
 }
 
 .text1 {
-    font-family: "PWPerspective";
+    font-family: "DancingScript";
     font-size: 380px;
 }
 .text2 {
@@ -43,29 +50,28 @@
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
 }
 
-/* Posições e rotações "aleatórias" mas centradas */
 .image-1 {
-    top: 45%;
-    left: 25%;
-    transform: translate(-50%, -50%) rotate(-15deg);
+    top: 20%;
+    left: 16%;
+    transform: translate(-50%, -50%) rotate(-16deg) scale(0.85);
 }
 .image-2 {
-    top: 50%;
-    left: 45%;
-    transform: translate(-50%, -50%) rotate(10deg);
+    top: 36%;
+    left: 33%;
+    transform: translate(-50%, -50%) rotate(-8deg) scale(0.93);
 }
 .image-3 {
-    top: 55%;
-    left: 35%;
-    transform: translate(-50%, -50%) rotate(-5deg);
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
 }
 .image-4 {
-    top: 50%;
-    left: 65%;
-    transform: translate(-50%, -50%) rotate(20deg);
+    top: 68%;
+    left: 67%;
+    transform: translate(-50%, -50%) rotate(8deg) scale(0.93);
 }
 .image-5 {
-    top: 45%;
-    left: 75%;
-    transform: translate(-50%, -50%) rotate(-10deg);
+    top: 84%;
+    left: 84%;
+    transform: translate(-50%, -50%) rotate(16deg) scale(0.85);
 }

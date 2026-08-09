@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, arrayMove, useSortable, horizontalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+    SortableContext,
+    arrayMove,
+    useSortable,
+    horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 // CSS
@@ -31,18 +42,21 @@ function SortableImage({
     onRemove: (id: string) => void;
     renderOverlay?: (file: File) => React.ReactNode;
 }) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id });
 
     const style: React.CSSProperties = {
         transform: CSS.Transform.toString(transform),
-        transition
+        transition,
     };
 
     return (
         <div ref={setNodeRef} className="img-wrapper" style={style}>
             <img src={preview} alt="preview" />
 
-            {renderOverlay && <div className="img-info">{renderOverlay(file)}</div>}
+            {renderOverlay && (
+                <div className="img-info">{renderOverlay(file)}</div>
+            )}
 
             <button
                 className="remove-img"
@@ -149,8 +163,15 @@ const ImageUploader: React.FC<Props> = ({ onChange, renderOverlay }) => {
                 onChange={handleFileChange}
             />
 
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={images.map((img) => img.id)} strategy={horizontalListSortingStrategy}>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+            >
+                <SortableContext
+                    items={images.map((img) => img.id)}
+                    strategy={horizontalListSortingStrategy}
+                >
                     <div className="image-uploader">
                         {images.map((img) => (
                             <SortableImage

@@ -13,6 +13,9 @@ import ValidationFeedback from "../../components/ValidationFeedback/ValidationFe
 // Hooks
 import { useToast } from "../../hooks/useToast";
 
+// Utils
+import { validateImageFiles } from "../../utils/fileValidation";
+
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
@@ -24,7 +27,6 @@ const GenerateProduct = () => {
         value: "Gerar Produto",
     });
 
-    // Validation states
     const [titleValidation, setTitleValidation] = useState({
         isValid: true,
         message: "",
@@ -35,7 +37,6 @@ const GenerateProduct = () => {
     const handleTitleChange = (value: string) => {
         setTitle(value);
 
-        // Simple validation: title should not be empty if provided
         if (value.trim() && value.length < 3) {
             setTitleValidation({
                 isValid: false,
@@ -46,6 +47,25 @@ const GenerateProduct = () => {
         }
     };
 
+    // Valida imagens assim que são selecionadas no uploader,
+    // antes de sequer chegar ao submit — feedback imediato.
+    const handleImagesChange = (newImages: File[]) => {
+        if (newImages.length === 0) {
+            setImages(newImages);
+            return;
+        }
+
+        const validation = validateImageFiles(newImages);
+        if (!validation.valid) {
+            showError(
+                validation.message ?? "Uma ou mais imagens são inválidas.",
+            );
+            return; // não atualiza o estado, mantém a seleção anterior válida
+        }
+
+        setImages(newImages);
+    };
+
     const handleResize = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -54,9 +74,13 @@ const GenerateProduct = () => {
             return;
         }
 
-        const baseUrl = import.meta.env.VITE_API_URL;
-        if (!baseUrl) {
-            showError("VITE_API_URL não está configurado. Verifique o ficheiro .env.");
+        // Segunda validação de segurança, caso o estado tenha sido
+        // alterado por outra via entretanto.
+        const validation = validateImageFiles(images);
+        if (!validation.valid) {
+            showError(
+                validation.message ?? "Uma ou mais imagens são inválidas.",
+            );
             return;
         }
 
@@ -69,11 +93,23 @@ const GenerateProduct = () => {
 
         try {
             setIsLoading(true);
-            setBtnSubmit({ value: "A gerar...", disabled: true });
+            setBtnSubmit({
+                value: "A gerar...",
+                disabled: true,
+            });
+
             showInfo("A gerar o produto...");
 
+            const baseUrl = import.meta.env.VITE_API_URL;
+            if (!baseUrl) {
+                showError(
+                    "VITE_API_URL não está configurado. Verifique o ficheiro .env.",
+                );
+                return;
+            }
+
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // timeout 30s
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
 
             const endpoint = `${baseUrl}/generate-product`;
             const response = await fetch(endpoint, {
@@ -86,13 +122,21 @@ const GenerateProduct = () => {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                throw new Error(`Erro ao gerar produto: ${response.status} ${response.statusText}\n${errorText}`);
+                throw new Error(
+                    `Erro ao gerar produto: ${response.status} ${response.statusText}\n${errorText}`,
+                );
             }
 
             const blob = await response.blob();
-            const contentDisposition = response.headers.get("Content-Disposition");
-            const headerFilename = contentDisposition?.match(/filename="?([^"]+)"?/)?.[1];
-            const fallbackFilename = response.headers.get("X-Filename") || "output.pdf";
+
+            const contentDisposition = response.headers.get(
+                "Content-Disposition",
+            );
+            const headerFilename =
+                contentDisposition?.match(/filename="?([^"]+)"?/)?.[1];
+            const fallbackFilename =
+                response.headers.get("X-Filename") || "output.pdf";
+
             const filename = headerFilename || fallbackFilename;
 
             const url = URL.createObjectURL(blob);
@@ -108,11 +152,18 @@ const GenerateProduct = () => {
             if (error instanceof DOMException && error.name === "AbortError") {
                 showError("O pedido demorou demasiado tempo (timeout de 30s).");
             } else {
-                showError(error instanceof Error ? error.message : "Erro ao processar pedido");
+                showError(
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao processar pedido",
+                );
             }
         } finally {
             setIsLoading(false);
-            setBtnSubmit({ value: "Gerar Produto", disabled: false });
+            setBtnSubmit({
+                value: "Gerar Produto",
+                disabled: false,
+            });
         }
     };
 
@@ -127,10 +178,10 @@ const GenerateProduct = () => {
 
                 <form onSubmit={handleResize}>
                     <div className="mb-3">
-                        <Tooltip content="Selecione as imagens do produto que deseja incluir no PDF">
+                        <Tooltip content="Selecione as imagens do produto que deseja incluir no PDF (máx. 15MB por imagem, PNG/JPEG/WEBP)">
                             <label className="form-label">Imagens</label>
                         </Tooltip>
-                        <ImageUploader onChange={setImages} />
+                        <ImageUploader onChange={handleImagesChange} />
                     </div>
 
                     <div className="mb-3">
@@ -168,7 +219,10 @@ const GenerateProduct = () => {
                         ></textarea>
                     </div>
 
-                    <ButtonSubmit disabled={btnSumbit.disabled} description={btnSumbit.value} />
+                    <ButtonSubmit
+                        disabled={btnSumbit.disabled}
+                        description={btnSumbit.value}
+                    />
                 </form>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import ModalPatterns from "./ModalPatterns";
 
 interface Pattern {
@@ -13,11 +13,10 @@ interface MockupPatternsProps {
     patternsInput: { name: string }[];
     setPatternsInput: (patterns: { name: string }[]) => void;
     patterns: Pattern[];
-    // Elevado para o componente pai para poder ser incluído no export/import
     activePatterns: string[];
-    setActivePatterns: (patterns: string[]) => void;
+    setActivePatterns: Dispatch<SetStateAction<string[]>>;
     patternCssList: string[];
-    setPatternCssList: (list: string[]) => void;
+    setPatternCssList: Dispatch<SetStateAction<string[]>>;
     currentEditingIndex: number | null;
     setCurrentEditingIndex: (index: number | null) => void;
 }
@@ -36,28 +35,31 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
     currentEditingIndex,
     setCurrentEditingIndex,
 }) => {
-    // Detecta padrões no HTML e inicializa estado
     useEffect(() => {
         if (!previewHtml) return;
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
+        const divs = Array.from(
+            doc.querySelectorAll("div[data-pattern]"),
+        ) as HTMLDivElement[];
 
         const ptns = divs.map((div, i) => ({
             name: div.getAttribute("data-title") ?? `Padrão ${i + 1}`,
         }));
         setPatternsInput(ptns);
 
-        setActivePatterns(activePatterns.length ? activePatterns : divs.map(() => ""));
-        setPatternCssList(patternCssList.length ? patternCssList : divs.map(() => ""));
+        setActivePatterns((prev) => (prev.length ? prev : divs.map(() => "")));
+        setPatternCssList((prev) => (prev.length ? prev : divs.map(() => "")));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [previewHtml, setPatternsInput]);
 
     const handlePatternRemove = (index: number) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
+        const divs = Array.from(
+            doc.querySelectorAll("div[data-pattern]"),
+        ) as HTMLDivElement[];
         const targetDiv = divs[index];
         if (!targetDiv) return;
 
@@ -67,13 +69,17 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
 
         setPreviewHtml(doc.documentElement.innerHTML);
 
-        const n = [...activePatterns];
-        n[index] = "";
-        setActivePatterns(n);
+        setActivePatterns((prev) => {
+            const n = [...prev];
+            n[index] = "";
+            return n;
+        });
 
-        const c = [...patternCssList];
-        c[index] = "";
-        setPatternCssList(c);
+        setPatternCssList((prev) => {
+            const n = [...prev];
+            n[index] = "";
+            return n;
+        });
 
         const styleEl = document.getElementById(`pattern-style-${index}`);
         if (styleEl) styleEl.remove();
@@ -83,28 +89,51 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
         <>
             {patternsInput.length ? (
                 <>
-                    {patternsInput.map((data, patternIndex) => (
-                        <div className="pattern-block" key={patternIndex}>
-                            <h5>{data.name}</h5>
-                            <div className="btn-list">
-                                <button
-                                    className="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal-patterns"
-                                    onClick={() => setCurrentEditingIndex(patternIndex)}
-                                >
-                                    Selecionar padrão
-                                </button>
-                                <button
-                                    className="btn btn-danger"
-                                    disabled={!activePatterns[patternIndex]}
-                                    onClick={() => handlePatternRemove(patternIndex)}
-                                >
-                                    Remover padrão
-                                </button>
+                    {patternsInput.map((data, patternIndex) => {
+                        const hasActivePattern = Boolean(
+                            activePatterns[patternIndex],
+                        );
+                        const statusId = `pattern-status-${patternIndex}`;
+
+                        return (
+                            <div className="pattern-block" key={patternIndex}>
+                                <h5 id={`pattern-label-${patternIndex}`}>
+                                    {data.name}
+                                </h5>
+                                <p id={statusId} className="visually-hidden">
+                                    {hasActivePattern
+                                        ? `Padrão ativo: ${activePatterns[patternIndex]}`
+                                        : "Nenhum padrão selecionado"}
+                                </p>
+                                <div className="btn-list">
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-patterns"
+                                        onClick={() =>
+                                            setCurrentEditingIndex(patternIndex)
+                                        }
+                                        aria-label={`Selecionar padrão para ${data.name}`}
+                                        aria-describedby={statusId}
+                                    >
+                                        Selecionar padrão
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        disabled={!hasActivePattern}
+                                        onClick={() =>
+                                            handlePatternRemove(patternIndex)
+                                        }
+                                        aria-label={`Remover padrão de ${data.name}`}
+                                    >
+                                        Remover padrão
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
                     <ModalPatterns
                         previewCss={previewCss}

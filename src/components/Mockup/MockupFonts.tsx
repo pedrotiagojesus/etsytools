@@ -23,7 +23,8 @@ const MockupFonts = () => {
                     <li className="list-group-item" key={font}>
                         <h5>{font}</h5>
                         <div style={{ fontFamily: font }}>
-                            Whereas disregard and contempt for human rights have resulted
+                            Whereas disregard and contempt for human rights have
+                            resulted
                         </div>
                     </li>
                 ))}

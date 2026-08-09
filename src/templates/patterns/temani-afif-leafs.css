@@ -8,6 +8,7 @@
         radial-gradient(var(--s) at 100% 100%, var(--c)),
         radial-gradient(var(--s) at 100% 0, var(--c)) calc(3 * var(--s) / 2) 0,
         radial-gradient(var(--s) at 0 100%, var(--c)) calc(var(--s) / 2) 0,
-        radial-gradient(var(--s) at 0 0, var(--c)) calc(2 * var(--s)) 0 var(--c2);
+        radial-gradient(var(--s) at 0 0, var(--c)) calc(2 * var(--s)) 0
+            var(--c2);
     background-size: calc(3 * var(--s)) calc(5 * var(--s) / 2);
 }

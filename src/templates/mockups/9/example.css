@@ -3,9 +3,15 @@
     height: 2250px;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
-    background: linear-gradient(120deg, #ffecd2, #fcb69f);
     position: relative;
     font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(120deg, #ffecd2, #fcb69f);
 }
 
 .text-container {
@@ -16,6 +22,7 @@
     text-align: center;
     color: #222;
     text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
 }
 
 .text1 {
@@ -44,27 +51,32 @@
 }
 
 .image-1 {
-    top: 40%;
-    left: 20%;
-    transform: translate(-50%, -50%) rotate(-25deg);
+    top: 36%;
+    left: 16%;
+    width: 380px;
+    transform: translate(-50%, -50%) rotate(-19deg);
 }
 .image-2 {
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(10deg);
+    top: 28%;
+    left: 42%;
+    width: 430px;
+    transform: translate(-50%, -50%) rotate(11deg);
 }
 .image-3 {
-    top: 55%;
-    left: 40%;
-    transform: translate(-50%, -50%) rotate(-5deg);
+    top: 56%;
+    left: 30%;
+    width: 400px;
+    transform: translate(-50%, -50%) rotate(-7deg);
 }
 .image-4 {
-    top: 60%;
-    left: 65%;
-    transform: translate(-50%, -50%) rotate(20deg);
+    top: 62%;
+    left: 60%;
+    width: 450px;
+    transform: translate(-50%, -50%) rotate(16deg);
 }
 .image-5 {
-    top: 45%;
-    left: 80%;
-    transform: translate(-50%, -50%) rotate(-15deg);
+    top: 40%;
+    left: 76%;
+    width: 380px;
+    transform: translate(-50%, -50%) rotate(-11deg);
 }

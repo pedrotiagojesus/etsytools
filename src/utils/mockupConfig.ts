@@ -34,8 +34,13 @@ export const buildMockupConfig = (
     exportedAt: new Date().toISOString(),
 });
 
-export const downloadMockupConfig = (config: MockupConfig, filename = "mockup-config") => {
-    const blob = new Blob([JSON.stringify(config, null, 2)], { type: "application/json" });
+export const downloadMockupConfig = (
+    config: MockupConfig,
+    filename = "mockup-config",
+) => {
+    const blob = new Blob([JSON.stringify(config, null, 2)], {
+        type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -60,10 +65,17 @@ export const readMockupConfigFile = (file: File): Promise<MockupConfig> => {
                     throw new Error("Ficheiro inválido: não é um objeto JSON.");
                 }
                 if (parsed.version !== 1) {
-                    throw new Error(`Versão de configuração não suportada: ${parsed.version}`);
+                    throw new Error(
+                        `Versão de configuração não suportada: ${parsed.version}`,
+                    );
                 }
-                if (typeof parsed.previewHtml !== "string" || typeof parsed.previewCss !== "string") {
-                    throw new Error("Ficheiro inválido: faltam previewHtml/previewCss.");
+                if (
+                    typeof parsed.previewHtml !== "string" ||
+                    typeof parsed.previewCss !== "string"
+                ) {
+                    throw new Error(
+                        "Ficheiro inválido: faltam previewHtml/previewCss.",
+                    );
                 }
 
                 resolve({
@@ -72,11 +84,17 @@ export const readMockupConfigFile = (file: File): Promise<MockupConfig> => {
                     previewHtml: parsed.previewHtml,
                     previewCss: parsed.previewCss,
                     patternStyles: parsed.patternStyles ?? {},
-                    activePatterns: Array.isArray(parsed.activePatterns) ? parsed.activePatterns : [],
+                    activePatterns: Array.isArray(parsed.activePatterns)
+                        ? parsed.activePatterns
+                        : [],
                     exportedAt: parsed.exportedAt ?? "",
                 });
             } catch (err) {
-                reject(err instanceof Error ? err : new Error("Erro ao ler o ficheiro de configuração."));
+                reject(
+                    err instanceof Error
+                        ? err
+                        : new Error("Erro ao ler o ficheiro de configuração."),
+                );
             }
         };
 
