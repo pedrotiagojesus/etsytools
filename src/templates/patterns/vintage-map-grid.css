@@ -1,0 +1,11 @@
+.vintage-map-grid-pattern {
+    --s: 60px; /* controla o tamanho da grelha */
+    --c1: #f2e8d5; /* papel envelhecido */
+    --c2: #c9b896; /* linhas do grid, tom sépia */
+
+    background-image:
+        linear-gradient(var(--c2) 1px, transparent 1px), linear-gradient(90deg, var(--c2) 1px, transparent 1px);
+    background-size: var(--s) var(--s);
+    background-color: var(--c1);
+    opacity: 1;
+}

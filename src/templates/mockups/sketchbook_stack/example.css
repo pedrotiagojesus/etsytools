@@ -1,0 +1,137 @@
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    /* Fundo por defeito: mesmo visual do padrão "sketchbook-dot-grid",
+       para já ficar bonito antes de o utilizador escolher um padrão
+       explicitamente na aba "Padrões". */
+    background-image: radial-gradient(#cfc9bd 1.6px, transparent 1.8px);
+    background-size: 44px 44px;
+    background-color: #f7f5f0;
+}
+
+/* Vinheta suave, escurece os cantos para focar o centro da composição */
+.vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(30, 30, 20, 0.16) 100%
+    );
+    pointer-events: none;
+}
+
+/* Brilho suave atrás do título, dá destaque sem usar formas rígidas */
+.title-glow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    width: 1400px;
+    height: 700px;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0) 70%
+    );
+    pointer-events: none;
+}
+
+.text-container {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #1e293b;
+    z-index: 3;
+}
+
+.text1 {
+    font-family: "LuckiestGuy";
+    font-size: 320px;
+    letter-spacing: 0.02em;
+}
+.text2 {
+    font-size: 85px;
+    font-weight: 700;
+    font-family: "Lato", sans-serif;
+    color: #475569;
+}
+
+.badge {
+    position: absolute;
+    top: 10%;
+    right: 8%;
+    z-index: 3;
+    background: #dc2626;
+    color: #fff;
+    font-family: "Lato", sans-serif;
+    font-weight: 900;
+    font-size: 46px;
+    padding: 22px 40px;
+    border-radius: 100px;
+    transform: rotate(6deg);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.image {
+    width: 500px;
+    aspect-ratio: 595/842;
+    background-color: #fff;
+    border: 2px solid #e2e5e9;
+    position: absolute;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 12px 24px rgba(20, 25, 35, 0.2);
+    z-index: 2;
+}
+
+.image-1 { top: 58%; left: 41%; transform: translate(-50%, -50%) rotate(-3deg); z-index: 1; }
+.image-2 { top: 59%; left: 44%; transform: translate(-50%, -50%) rotate(-1deg); z-index: 2; }
+.image-3 { top: 60%; left: 47%; transform: translate(-50%, -50%) rotate(1deg); z-index: 3; }
+.image-4 { top: 61%; left: 50%; transform: translate(-50%, -50%) rotate(3deg); z-index: 4; }
+.image-5 { top: 62%; left: 53%; transform: translate(-50%, -50%) rotate(5deg); z-index: 5; }
+
+.pencil-single {
+    position: absolute;
+    top: 44%;
+    left: 58%;
+    width: 780px;
+    aspect-ratio: 2.6 / 1;
+    transform: translate(-50%, -50%) rotate(-18deg);
+    z-index: 6;
+    background-image: url("/images/props/pencil-single.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 14px 16px rgba(0, 0, 0, 0.3));
+}
+
+.pencils-set {
+    position: absolute;
+    bottom: -4%;
+    left: 2%;
+    width: 620px;
+    aspect-ratio: 2.3 / 1;
+    z-index: 6;
+    background-image: url("/images/props/pencils-set.png");
+    background-size: contain;
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.25));
+}

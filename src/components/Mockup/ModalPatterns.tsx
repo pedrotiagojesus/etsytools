@@ -1,11 +1,5 @@
-import {
-    useEffect,
-    useState,
-    lazy,
-    Suspense,
-    type Dispatch,
-    type SetStateAction,
-} from "react";
+import { useEffect, useState, lazy, Suspense, type Dispatch, type SetStateAction } from "react";
+import { createPortal } from "react-dom";
 import MockupEditor from "./MockupEditor";
 import injectPatternStyle from "../../utils/injectPatternStyle";
 
@@ -68,7 +62,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
             if (found) {
                 const scoped = found.css.replace(
                     new RegExp(`\\.${found.name}-pattern`, "g"),
-                    `.pattern-${editingIndex}`,
+                    `.pattern-${editingIndex}`
                 );
                 setSelectedPatternCss(scoped);
             } else {
@@ -84,9 +78,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(
-            doc.querySelectorAll("div[data-pattern]"),
-        ) as HTMLDivElement[];
+        const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
         const targetDiv = divs[index];
         if (!targetDiv) return;
 
@@ -98,10 +90,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
         targetDiv.classList.add(scopedClass);
         setPreviewHtml(doc.documentElement.innerHTML);
 
-        const scopedCss = pattern.css.replace(
-            new RegExp(`\\.${pattern.name}-pattern`, "g"),
-            `.${scopedClass}`,
-        );
+        const scopedCss = pattern.css.replace(new RegExp(`\\.${pattern.name}-pattern`, "g"), `.${scopedClass}`);
 
         injectPatternStyle(scopedCss, `pattern-style-${index}`);
 
@@ -121,7 +110,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
         setSelectedPatternCss(scopedCss);
     };
 
-    return (
+    const modalContent = (
         <div className="modal" id="modal-patterns">
             <div className="modal-dialog modal-fullscreen">
                 <div className="modal-content">
@@ -133,11 +122,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                         <div className="row main-row">
                             <div className="col-7 left-side">
                                 {isModalOpen && (
-                                    <Suspense
-                                        fallback={
-                                            <div>Carregando preview...</div>
-                                        }
-                                    >
+                                    <Suspense fallback={<div>Carregando preview...</div>}>
                                         <MockupPreview
                                             previewId="modal-pattern-preview"
                                             previewDisplayId="modal-pattern-display"
@@ -158,10 +143,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                                     n[editingIndex] = newCss;
                                                     return n;
                                                 });
-                                                injectPatternStyle(
-                                                    newCss,
-                                                    `pattern-style-${editingIndex}`,
-                                                );
+                                                injectPatternStyle(newCss, `pattern-style-${editingIndex}`);
                                             }
                                         }}
                                     />
@@ -174,25 +156,17 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                         {patterns.map((pattern, i) => (
                                             <div className="col-3" key={i}>
                                                 <button
+                                                title={pattern.name}
                                                     type="button"
                                                     className={`pattern-preview ${pattern.name}-pattern ${
-                                                        selectedPatternName ===
-                                                        pattern.name
-                                                            ? "active"
-                                                            : ""
+                                                        selectedPatternName === pattern.name ? "active" : ""
                                                     }`}
                                                     onClick={() =>
                                                         editingIndex !== null &&
-                                                        applyPatternToIndex(
-                                                            pattern,
-                                                            editingIndex,
-                                                        )
+                                                        applyPatternToIndex(pattern, editingIndex)
                                                     }
                                                     aria-label={`Aplicar padrão ${pattern.name}`}
-                                                    aria-pressed={
-                                                        selectedPatternName ===
-                                                        pattern.name
-                                                    }
+                                                    aria-pressed={selectedPatternName === pattern.name}
                                                 ></button>
                                             </div>
                                         ))}
@@ -203,11 +177,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                     </div>
 
                     <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            data-bs-dismiss="modal"
-                        >
+                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
                             Fechar
                         </button>
                     </div>
@@ -215,6 +185,8 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
             </div>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 };
 
 export default ModalPatterns;

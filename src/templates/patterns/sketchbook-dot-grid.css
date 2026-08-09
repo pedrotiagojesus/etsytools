@@ -1,0 +1,9 @@
+.sketchbook-dot-grid-pattern {
+  --s: 44px; /* controla o espaçamento dos pontos */
+  --c1: #f7f5f0; /* papel */
+  --c2: #cfc9bd; /* pontos */
+
+  background-image: radial-gradient(var(--c2) 1.6px, transparent 1.8px);
+  background-size: var(--s) var(--s);
+  background-color: var(--c1);
+}

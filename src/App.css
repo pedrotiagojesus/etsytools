@@ -1,10 +1,7 @@
-/* Page Transition Animations */
-
 .page-transition {
     animation-duration: 300ms;
     animation-timing-function: var(--ease-out);
     animation-fill-mode: both;
-    /* Performance optimization: use GPU acceleration */
     will-change: opacity;
 }
 
@@ -19,6 +16,5 @@
 /* Ensure smooth transitions */
 main {
     min-height: calc(100vh - 200px);
-    /* Promote to own layer for better performance */
     transform: translateZ(0);
 }

@@ -1,0 +1,168 @@
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #f4e9d8; /* fallback antes de aplicar um padrão */
+}
+
+/* Linhas de ação a irradiar do centro, clássico efeito de impacto de BD */
+.action-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: repeating-conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(255, 255, 255, 0.55) 0deg 4deg,
+        transparent 4deg 16deg
+    );
+    mix-blend-mode: screen;
+}
+
+/* Rebentamento em estrela atrás do título */
+.burst {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1600px;
+    height: 1600px;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background: #ffe600;
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        96% 24%,
+        74% 50%,
+        96% 76%,
+        61% 65%,
+        50% 100%,
+        39% 65%,
+        4% 76%,
+        26% 50%,
+        4% 24%,
+        39% 35%
+    );
+    border: 12px solid #1a1a1a;
+}
+
+/* Texto central */
+.text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+}
+
+.text1 {
+    font-family: "Impact", sans-serif;
+    font-size: 320px;
+    color: #ff0000;
+    -webkit-text-stroke: 8px #1a1a1a;
+    text-shadow:
+        6px 6px 0 #1a1a1a,
+        12px 12px 0 rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    display: block;
+}
+
+.text2 {
+    font-family: "Bungee", "Arial Black", sans-serif;
+    font-size: 95px;
+    color: #ffff00;
+    -webkit-text-stroke: 4px #1a1a1a;
+    text-shadow:
+        4px 4px 0 #1a1a1a,
+        8px 8px 0 rgba(0, 0, 0, 0.25);
+    display: inline-block;
+    margin-top: 20px;
+    transform: rotate(-3deg);
+}
+
+.image {
+    width: 420px;
+    aspect-ratio: 595/842;
+    position: absolute;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    border: 10px solid #1a1a1a;
+    box-shadow: 10px 10px 0 rgba(26, 26, 26, 0.85);
+    z-index: 1;
+}
+
+/* Explosão radial a partir do centro */
+.image:nth-child(2) {
+    top: 8%;
+    left: 10%;
+    width: 380px;
+    transform: rotate(-13deg);
+}
+.image:nth-child(3) {
+    top: 6%;
+    left: 38%;
+    width: 400px;
+    transform: rotate(6deg);
+}
+.image:nth-child(4) {
+    top: 9%;
+    left: 66%;
+    width: 380px;
+    transform: rotate(-8deg);
+}
+.image:nth-child(5) {
+    top: 30%;
+    left: 16%;
+    width: 420px;
+    transform: rotate(10deg);
+}
+.image:nth-child(6) {
+    top: 27%;
+    left: 74%;
+    width: 420px;
+    transform: rotate(9deg);
+}
+.image:nth-child(7) {
+    top: 58%;
+    left: 12%;
+    width: 400px;
+    transform: rotate(-9deg);
+}
+.image:nth-child(8) {
+    top: 61%;
+    left: 68%;
+    width: 400px;
+    transform: rotate(8deg);
+}
+.image:nth-child(9) {
+    top: 84%;
+    left: 24%;
+    width: 380px;
+    transform: rotate(-11deg);
+}
+.image:nth-child(10) {
+    top: 84%;
+    left: 58%;
+    width: 380px;
+    transform: rotate(10deg);
+}
+.image:nth-child(11) {
+    top: 46%;
+    left: 45%;
+    width: 200px;
+    transform: rotate(4deg);
+    z-index: 0;
+    opacity: 0.4;
+}

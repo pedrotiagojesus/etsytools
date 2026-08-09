@@ -1,0 +1,12 @@
+.comic-halftone-pattern {
+    --s: 26px; /* controla o tamanho dos pontos */
+    --c1: #f4e9d8; /* cor de fundo (papel) */
+    --c2: #1a1a1a; /* cor dos pontos */
+
+    background-image: radial-gradient(var(--c2) 22%, transparent 23%), radial-gradient(var(--c2) 22%, transparent 23%);
+    background-size: var(--s) var(--s);
+    background-position:
+        0 0,
+        calc(var(--s) / 2) calc(var(--s) / 2);
+    background-color: var(--c1);
+}

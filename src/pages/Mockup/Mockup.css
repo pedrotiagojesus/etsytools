@@ -149,7 +149,24 @@
 }
 
 #modal-patterns .preview-section {
+    position: relative;
     aspect-ratio: 4 / 2;
+    max-width: 100%;
+}
+
+#modal-patterns .preview-section .tools {
+    display: flex;
+    gap: var(--spacing-xs);
+    position: absolute;
+    right: var(--spacing-md);
+    z-index: 1;
+    top: var(--spacing-md);
+}
+
+#modal-patterns .preview-section .react-transform-wrapper {
+    background-color: var(--bs-gray-300);
+    width: 100%;
+    height: 100%;
 }
 
 #modal-patterns .pattern-editor {
@@ -158,17 +175,14 @@
 
 #modal-patterns .pattern-preview {
     border: 7px solid #ccc;
+    padding: 0;
+    appearance: none;
     overflow: hidden;
     cursor: pointer;
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s,
-        border-color 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     background-repeat: repeat;
     aspect-ratio: 1 / 1;
     width: 100%;
-    padding: 0;
-    appearance: none;
 }
 
 #modal-patterns .pattern-preview:hover {

@@ -1,0 +1,197 @@
+/* ========== MOCKUP DIGITAL E IMPRESSO ========== */
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #e8e8e8; /* fallback antes de aplicar um padrão */
+}
+
+/* Texto no topo central */
+.text-container {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #2b2b2b;
+    line-height: 1.15;
+    z-index: 3;
+}
+
+.text1 {
+    font-family: "PWPerspective", sans-serif;
+    font-size: 230px;
+    display: block;
+    letter-spacing: 0.05em;
+}
+.text2 {
+    font-size: 80px;
+    font-weight: 700;
+    color: #333;
+    display: block;
+}
+.text3 {
+    font-size: 48px;
+    font-weight: 500;
+    color: #777;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Etiqueta de produto digital */
+.badge {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background: #1e293b;
+    color: #fff;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    padding: 14px 32px;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+}
+
+/* Seta ligando tablet e papel */
+.link-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 120px;
+    color: rgba(43, 43, 43, 0.3);
+    z-index: 1;
+    font-weight: 700;
+}
+
+/* Tablet */
+.mockup.tablet {
+    width: 40%;
+    aspect-ratio: 3 / 4;
+    background: #111;
+    border-radius: 30px;
+    position: absolute;
+    top: 50%;
+    left: 18%;
+    transform: translateY(-30%);
+    box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    z-index: 2;
+}
+.tablet-notch {
+    position: absolute;
+    top: 1.4%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8%;
+    height: 1.2%;
+    border-radius: 10px;
+    background: #333;
+    z-index: 2;
+}
+.tablet-home {
+    position: absolute;
+    bottom: 1.6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid #444;
+}
+.mockup.tablet .screen {
+    width: 90%;
+    height: 88%;
+    margin: 6% 5% 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: inset 0 0 0 6px #f3f3f3;
+}
+
+/* Papel impresso, como página de bloco com argolas */
+.mockup.paper {
+    width: 38%;
+    aspect-ratio: 595 / 842;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    transform: translateY(-20%) rotate(6deg);
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+    border: 2px solid #ddd;
+    z-index: 2;
+}
+.paper-rings {
+    position: absolute;
+    top: -3%;
+    left: 6%;
+    width: 88%;
+    height: 6%;
+    background-image: repeating-radial-gradient(
+        circle at 6% 50%,
+        #999 0 4px,
+        transparent 5px
+    );
+    background-size: 12% 100%;
+    background-repeat: repeat-x;
+    z-index: 3;
+}
+.mockup.paper .page {
+    width: 94%;
+    height: 94%;
+    margin: 3%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Lápis de cor apoiado na página impressa */
+.pencil-2 {
+    position: absolute;
+    bottom: -6%;
+    right: -8%;
+    width: 34px;
+    height: 340px;
+    transform: rotate(-32deg);
+    z-index: 4;
+}
+.pencil-2::before {
+    content: "";
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 34px;
+    height: 290px;
+    background: repeating-linear-gradient(
+        90deg,
+        #dc2626 0 7px,
+        #b91c1c 7px 8.5px
+    );
+    border-radius: 4px;
+}
+.pencil-2::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+    border-bottom: 50px solid #fde68a;
+}
