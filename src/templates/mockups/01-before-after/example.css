@@ -1,0 +1,107 @@
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #f4f1ea;
+}
+
+/*
+ * Safe zone: o Etsy corta a imagem em quadrado (a partir do centro)
+ * para a miniatura da listagem/pesquisa. Numa tela 3000x2250, isso
+ * mostra apenas a faixa central de 2250x2250px (75% da largura).
+ * Todo o conteúdo importante fica dentro desta zona.
+ */
+.safe-zone {
+    position: absolute;
+    top: 0;
+    left: 12.5%;
+    width: 75%;
+    height: 100%;
+}
+
+.text-container {
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    z-index: 3;
+    color: #2b2b2b;
+}
+.text1 {
+    font-family: "PWPerspective";
+    font-size: clamp(90px, 12vw, 190px); /* encolhe automaticamente */
+    white-space: nowrap;
+    display: block;
+    letter-spacing: 0.03em;
+    background-color: #fff;
+    margin-bottom: 40px;
+    padding: 10px 40px;
+    width: fit-content;   /* em vez de esticar toda a largura */
+    margin-inline: auto;  /* mantém centrado */
+}
+.text2 {
+    background: #1e293b;
+    color: #fff;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-size: 42px;
+    padding: 14px 32px;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+}
+
+.split-divider {
+    position: absolute;
+    top: 25%;
+    bottom: 8%;
+    left: 50%;
+    width: 6px;
+    background: repeating-linear-gradient(180deg, #999 0 20px, transparent 20px 40px);
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.side {
+    position: absolute;
+    top: 25%;
+    bottom: 8%;
+    width: 46%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.side-left { left: 1%; }
+.side-right { right: 1%; }
+
+.image {
+    width: 100%;
+    flex: 1;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.info {
+    position: absolute;
+    bottom: 1%;
+    font-size: 70px;
+    color: #6b6b6b;
+    font-family: "Lato", sans-serif;
+    text-align: center;
+    width: 100%;
+    text-transform: uppercase;
+}

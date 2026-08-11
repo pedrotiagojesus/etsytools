@@ -31,7 +31,7 @@ interface Pattern {
 const Mockup = () => {
     const [mockupTemplate, setMockupTemplate] = useState<string[]>([]);
     const [mockupTemplateSelected, setMockupTemplateSelected] =
-        useState<string>("main");
+        useState<string>("01-before-after");
     const [previewHtml, setPreviewHtml] = useState("");
     const [previewCss, setPreviewCss] = useState("");
     const [images, setImages] = useState<{ name: string; bg: string | null }[]>(
