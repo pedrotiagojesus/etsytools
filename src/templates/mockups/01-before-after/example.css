@@ -11,97 +11,146 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background: #f4f1ea;
+    background: linear-gradient(135deg, #fb7185, #f97316);
+    overflow: hidden;
 }
 
-/*
- * Safe zone: o Etsy corta a imagem em quadrado (a partir do centro)
- * para a miniatura da listagem/pesquisa. Numa tela 3000x2250, isso
- * mostra apenas a faixa central de 2250x2250px (75% da largura).
- * Todo o conteúdo importante fica dentro desta zona.
- */
+.sunburst {
+    position: absolute;
+    top: 22%;
+    left: 50%;
+    width: 100%;
+    height: 200%;
+    transform: translate(-50%, -50%);
+    background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.12) 0deg 6deg, transparent 6deg 18deg);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.badge {
+    position: absolute;
+    top: 20%;
+    right: 1%;
+    z-index: 4;
+    background: #1e293b;
+    color: #fff;
+    font-family: "Lato", sans-serif;
+    font-weight: 900;
+    font-size: 44px;
+    padding: 20px 80px;
+    border-radius: 100px;
+    transform: rotate(6deg);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.badge::before {
+    content: "☀️";
+    font-size: 48px;
+}
+
 .safe-zone {
     position: absolute;
     top: 0;
     left: 12.5%;
     width: 75%;
     height: 100%;
-}
-
-.text-container {
-    position: absolute;
-    top: 6%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    text-align: center;
-    z-index: 3;
-    color: #2b2b2b;
-}
-.text1 {
-    font-family: "PWPerspective";
-    font-size: clamp(90px, 12vw, 190px); /* encolhe automaticamente */
-    white-space: nowrap;
-    display: block;
-    letter-spacing: 0.03em;
-    background-color: #fff;
-    margin-bottom: 40px;
-    padding: 10px 40px;
-    width: fit-content;   /* em vez de esticar toda a largura */
-    margin-inline: auto;  /* mantém centrado */
-}
-.text2 {
-    background: #1e293b;
-    color: #fff;
-    font-family: "Lato", sans-serif;
-    font-weight: 700;
-    font-size: 42px;
-    padding: 14px 32px;
-    border-radius: 100px;
-    letter-spacing: 0.03em;
-}
-
-.split-divider {
-    position: absolute;
-    top: 25%;
-    bottom: 8%;
-    left: 50%;
-    width: 6px;
-    background: repeating-linear-gradient(180deg, #999 0 20px, transparent 20px 40px);
-    transform: translateX(-50%);
-    z-index: 2;
-}
-
-.side {
-    position: absolute;
-    top: 25%;
-    bottom: 8%;
-    width: 46%;
+    padding: 100px 0;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    z-index: 2;
 }
-.side-left { left: 1%; }
-.side-right { right: 1%; }
+
+.text-container {
+    text-align: center;
+    z-index: 3;
+    flex-shrink: 0;
+    display: block;
+}
+
+.text1 {
+    font-family: "LuckiestGuy";
+    font-size: clamp(110px, 14vw, 220px);
+    white-space: nowrap;
+    display: block;
+    letter-spacing: 0.02em;
+    color: #fff7ed;
+    -webkit-text-stroke: 6px #7c2d12;
+    text-shadow:
+        6px 6px 0 #7c2d12,
+        12px 12px 24px rgba(0, 0, 0, 0.3);
+    margin-bottom: 30px;
+    line-height: 1;
+    white-space: normal;
+}
+.text2 {
+    background: #fef3c7;
+    color: #1e293b;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    padding: 16px 36px;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+    display: inline-block;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.images-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    min-height: 0;
+}
+
+.side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-left .image {
+    transform: rotate(-4deg);
+}
+.side-right .image {
+    transform: rotate(4deg);
+}
+
+.split-divider {
+    align-self: stretch;
+    width: 6px;
+    background: repeating-linear-gradient(180deg, #fff7ed 0 20px, transparent 20px 40px);
+    flex-shrink: 0;
+    opacity: 0.7;
+}
 
 .image {
-    width: 100%;
-    flex: 1;
+    width: 720px;
+    aspect-ratio: 595 / 842;
     background-color: #fff;
-    border: 2px solid #ddd;
+    border: 4px solid #fff;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
 
 .info {
-    position: absolute;
-    bottom: 1%;
-    font-size: 70px;
-    color: #6b6b6b;
+    font-size: 56px;
+    color: #fff7ed;
     font-family: "Lato", sans-serif;
+    font-weight: 700;
     text-align: center;
-    width: 100%;
     text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
