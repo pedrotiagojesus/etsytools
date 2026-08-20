@@ -7,7 +7,6 @@ import MockupImages from "./../../components/Mockup/MockupImages";
 import MockupPatterns from "./../../components/Mockup/MockupPatterns";
 import MockupFonts from "../../components/Mockup/MockupFonts";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import ModalEtsyPreview from "../../components/Mockup/ModalEtsyPreview";
 
 // CSS
 import "./Mockup.css";
@@ -146,7 +145,7 @@ const Mockup = () => {
     }, []);
 
     const handleDownload = async () => {
-        await downloadPng("preview-display");
+        await downloadPng("preview-display", "mockup", "jpeg");
     };
 
     const handleExportConfig = () => {
@@ -293,15 +292,6 @@ const Mockup = () => {
                     <button className="btn btn-transparent" type="button" onClick={handleDownload}>
                         Download
                     </button>
-                    <button
-                        className="btn btn-transparent"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal-etsy-preview"
-                        title="Simular listagem no Etsy"
-                    >
-                        <i className="bi bi-search" aria-hidden="true"></i> Simular no Etsy
-                    </button>
                 </div>
             </div>
 
@@ -353,7 +343,6 @@ const Mockup = () => {
                         </div>
                     </div>
                 </div>
-                <ModalEtsyPreview previewContentId="preview-display" />
             </div>
         </>
     );
