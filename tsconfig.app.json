@@ -8,7 +8,6 @@
         "types": ["vite/client"],
         "skipLibCheck": true,
 
-        /* Bundler mode */
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "verbatimModuleSyntax": true,
@@ -16,7 +15,18 @@
         "noEmit": true,
         "jsx": "react-jsx",
 
-        /* Linting */
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"],
+            "@components/*": ["src/components/*"],
+            "@pages/*": ["src/pages/*"],
+            "@utils/*": ["src/utils/*"],
+            "@hooks/*": ["src/hooks/*"],
+            "@contexts/*": ["src/contexts/*"],
+            "@assets/*": ["src/assets/*"],
+            "@templates/*": ["src/templates/*"]
+        },
+
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,

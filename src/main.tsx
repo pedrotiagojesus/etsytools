@@ -8,21 +8,21 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 // CSS
-import "./assets/css/bootstrap.min.css";
-import "./assets/css/theme.css";
+import "@assets/css/bootstrap.min.css";
+import "@assets/css/theme.css";
 
 // Fonts
-import "./assets/fonts/Lato/Lato.css";
+import "@assets/fonts/Lato/Lato.css";
 
 // Context
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { ToastProvider } from "./contexts/ToastContext";
+import { ThemeProvider } from "@contexts/ThemeContext";
+import { ToastProvider } from "@contexts/ToastContext";
 
 // Pages
 import App from "./App";
-import Calculator from "./pages/Calculator/Calculator";
-import GenerateProduct from "./pages/GenerateProduct/GenerateProduct";
-import Mockup from "./pages/Mockup/Mockup";
+import Calculator from "@pages/Calculator/Calculator";
+import GenerateProduct from "@pages/GenerateProduct/GenerateProduct";
+import Mockup from "@pages/Mockup/Mockup";
 
 const router = createBrowserRouter(
     [

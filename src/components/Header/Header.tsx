@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import { useTheme } from "../../hooks/useTheme";
+import { useTheme } from "@hooks/useTheme";
 
 // CSS
 import "./Header.css";

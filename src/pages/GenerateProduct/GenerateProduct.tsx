@@ -4,17 +4,17 @@ import { useState } from "react";
 import "./GenerateProduct.css";
 
 // Components
-import ImageUploader from "../../components/ImageUploader/ImageUploader";
-import ButtonSubmit from "../../components/ButtonSubmit/ButtonSubmit";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import Tooltip from "../../components/Tooltip/Tooltip";
-import ValidationFeedback from "../../components/ValidationFeedback/ValidationFeedback";
+import ImageUploader from "@components/ImageUploader/ImageUploader";
+import ButtonSubmit from "@components/ButtonSubmit/ButtonSubmit";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
+import Tooltip from "@components/Tooltip/Tooltip";
+import ValidationFeedback from "@components/ValidationFeedback/ValidationFeedback";
 
 // Hooks
-import { useToast } from "../../hooks/useToast";
+import { useToast } from "@hooks/useToast";
 
 // Utils
-import { validateImageFiles } from "../../utils/fileValidation";
+import { validateImageFiles } from "@utils/fileValidation";
 
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");

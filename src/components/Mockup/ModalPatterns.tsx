@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy, Suspense, type Dispatch, type SetStateAction } from "react";
 import { createPortal } from "react-dom";
 import MockupEditor from "./MockupEditor";
-import injectPatternStyle from "../../utils/injectPatternStyle";
+import injectPatternStyle from "@utils/injectPatternStyle";
 
 const MockupPreview = lazy(() => import("./MockupPreview"));
 

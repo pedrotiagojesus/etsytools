@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { resizeImageToBase64 } from "../../utils/resizeImage";
+import { resizeImageToBase64 } from "@utils/resizeImage";
 
 interface MockupImagesProps {
     previewHtml: string;

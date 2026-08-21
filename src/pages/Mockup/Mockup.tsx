@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 
 // Components
-import MockupPreview from "./../../components/Mockup/MockupPreview";
-import MockupEditor from "./../../components/Mockup/MockupEditor";
-import MockupImages from "./../../components/Mockup/MockupImages";
-import MockupPatterns from "./../../components/Mockup/MockupPatterns";
-import MockupFonts from "../../components/Mockup/MockupFonts";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import MockupPreview from "@components/Mockup/MockupPreview";
+import MockupEditor from "@components/Mockup/MockupEditor";
+import MockupImages from "@components/Mockup/MockupImages";
+import MockupPatterns from "@components/Mockup/MockupPatterns";
+import MockupFonts from "@components/Mockup/MockupFonts";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 
 // CSS
 import "./Mockup.css";
 
 // Utils
-import downloadPng from "../../utils/downloadFiles";
-import injectPatternStyle from "../../utils/injectPatternStyle";
-import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "../../utils/mockupConfig";
+import downloadPng from "@utils/downloadFiles";
+import injectPatternStyle from "@utils/injectPatternStyle";
+import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockupConfig";
 
 // Hooks
-import { useToast } from "../../hooks/useToast";
+import { useToast } from "@hooks/useToast";
 
 interface Pattern {
     name: string;

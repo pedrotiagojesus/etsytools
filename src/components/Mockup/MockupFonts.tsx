@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listAvailableFonts, loadFont } from "../../utils/loadFonts";
+import { listAvailableFonts, loadFont } from "@utils/loadFonts";
 
 const MockupFonts = () => {
     const [fontList, setFontList] = useState<string[]>([]);
