@@ -9,6 +9,7 @@ import ButtonSubmit from "@components/ButtonSubmit/ButtonSubmit";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import Tooltip from "@components/Tooltip/Tooltip";
 import ValidationFeedback from "@components/ValidationFeedback/ValidationFeedback";
+import EtsySeoPanel from "@components/GenerateProduct/EtsySeoPanel";
 
 // Hooks
 import { useToast } from "@hooks/useToast";
@@ -338,6 +339,8 @@ const GenerateProduct = () => {
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                     </div>
+
+                    <EtsySeoPanel theme={title} pageCount={images.length} />
 
                     <ButtonSubmit
                         disabled={btnSumbit.disabled}
