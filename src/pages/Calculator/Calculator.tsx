@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useMemo, useState } from "react";
 import Tooltip from "@components/Tooltip/Tooltip";
 
 // CSS
@@ -19,31 +19,15 @@ function Calculator() {
         paymentProcessing: 0,
     });
 
-    const [profitMargin, setProfitMargin] = useState(0);
-
     const [precoVenda, setPrecoVenda] = useState<number>(0);
-    const [precoComDesconto, setPrecoComDesconto] = useState<number>(0);
     const [desconto, setDesconto] = useState<number>(0);
 
-    const debounceTimer = useRef<number | null>(null);
-
-    useEffect(() => {
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-        }
-
-        debounceTimer.current = window.setTimeout(() => {
-            const result = calculateProfit(precoVenda, desconto, rate);
-            setProfitMargin(result.profit);
-            setPrecoComDesconto(result.precoComDesconto);
-        }, 200);
-
-        return () => {
-            if (debounceTimer.current) {
-                clearTimeout(debounceTimer.current);
-            }
-        };
-    }, [precoVenda, desconto, rate]);
+    // Cálculo local e síncrono (sem I/O) — não há motivo para debounce,
+    // atualiza a cada tecla via useMemo.
+    const { profit: profitMargin, precoComDesconto } = useMemo(
+        () => calculateProfit(precoVenda, desconto, rate),
+        [precoVenda, desconto, rate],
+    );
 
     return (
         <div id="calculator-page">

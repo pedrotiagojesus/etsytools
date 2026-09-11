@@ -1,24 +1,11 @@
-import { createContext, useReducer } from "react";
+import { useReducer } from "react";
 import type { ReactNode } from "react";
-
-export interface Toast {
-    id: string;
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-    duration: number;
-}
-
-interface ToastContextType {
-    toasts: Toast[];
-    addToast: (message: string, type: Toast["type"], duration?: number) => void;
-    removeToast: (id: string) => void;
-}
+import { ToastContext } from "@hooks/useToast";
+import type { Toast } from "@hooks/useToast";
 
 type ToastAction =
     | { type: "ADD_TOAST"; payload: Toast }
     | { type: "REMOVE_TOAST"; payload: string };
-
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 const toastReducer = (state: Toast[], action: ToastAction): Toast[] => {
     switch (action.type) {
@@ -71,5 +58,3 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
         </ToastContext.Provider>
     );
 };
-
-export default ToastContext;

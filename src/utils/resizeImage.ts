@@ -6,7 +6,6 @@ export const resizeImageToBase64 = (
     file: File,
     maxWidth = 1200,
     maxHeight = 1200,
-    quality = 0.85,
 ): Promise<string> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -40,7 +39,7 @@ export const resizeImageToBase64 = (
 
                 ctx.drawImage(img, 0, 0, width, height);
 
-                const dataUrl = canvas.toDataURL("image/png", quality);
+                const dataUrl = canvas.toDataURL("image/png");
                 resolve(dataUrl);
             };
 

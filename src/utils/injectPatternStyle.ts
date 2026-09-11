@@ -16,7 +16,7 @@ const injectPatternStyle = (css: string, id: string) => {
     // Cria novo elemento <style>
     const style = document.createElement("style");
     style.id = id;
-    style.innerHTML = css;
+    style.textContent = css;
     document.head.appendChild(style);
 };
 

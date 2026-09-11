@@ -1,11 +1,6 @@
 import Toast from "./Toast";
 import "./ToastContainer.css";
-
-export interface ToastData {
-    id: string;
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-}
+import type { Toast as ToastData } from "@hooks/useToast";
 
 interface ToastContainerProps {
     toasts: ToastData[];

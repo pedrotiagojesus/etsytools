@@ -1,5 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 
 // Components
 import Header from "@components/Header/Header";

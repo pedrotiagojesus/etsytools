@@ -1,4 +1,5 @@
-import { StrictMode } from "react";
+import { lazy, StrictMode, Suspense } from "react";
+import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -18,11 +19,26 @@ import "@assets/fonts/Lato/Lato.css";
 import { ThemeProvider } from "@contexts/ThemeContext";
 import { ToastProvider } from "@contexts/ToastContext";
 
+// Components
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
+
 // Pages
 import App from "./App";
-import Calculator from "@pages/Calculator/Calculator";
-import GenerateProduct from "@pages/GenerateProduct/GenerateProduct";
-import Mockup from "@pages/Mockup/Mockup";
+
+// Cada página fica no seu próprio chunk, carregado só quando visitado — o
+// Mockup sozinho arrasta react-ace, dnd-kit e html-to-image, que as outras
+// páginas não precisam.
+const Calculator = lazy(() => import("@pages/Calculator/Calculator"));
+const GenerateProduct = lazy(
+    () => import("@pages/GenerateProduct/GenerateProduct"),
+);
+const Mockup = lazy(() => import("@pages/Mockup/Mockup"));
+
+const withSuspense = (element: ReactNode) => (
+    <Suspense fallback={<LoadingSpinner overlay size="lg" />}>
+        {element}
+    </Suspense>
+);
 
 const router = createBrowserRouter(
     [
@@ -32,28 +48,20 @@ const router = createBrowserRouter(
             children: [
                 {
                     index: true,
-                    element: <Calculator />,
+                    element: withSuspense(<Calculator />),
                 },
                 {
                     path: "/calculator",
-                    element: <Calculator />,
+                    element: withSuspense(<Calculator />),
                 },
                 {
                     path: "/generate-product",
-                    element: <GenerateProduct />,
+                    element: withSuspense(<GenerateProduct />),
                 },
                 {
                     path: "/mockup",
-                    element: <Mockup />,
+                    element: withSuspense(<Mockup />),
                 },
-                // {
-                //     path: "/midjourney-prompt",
-                //     element: <MidjourneyPrompt />,
-                // },
-                // {
-                //     path: "/test",
-                //     element: <Test />,
-                // },
             ],
         },
     ],

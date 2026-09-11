@@ -15,31 +15,26 @@ const downloadHtmlAsImage = async (
     const element = document.getElementById(elementId);
 
     if (!element) {
-        console.error(`Elemento com ID "${elementId}" não encontrado.`);
-        return;
+        throw new Error(`Elemento com ID "${elementId}" não encontrado.`);
     }
 
-    try {
-        let dataUrl: string;
+    let dataUrl: string;
 
-        if (format === "jpeg") {
-            dataUrl = await toJpeg(element, {
-                quality: 0.95,
-                backgroundColor: "#ffffff", // fundo branco
-            });
-        } else {
-            dataUrl = await toPng(element, {
-                backgroundColor: "#ffffff",
-            });
-        }
-
-        const link = document.createElement("a");
-        link.download = `${fileName}.${format}`;
-        link.href = dataUrl;
-        link.click();
-    } catch (err) {
-        console.error("Erro ao gerar imagem:", err);
+    if (format === "jpeg") {
+        dataUrl = await toJpeg(element, {
+            quality: 0.95,
+            backgroundColor: "#ffffff", // fundo branco
+        });
+    } else {
+        dataUrl = await toPng(element, {
+            backgroundColor: "#ffffff",
+        });
     }
+
+    const link = document.createElement("a");
+    link.download = `${fileName}.${format}`;
+    link.href = dataUrl;
+    link.click();
 };
 
 export default downloadHtmlAsImage;

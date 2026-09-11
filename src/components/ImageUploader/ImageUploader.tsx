@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     DndContext,
     closestCenter,
@@ -96,6 +96,8 @@ function SortableImage({
 
 const ImageUploader: React.FC<Props> = ({ onChange, renderOverlay }) => {
     const [images, setImages] = useState<ImageItem[]>([]);
+    const imagesRef = useRef(images);
+    imagesRef.current = images;
 
     const sensors = useSensors(useSensor(PointerSensor));
 
@@ -141,12 +143,14 @@ const ImageUploader: React.FC<Props> = ({ onChange, renderOverlay }) => {
     };
 
     // Liberta todos os object URLs ao desmontar o componente
-    // (ex: navegação para outra página com imagens ainda por remover)
+    // (ex: navegação para outra página com imagens ainda por remover).
+    // Usa imagesRef em vez de `images` porque este efeito só corre no
+    // mount/unmount — sem a ref, o cleanup ficaria preso ao array vazio
+    // da primeira renderização e nunca libertaria nada.
     useEffect(() => {
         return () => {
-            images.forEach((img) => URL.revokeObjectURL(img.preview));
+            imagesRef.current.forEach((img) => URL.revokeObjectURL(img.preview));
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

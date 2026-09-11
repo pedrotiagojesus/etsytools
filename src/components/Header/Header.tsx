@@ -106,27 +106,6 @@ const Header = () => {
                                 <span className="nav-text">Mockup</span>
                             </NavLink>
                         </li>
-                        {/*
-                        <li className="nav-item">
-                            <NavLink to="/image-fixer" className="nav-link">
-                                Image Fixer
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/generate-pdf" className="nav-link">
-                                Gerador de PDF
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/convert-svg" className="nav-link">
-                                Conversor para SVG
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/midjourney-prompt" className="nav-link">
-                                Midjourney Prompt
-                            </NavLink>
-                        </li> */}
                     </ul>
                 </div>
             </div>
