@@ -7,19 +7,27 @@ import "ace-builds/src-noconflict/mode-css";
 interface MockupEditorProps {
     mode: "html" | "css";
     preview: string;
-    setPreview: (v: string) => void;
+    onChange: (v: string) => void;
     debounceMs?: number;
 }
 
 const MockupEditor: React.FC<MockupEditorProps> = ({
     mode,
     preview,
-    setPreview,
+    onChange,
     debounceMs = 300,
 }) => {
     const [localValue, setLocalValue] = useState(preview);
     const debounceTimer = useRef<number | null>(null);
     const isInternalChange = useRef(false);
+
+    // Refs para o cleanup de desmontagem (abaixo) ter sempre acesso ao valor
+    // e ao onChange mais recentes, em vez de ficar preso aos da primeira
+    // renderização (o efeito só corre no mount/unmount, de propósito).
+    const localValueRef = useRef(localValue);
+    const onChangeRef = useRef(onChange);
+    localValueRef.current = localValue;
+    onChangeRef.current = onChange;
 
     // Sincroniza o valor local quando o preview muda por fora
     // (ex: trocar de template, upload de imagem, seleção de padrão)
@@ -37,9 +45,16 @@ const MockupEditor: React.FC<MockupEditorProps> = ({
             clearTimeout(debounceTimer.current);
         }
 
+        // Fecha sobre o `onChange` desta renderização (o alvo — ex: o slide
+        // ativo — no momento em que se escreveu), não a ref sempre
+        // atualizada usada no cleanup abaixo. Sem isto, trocar de slide
+        // dentro da janela do debounce faz a edição escrever no slide
+        // errado (o que ficou ativo entretanto), não naquele onde foi feita.
+        const targetOnChange = onChange;
+
         debounceTimer.current = window.setTimeout(() => {
             isInternalChange.current = true;
-            setPreview(value); // só aqui reprocessa DOMParser/preview
+            targetOnChange(value); // só aqui reprocessa DOMParser/preview
         }, debounceMs);
     };
 
@@ -49,7 +64,7 @@ const MockupEditor: React.FC<MockupEditorProps> = ({
             if (debounceTimer.current) {
                 clearTimeout(debounceTimer.current);
                 isInternalChange.current = true;
-                setPreview(localValue);
+                onChangeRef.current(localValueRef.current);
             }
         };
     }, []);

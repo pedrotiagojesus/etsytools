@@ -1,194 +1,40 @@
-import { useEffect, useRef, useState } from "react";
-
 // Components
 import MockupPreview from "@components/Mockup/MockupPreview";
 import MockupEditor from "@components/Mockup/MockupEditor";
 import MockupImages from "@components/Mockup/MockupImages";
 import MockupPatterns from "@components/Mockup/MockupPatterns";
 import MockupFonts from "@components/Mockup/MockupFonts";
+import MockupSlides from "@components/Mockup/MockupSlides";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 
 // CSS
 import "./Mockup.css";
 
-// Utils
-import downloadPng from "@utils/downloadFiles";
-import injectPatternStyle from "@utils/injectPatternStyle";
-import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockupConfig";
-
 // Hooks
-import { useToast } from "@hooks/useToast";
-
-interface Pattern {
-    name: string;
-    css: string;
-}
+import { useMockupEditor } from "@hooks/useMockupEditor";
 
 const Mockup = () => {
-    const [mockupTemplate, setMockupTemplate] = useState<string[]>([]);
-    const [mockupTemplateSelected, setMockupTemplateSelected] = useState<string>("01-before-after");
-    const [previewHtml, setPreviewHtml] = useState("");
-    const [previewCss, setPreviewCss] = useState("");
-    const [images, setImages] = useState<{ name: string; bg: string | null }[]>([]);
-    const [patternsInput, setPatternsInput] = useState<{ name: string }[]>([]);
-    const [patterns, setPatterns] = useState<Pattern[]>([]);
-    const [loadingTemplate, setLoadingTemplate] = useState(false);
+    const editor = useMockupEditor();
+    const {
+        activeSlideId,
+        mockupTemplateSelected,
+        mockupTemplate,
+        setMockupTemplateSelected,
+        images,
+        patternsInput,
+        importInputRef,
+        loadingTemplate,
+        previewHtml,
+        previewCss,
+        handleImportClick,
 
-    const [activePatterns, setActivePatterns] = useState<string[]>([]);
-    const [patternCssList, setPatternCssList] = useState<string[]>([]);
-    const [currentEditingIndex, setCurrentEditingIndex] = useState<number | null>(null);
+        updateHtml,
+        updateCss,
 
-    const skipTemplateLoad = useRef(false);
-    const importInputRef = useRef<HTMLInputElement>(null);
-
-    const { showError, showSuccess } = useToast();
-
-    useEffect(() => {
-        if (skipTemplateLoad.current) {
-            skipTemplateLoad.current = false;
-            return;
-        }
-
-        (async () => {
-            setLoadingTemplate(true);
-
-            try {
-                const mockupTemplateFiles = import.meta.glob("/src/templates/mockups/*/*", { as: "raw" });
-
-                for (const path in mockupTemplateFiles) {
-                    let htmlLoaded = false;
-                    let cssLoaded = false;
-
-                    if (path.includes(`/src/templates/mockups/${mockupTemplateSelected}/`)) {
-                        const loader = mockupTemplateFiles[path];
-                        const content = await loader();
-                        const extension = path.split("/")?.pop()?.split(".").pop() || "unknown";
-
-                        if (extension === "html" && !htmlLoaded) {
-                            setPreviewHtml(content);
-                            htmlLoaded = true;
-                        }
-
-                        if (extension === "css" && !cssLoaded) {
-                            setPreviewCss(content);
-                            cssLoaded = true;
-                        }
-
-                        if (htmlLoaded && cssLoaded) break;
-                    }
-                }
-
-                setActivePatterns([]);
-                setPatternCssList([]);
-            } catch (err) {
-                console.error(`Erro ao carregar o template "${mockupTemplateSelected}":`, err);
-                setPreviewHtml("<p>Erro ao carregar HTML do mockup.</p>");
-                setPreviewCss("body { background: red; }");
-                showError(`Erro ao carregar o template "${mockupTemplateSelected}"`);
-            } finally {
-                setLoadingTemplate(false);
-            }
-        })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mockupTemplateSelected]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const files = import.meta.glob("/src/templates/mockups/*/*");
-                const folders = new Set<string>();
-
-                Object.keys(files).forEach((path) => {
-                    const parts = path.split("/");
-                    const folder = parts[parts.length - 2];
-                    folders.add(folder);
-                });
-
-                setMockupTemplate(Array.from(folders).sort());
-
-                const cssFiles = import.meta.glob("/src/templates/patterns/*.css", { as: "raw" });
-
-                const loadedPatterns: Pattern[] = [];
-                const loadedPatternNames = new Set<string>();
-
-                for (const path in cssFiles) {
-                    const loader = cssFiles[path];
-                    const cssContent = await loader();
-                    const name = path.split("/").pop()?.replace(".css", "") || "unknown";
-
-                    if (!loadedPatternNames.has(name)) {
-                        if (!document.querySelector(`link[data-pattern="${name}"]`)) {
-                            const blob = new Blob([cssContent], {
-                                type: "text/css",
-                            });
-                            const href = URL.createObjectURL(blob);
-
-                            const link = document.createElement("link");
-                            link.rel = "stylesheet";
-                            link.href = href;
-                            link.setAttribute("data-pattern", name);
-                            document.head.appendChild(link);
-                        }
-
-                        loadedPatterns.push({ name, css: cssContent });
-                        loadedPatternNames.add(name);
-                    }
-                }
-
-                setPatterns(loadedPatterns);
-            } catch (err) {
-                console.error("Erro ao carregar template:", err);
-                showError("Erro ao carregar templates e padrões");
-            }
-        })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleDownload = async () => {
-        await downloadPng("preview-display", "mockup", "jpeg");
-    };
-
-    const handleExportConfig = () => {
-        try {
-            const config = buildMockupConfig(mockupTemplateSelected, previewHtml, previewCss, activePatterns);
-            downloadMockupConfig(config, `mockup-${mockupTemplateSelected}`);
-            showSuccess("Configuração exportada com sucesso!");
-        } catch (err) {
-            console.error(err);
-            showError("Erro ao exportar a configuração.");
-        }
-    };
-
-    const handleImportClick = () => {
-        importInputRef.current?.click();
-    };
-
-    const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        e.target.value = "";
-        if (!file) return;
-
-        try {
-            const config = await readMockupConfigFile(file);
-
-            skipTemplateLoad.current = true;
-            setMockupTemplateSelected(config.template);
-            setPreviewHtml(config.previewHtml);
-            setPreviewCss(config.previewCss);
-            setActivePatterns(config.activePatterns);
-
-            Object.entries(config.patternStyles).forEach(([id, css]) => {
-                injectPatternStyle(css, id);
-            });
-
-            setPatternCssList(config.activePatterns.map((_, i) => config.patternStyles[`pattern-style-${i}`] ?? ""));
-
-            showSuccess("Configuração importada com sucesso!");
-        } catch (err) {
-            console.error(err);
-            showError(err instanceof Error ? err.message : "Erro ao importar a configuração.");
-        }
-    };
+        exportConfig,
+        downloadPreview,
+        importConfig,
+    } = editor;
 
     return (
         <>
@@ -222,6 +68,15 @@ const Mockup = () => {
                     <button
                         className="btn btn-transparent active"
                         data-bs-toggle="tab"
+                        data-bs-target="#slides"
+                        type="button"
+                        role="tab"
+                    >
+                        Ficha do Produto
+                    </button>
+                    <button
+                        className="btn btn-transparent"
+                        data-bs-toggle="tab"
                         data-bs-target="#html"
                         type="button"
                         role="tab"
@@ -247,6 +102,7 @@ const Mockup = () => {
                         Imagens
                     </button>
                     <button
+                        id="pattern-tab-trigger"
                         className={`btn btn-transparent ${!patternsInput.length ? "disabled" : ""}`}
                         data-bs-toggle="tab"
                         data-bs-target="#pattern"
@@ -268,7 +124,7 @@ const Mockup = () => {
                     <button
                         className="btn btn-transparent"
                         type="button"
-                        onClick={handleExportConfig}
+                        onClick={exportConfig}
                         title="Exportar configuração"
                     >
                         <i className="bi bi-download" aria-hidden="true"></i> Exportar
@@ -286,10 +142,10 @@ const Mockup = () => {
                         type="file"
                         accept="application/json"
                         style={{ display: "none" }}
-                        onChange={handleImportFile}
+                        onChange={importConfig}
                     />
 
-                    <button className="btn btn-transparent" type="button" onClick={handleDownload}>
+                    <button className="btn btn-transparent" type="button" onClick={downloadPreview}>
                         Download
                     </button>
                 </div>
@@ -307,35 +163,20 @@ const Mockup = () => {
 
                     <div className="col-xl-5 h-100">
                         <div className="tab-content h-100">
-                            <div className="tab-pane h-100 overflow-auto show active" id="html" role="tabpanel">
-                                <MockupEditor mode="html" preview={previewHtml} setPreview={setPreviewHtml} />
+                            <div className="tab-pane h-100 overflow-auto show active" id="slides" role="tabpanel">
+                                <MockupSlides editor={editor} />
+                            </div>
+                            <div className="tab-pane h-100 overflow-auto" id="html" role="tabpanel">
+                                <MockupEditor key={`html-${activeSlideId}`} mode="html" preview={previewHtml} onChange={updateHtml} />
                             </div>
                             <div className="tab-pane h-100 overflow-auto" id="css" role="tabpanel">
-                                <MockupEditor mode="css" preview={previewCss} setPreview={setPreviewCss} />
+                                <MockupEditor key={`css-${activeSlideId}`} mode="css" preview={previewCss} onChange={updateCss} />
                             </div>
                             <div className="tab-pane h-100 overflow-auto" id="image" role="tabpanel">
-                                <MockupImages
-                                    images={images}
-                                    setImages={setImages}
-                                    previewHtml={previewHtml}
-                                    setPreviewHtml={setPreviewHtml}
-                                />
+                                <MockupImages editor={editor} />
                             </div>
                             <div className="tab-pane h-100 overflow-auto" id="pattern" role="tabpanel">
-                                <MockupPatterns
-                                    previewCss={previewCss}
-                                    previewHtml={previewHtml}
-                                    setPreviewHtml={setPreviewHtml}
-                                    setPatternsInput={setPatternsInput}
-                                    patternsInput={patternsInput}
-                                    patterns={patterns}
-                                    activePatterns={activePatterns}
-                                    setActivePatterns={setActivePatterns}
-                                    patternCssList={patternCssList}
-                                    setPatternCssList={setPatternCssList}
-                                    currentEditingIndex={currentEditingIndex}
-                                    setCurrentEditingIndex={setCurrentEditingIndex}
-                                />
+                                <MockupPatterns editor={editor} />
                             </div>
                             <div className="tab-pane h-100 overflow-auto" id="fonts" role="tabpanel">
                                 <MockupFonts />

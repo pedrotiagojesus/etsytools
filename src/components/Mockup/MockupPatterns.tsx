@@ -1,40 +1,39 @@
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useEffect } from "react";
 import ModalPatterns from "./ModalPatterns";
-
-interface Pattern {
-    name: string;
-    css: string;
-}
+import injectPatternStyle from "@utils/injectPatternStyle";
+import type { MockupEditorState } from "@hooks/useMockupEditor";
 
 interface MockupPatternsProps {
-    previewCss: string;
-    previewHtml: string;
-    setPreviewHtml: (html: string) => void;
-    patternsInput: { name: string }[];
-    setPatternsInput: (patterns: { name: string }[]) => void;
-    patterns: Pattern[];
-    activePatterns: string[];
-    setActivePatterns: Dispatch<SetStateAction<string[]>>;
-    patternCssList: string[];
-    setPatternCssList: Dispatch<SetStateAction<string[]>>;
-    currentEditingIndex: number | null;
-    setCurrentEditingIndex: (index: number | null) => void;
+    editor: MockupEditorState;
 }
 
-const MockupPatterns: React.FC<MockupPatternsProps> = ({
-    previewCss,
-    previewHtml,
-    setPreviewHtml,
-    patternsInput,
-    setPatternsInput,
-    patterns,
-    activePatterns,
-    setActivePatterns,
-    patternCssList,
-    setPatternCssList,
-    currentEditingIndex,
-    setCurrentEditingIndex,
-}) => {
+const MockupPatterns: React.FC<MockupPatternsProps> = ({ editor }) => {
+    const {
+        previewHtml,
+        updateHtml: setPreviewHtml,
+        patternsInput,
+        setPatternsInput,
+        loadPatterns,
+        activePatterns,
+        setActivePatterns,
+        patternCssList,
+        setPatternCssList,
+        currentEditingIndex,
+        setCurrentEditingIndex,
+    } = editor;
+
+    // O catálogo de padrões só é carregado quando esta tab é aberta pela
+    // primeira vez (não no mount da página Mockup) — evita ~200 pedidos
+    // de rede para quem nunca chega a usar padrões. Escuta o evento do
+    // Bootstrap (não só o onClick do botão) para cobrir também a troca de
+    // tab por teclado.
+    useEffect(() => {
+        const trigger = document.getElementById("pattern-tab-trigger");
+        const handleShown = () => loadPatterns();
+        trigger?.addEventListener("shown.bs.tab", handleShown);
+        return () => trigger?.removeEventListener("shown.bs.tab", handleShown);
+    }, [loadPatterns]);
+
     useEffect(() => {
         if (!previewHtml) return;
 
@@ -53,6 +52,22 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
         setPatternCssList((prev) => (prev.length ? prev : divs.map(() => "")));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [previewHtml, setPatternsInput]);
+
+    // Os <style id="pattern-style-N"> injetados são globais ao document,
+    // mas patternCssList é por slide — ao trocar de slide ativo (ou depois
+    // de importar uma configuração), previewHtml muda e é preciso
+    // reinjetar os estilos desse slide, ou o preview mostraria os padrões
+    // do slide anterior (ou nenhum) até se voltar a editar um padrão.
+    // patternCssList não entra nas deps de propósito: muda no mesmo
+    // "commit" que previewHtml quando se troca de slide (ambos vêm do
+    // mesmo slide ativo), por isso já está atualizado quando este efeito
+    // corre a seguir a uma troca de slide.
+    useEffect(() => {
+        patternCssList.forEach((css, index) => {
+            if (css) injectPatternStyle(css, `pattern-style-${index}`);
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [previewHtml]);
 
     const handlePatternRemove = (index: number) => {
         const parser = new DOMParser();
@@ -135,17 +150,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
                         );
                     })}
 
-                    <ModalPatterns
-                        previewCss={previewCss}
-                        previewHtml={previewHtml}
-                        setPreviewHtml={setPreviewHtml}
-                        patterns={patterns}
-                        editingIndex={currentEditingIndex}
-                        activePatterns={activePatterns}
-                        setActivePatterns={setActivePatterns}
-                        patternCssList={patternCssList}
-                        setPatternCssList={setPatternCssList}
-                    />
+                    <ModalPatterns editor={editor} editingIndex={currentEditingIndex} />
                 </>
             ) : (
                 <p className="text-muted">Nenhum padrão encontrado.</p>

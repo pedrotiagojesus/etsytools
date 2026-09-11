@@ -1,38 +1,29 @@
-import { useEffect, useState, lazy, Suspense, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { createPortal } from "react-dom";
 import MockupEditor from "./MockupEditor";
 import injectPatternStyle from "@utils/injectPatternStyle";
+import type { MockupEditorState } from "@hooks/useMockupEditor";
 
 const MockupPreview = lazy(() => import("./MockupPreview"));
 
-interface Pattern {
-    name: string;
-    css: string;
-}
-
 interface ModalPatternsProps {
-    previewCss: string;
-    previewHtml: string;
-    setPreviewHtml: (html: string) => void;
-    patterns: Pattern[];
+    editor: MockupEditorState;
     editingIndex: number | null;
-    activePatterns: string[];
-    setActivePatterns: Dispatch<SetStateAction<string[]>>;
-    patternCssList: string[];
-    setPatternCssList: Dispatch<SetStateAction<string[]>>;
 }
 
-const ModalPatterns: React.FC<ModalPatternsProps> = ({
-    previewCss,
-    previewHtml,
-    setPreviewHtml,
-    patterns,
-    editingIndex,
-    activePatterns,
-    setActivePatterns,
-    patternCssList,
-    setPatternCssList,
-}) => {
+const ModalPatterns: React.FC<ModalPatternsProps> = ({ editor, editingIndex }) => {
+    const {
+        activeSlideId,
+        previewCss,
+        previewHtml,
+        updateHtml: setPreviewHtml,
+        patterns,
+        activePatterns,
+        setActivePatterns,
+        patternCssList,
+        setPatternCssList,
+    } = editor;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPatternCss, setSelectedPatternCss] = useState<string>("");
     const [selectedPatternName, setSelectedPatternName] = useState<string>("");
@@ -73,7 +64,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
         }
     }, [isModalOpen, editingIndex, activePatterns, patternCssList, patterns]);
 
-    const applyPatternToIndex = (pattern: Pattern, index: number) => {
+    const applyPatternToIndex = (pattern: MockupEditorState["patterns"][number], index: number) => {
         if (index === null) return;
 
         const parser = new DOMParser();
@@ -133,9 +124,10 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
                                 )}
                                 <div className="pattern-editor">
                                     <MockupEditor
+                                        key={`pattern-${activeSlideId}-${editingIndex}`}
                                         mode="css"
                                         preview={selectedPatternCss ?? ""}
-                                        setPreview={(newCss) => {
+                                        onChange={(newCss) => {
                                             setSelectedPatternCss(newCss);
                                             if (editingIndex !== null) {
                                                 setPatternCssList((prev) => {

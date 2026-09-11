@@ -1,6 +1,6 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useEffect, useRef, useState } from "react";
-import { centerContent } from "@utils/centerMockuptPreview";
+import { centerContent } from "@utils/centerMockupPreview";
 import { loadFontsFromCss } from "@utils/loadFonts";
 import MockupToolbar from "./MockupToolbar";
 
@@ -17,14 +17,20 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
     previewHtml,
     previewCss,
 }) => {
+    // Um id por instância (não um "mockup-style" fixo) — a página principal
+    // e o preview dentro do modal de padrões renderizam este componente ao
+    // mesmo tempo, e partilhar o mesmo <style> faria uma instância pisar o
+    // CSS da outra caso alguma vez mostrem conteúdos diferentes.
+    const styleTagId = `mockup-style-${previewDisplayId}`;
+
     useEffect(() => {
-        const styleTag = document.getElementById("mockup-style") || document.createElement("style");
-        styleTag.id = "mockup-style";
-        styleTag.innerHTML = `${previewCss ?? ""}`;
+        const styleTag = document.getElementById(styleTagId) || document.createElement("style");
+        styleTag.id = styleTagId;
+        styleTag.textContent = previewCss ?? "";
         document.head.appendChild(styleTag);
 
         loadFontsFromCss(previewCss);
-    }, [previewCss]);
+    }, [previewCss, styleTagId]);
 
     const [guideLine, setGuideLine] = useState(false);
     const initialScaleRef = useRef<number>(1);
