@@ -61,6 +61,31 @@
     margin-bottom: var(--spacing-md);
 }
 
+#mockup-page #slides .spec-warnings {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm);
+    border: 1px solid var(--warning);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--surface);
+}
+
+#mockup-page #slides .spec-warnings-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-sm);
+}
+
+#mockup-page #slides .spec-warning-row {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+#mockup-page #slides .spec-warning-row.high {
+    color: var(--danger);
+    font-weight: var(--font-weight-medium);
+}
+
 #mockup-page #slides .add-slide-form input {
     flex: 2;
 }

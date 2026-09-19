@@ -1,6 +1,7 @@
 import JSZip from "jszip";
 import { toJpeg } from "html-to-image";
 import injectPatternStyle from "@utils/injectPatternStyle";
+import { checkImageSpecs } from "@utils/etsyImageSpecs";
 import type { Slide } from "@hooks/useMockupEditor";
 
 export interface ExportProgress {
@@ -9,12 +10,65 @@ export interface ExportProgress {
     slideName: string;
 }
 
+export interface SpecWarning {
+    name: string;
+    width: number;
+    height: number;
+    severity: "low" | "high";
+    message: string;
+}
+
 export interface ExportResult {
     ok: string[];
     failed: { name: string; error: string }[];
+    specWarnings: SpecWarning[];
 }
 
-const slugify = (name: string): string =>
+const getDataUrlDimensions = (dataUrl: string): Promise<{ width: number; height: number }> =>
+    new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = () => reject(new Error("Não foi possível ler as dimensões da imagem exportada"));
+        img.src = dataUrl;
+    });
+
+const buildSpecWarning = (name: string, width: number, height: number): SpecWarning | null => {
+    const check = checkImageSpecs(width, height);
+
+    if (check.belowAbsoluteMinimum) {
+        return {
+            name,
+            width,
+            height,
+            severity: "high",
+            message: "abaixo do mínimo absoluto do Etsy (635px) — o Etsy despromove esta imagem na pesquisa",
+        };
+    }
+
+    if (!check.meetsZoomMinimum) {
+        return {
+            name,
+            width,
+            height,
+            severity: "low",
+            message: "abaixo do recomendado para zoom completo (2000px)",
+        };
+    }
+
+    if (!check.aspectRatioOk) {
+        return {
+            name,
+            width,
+            height,
+            severity: "low",
+            message: "proporção fora do recomendado pelo Etsy (1:1 ou 4:3)",
+        };
+    }
+
+    return null;
+};
+
+export const slugify = (name: string): string =>
     name
         .trim()
         .toLowerCase()
@@ -22,6 +76,32 @@ const slugify = (name: string): string =>
         .replace(/\p{Diacritic}/gu, "")
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "") || "slide";
+
+/**
+ * Monta um slide num container offscreen já preparado (innerHTML + CSS +
+ * padrões) e captura-o como dataURL — extraído para ser reaproveitado por
+ * qualquer exportação que precise da imagem "limpa" de um slide (ex:
+ * formatos de redes sociais, que depois recortam este resultado).
+ */
+export const captureSlideAsDataUrl = async (
+    container: HTMLDivElement,
+    styleTag: HTMLStyleElement,
+    slide: Slide,
+): Promise<string> => {
+    container.innerHTML = slide.previewHtml;
+    styleTag.textContent = slide.previewCss ?? "";
+
+    slide.patternCssList.forEach((css, patternIndex) => {
+        if (css) injectPatternStyle(css, `pattern-style-${patternIndex}`);
+    });
+
+    // Espera dois frames para o browser aplicar estilos/imagens antes de
+    // capturar (mesma margem de segurança que qualquer captura de DOM
+    // baseada em html-to-image precisa).
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    return toJpeg(container, { quality: 0.95, backgroundColor: "#ffffff" });
+};
 
 /**
  * Renderiza e captura cada slide fora do ecrã (o preview visível tem um
@@ -53,6 +133,7 @@ export const exportSlidesAsZip = async (
     const zip = new JSZip();
     const ok: string[] = [];
     const failed: ExportResult["failed"] = [];
+    const specWarnings: SpecWarning[] = [];
 
     try {
         for (let i = 0; i < slides.length; i++) {
@@ -60,24 +141,20 @@ export const exportSlidesAsZip = async (
             onProgress?.({ current: i + 1, total: slides.length, slideName: slide.name });
 
             try {
-                container.innerHTML = slide.previewHtml;
-                styleTag.textContent = slide.previewCss ?? "";
-
-                slide.patternCssList.forEach((css, patternIndex) => {
-                    if (css) injectPatternStyle(css, `pattern-style-${patternIndex}`);
-                });
-
-                // Espera dois frames para o browser aplicar estilos/imagens
-                // antes de capturar (mesma margem de segurança que qualquer
-                // captura de DOM baseada em html-to-image precisa).
-                await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-                const dataUrl = await toJpeg(container, { quality: 0.95, backgroundColor: "#ffffff" });
+                const dataUrl = await captureSlideAsDataUrl(container, styleTag, slide);
                 const base64 = dataUrl.split(",")[1] ?? "";
                 const filename = `${String(i + 1).padStart(2, "0")}-${slugify(slide.name)}.jpg`;
 
                 zip.file(filename, base64, { base64: true });
                 ok.push(slide.name);
+
+                try {
+                    const { width, height } = await getDataUrlDimensions(dataUrl);
+                    const warning = buildSpecWarning(slide.name, width, height);
+                    if (warning) specWarnings.push(warning);
+                } catch (err) {
+                    console.error("Não foi possível verificar as specs de imagem do Etsy:", err);
+                }
             } catch (err) {
                 failed.push({ name: slide.name, error: err instanceof Error ? err.message : String(err) });
             }
@@ -97,5 +174,5 @@ export const exportSlidesAsZip = async (
         URL.revokeObjectURL(url);
     }
 
-    return { ok, failed };
+    return { ok, failed, specWarnings };
 };

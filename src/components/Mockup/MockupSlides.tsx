@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useToast } from "@hooks/useToast";
-import { exportSlidesAsZip, type ExportProgress } from "@utils/exportSlidesAsZip";
+import { exportSlidesAsZip, type ExportProgress, type SpecWarning } from "@utils/exportSlidesAsZip";
+import { exportSocialFormatsZip } from "@utils/exportSocialFormatsZip";
 import type { MockupEditorState } from "@hooks/useMockupEditor";
 
 interface MockupSlidesProps {
@@ -19,6 +20,10 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
 
     const [generating, setGenerating] = useState(false);
     const [progress, setProgress] = useState<ExportProgress | null>(null);
+    const [specWarnings, setSpecWarnings] = useState<SpecWarning[]>([]);
+
+    const [generatingSocial, setGeneratingSocial] = useState(false);
+    const [progressSocial, setProgressSocial] = useState<ExportProgress | null>(null);
 
     const handleAddSlide = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,9 +35,11 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
     const handleGenerateAll = async () => {
         setGenerating(true);
         setProgress(null);
+        setSpecWarnings([]);
 
         try {
             const result = await exportSlidesAsZip(slides, setProgress);
+            setSpecWarnings(result.specWarnings);
 
             if (result.failed.length === 0) {
                 showSuccess(`${result.ok.length} imagens geradas com sucesso!`);
@@ -51,6 +58,30 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
         }
     };
 
+    const handleExportSocial = async () => {
+        setGeneratingSocial(true);
+        setProgressSocial(null);
+
+        try {
+            const result = await exportSocialFormatsZip(slides, setProgressSocial);
+
+            if (result.failed.length === 0) {
+                showSuccess(`Imagens para redes sociais geradas (${result.ok.length} slides)!`);
+            } else if (result.ok.length === 0) {
+                showError("Não foi possível gerar nenhuma imagem para redes sociais.");
+            } else {
+                showWarning(`${result.ok.length} slides gerados, ${result.failed.length} falharam (ver consola).`);
+                console.error("Slides que falharam a gerar (redes sociais):", result.failed);
+            }
+        } catch (err) {
+            console.error(err);
+            showError("Erro ao gerar as imagens para redes sociais.");
+        } finally {
+            setGeneratingSocial(false);
+            setProgressSocial(null);
+        }
+    };
+
     return (
         <div id="slides-page">
             <p className="text-muted">
@@ -66,7 +97,7 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
                     type="button"
                     className="btn btn-success"
                     onClick={handleGenerateAll}
-                    disabled={generating || slides.length === 0}
+                    disabled={generating || generatingSocial || slides.length === 0}
                 >
                     {generating ? (
                         <>
@@ -79,7 +110,40 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
                         </>
                     )}
                 </button>
+                <button
+                    type="button"
+                    className="btn btn-outline-success"
+                    onClick={handleExportSocial}
+                    disabled={generating || generatingSocial || slides.length === 0}
+                >
+                    {generatingSocial ? (
+                        <>
+                            <i className="bi bi-hourglass-split" aria-hidden="true"></i>{" "}
+                            {progressSocial
+                                ? `A gerar ${progressSocial.current} de ${progressSocial.total} (${progressSocial.slideName})…`
+                                : "A gerar…"}
+                        </>
+                    ) : (
+                        <>
+                            <i className="bi bi-share" aria-hidden="true"></i> Exportar para redes sociais
+                        </>
+                    )}
+                </button>
             </div>
+
+            {specWarnings.length > 0 && (
+                <div className="spec-warnings">
+                    <p className="spec-warnings-title">Specs do Etsy</p>
+                    {specWarnings.map((warning, index) => (
+                        <p
+                            key={`${warning.name}-${index}`}
+                            className={`spec-warning-row ${warning.severity === "high" ? "high" : ""}`}
+                        >
+                            <b>{warning.name}</b>: {warning.width}×{warning.height}px — {warning.message}
+                        </p>
+                    ))}
+                </div>
+            )}
 
             {showAddForm && (
                 <form className="add-slide-form" onSubmit={handleAddSlide}>
