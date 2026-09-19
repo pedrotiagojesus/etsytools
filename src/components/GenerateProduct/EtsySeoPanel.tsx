@@ -6,6 +6,7 @@ import {
     TITLE_MAX_LENGTH,
     type EtsyAudience,
 } from "@utils/etsySeo";
+import { generateListingDescription } from "@utils/listingDescription";
 import { useToast } from "@hooks/useToast";
 
 // CSS
@@ -24,6 +25,11 @@ const EtsySeoPanel: React.FC<EtsySeoPanelProps> = ({ theme, pageCount }) => {
 
     const { title, tags } = useMemo(
         () => generateEtsyListing({ theme, pageCount, audience }),
+        [theme, pageCount, audience],
+    );
+
+    const description = useMemo(
+        () => generateListingDescription({ theme, pageCount, audience }),
         [theme, pageCount, audience],
     );
 
@@ -121,6 +127,28 @@ const EtsySeoPanel: React.FC<EtsySeoPanelProps> = ({ theme, pageCount }) => {
                         <p className="text-muted small mb-0">
                             Cada tag pode ter até {TAG_MAX_LENGTH} caracteres — clica numa tag para a copiar.
                         </p>
+                    </div>
+
+                    <div className="mb-2">
+                        <div className="etsy-seo-field-head">
+                            <label htmlFor="etsy-description" className="form-label mb-0">
+                                Descrição sugerida
+                            </label>
+                        </div>
+                        <textarea
+                            id="etsy-description"
+                            className="form-control"
+                            rows={6}
+                            readOnly
+                            value={description}
+                        ></textarea>
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-transparent mt-1"
+                            onClick={() => copyToClipboard(description, "Descrição copiada!")}
+                        >
+                            <i className="bi bi-clipboard" aria-hidden="true"></i> Copiar descrição
+                        </button>
                     </div>
                 </>
             )}
