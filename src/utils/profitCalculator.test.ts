@@ -6,6 +6,7 @@ const rate: EtsyRates = {
     transaction: 6.5,
     fixedPaymentProcessing: 0.3,
     variablePaymentProcessing: 4,
+    listingFee: 0.2,
 };
 
 describe("calculateProfit", () => {
@@ -25,10 +26,16 @@ describe("calculateProfit", () => {
         expect(result.paymentProcessingRateResult).toBeCloseTo(4.3);
     });
 
-    it("subtrai publicidade, transação e processamento do preço com desconto", () => {
+    it("subtrai publicidade, taxa de listagem, transação e processamento do preço com desconto", () => {
         const result = calculateProfit(100, 0, rate);
-        // 100 - (0.19 + 6.5 + 4.3)
-        expect(result.profit).toBeCloseTo(89.01);
+        // 100 - (0.19 + 0.20 + 6.5 + 4.3)
+        expect(result.profit).toBeCloseTo(88.81);
+    });
+
+    it("inclui a taxa de listagem do Etsy no lucro final", () => {
+        const withFee = calculateProfit(100, 0, rate);
+        const withoutFee = calculateProfit(100, 0, { ...rate, listingFee: 0 });
+        expect(withoutFee.profit - withFee.profit).toBeCloseTo(rate.listingFee);
     });
 
     it("sem desconto, precoComDesconto == precoVenda", () => {
@@ -41,6 +48,7 @@ describe("calculateProfit", () => {
         expect(result.precoComDesconto).toBe(0);
         expect(result.transactionRateResult).toBe(0);
         expect(result.paymentProcessingRateResult).toBeCloseTo(0.3);
-        expect(result.profit).toBeCloseTo(-0.49);
+        // -(0.19 + 0.20 + 0 + 0.30)
+        expect(result.profit).toBeCloseTo(-0.69);
     });
 });
