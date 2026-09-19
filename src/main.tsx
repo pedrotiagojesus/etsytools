@@ -33,6 +33,7 @@ const GenerateProduct = lazy(
     () => import("@pages/GenerateProduct/GenerateProduct"),
 );
 const Mockup = lazy(() => import("@pages/Mockup/Mockup"));
+const Responses = lazy(() => import("@pages/Responses/Responses"));
 
 const withSuspense = (element: ReactNode) => (
     <Suspense fallback={<LoadingSpinner overlay size="lg" />}>
@@ -61,6 +62,10 @@ const router = createBrowserRouter(
                 {
                     path: "/mockup",
                     element: withSuspense(<Mockup />),
+                },
+                {
+                    path: "/responses",
+                    element: withSuspense(<Responses />),
                 },
             ],
         },

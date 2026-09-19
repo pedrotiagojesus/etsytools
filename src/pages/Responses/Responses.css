@@ -1,0 +1,31 @@
+#responses-page .responses-toolbar {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-block: var(--spacing-md);
+}
+
+#responses-page .response-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--surface);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+#responses-page .response-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+#responses-page .response-card-header input {
+    flex: 1;
+    font-weight: var(--font-weight-medium);
+}
+
+#responses-page .response-card-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+}
