@@ -5,6 +5,7 @@ import MockupImages from "@components/Mockup/MockupImages";
 import MockupPatterns from "@components/Mockup/MockupPatterns";
 import MockupFonts from "@components/Mockup/MockupFonts";
 import MockupSlides from "@components/Mockup/MockupSlides";
+import ModalEtsyThumbnail from "@components/Mockup/ModalEtsyThumbnail";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 
 // CSS
@@ -148,6 +149,14 @@ const Mockup = () => {
                     <button className="btn btn-transparent" type="button" onClick={downloadPreview}>
                         Download
                     </button>
+                    <button
+                        className="btn btn-transparent"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-etsy-thumbnail"
+                    >
+                        <i className="bi bi-grid-3x3-gap" aria-hidden="true"></i> Ver como thumbnail Etsy
+                    </button>
                 </div>
             </div>
 
@@ -185,6 +194,8 @@ const Mockup = () => {
                     </div>
                 </div>
             </div>
+
+            <ModalEtsyThumbnail previewHtml={previewHtml} previewCss={previewCss} />
         </>
     );
 };

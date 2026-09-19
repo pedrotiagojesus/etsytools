@@ -1,0 +1,53 @@
+.etsy-thumbnail-note {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.etsy-thumbnail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+}
+
+.etsy-thumbnail-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.etsy-thumbnail-crop {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--surface);
+    border-radius: var(--radius-sm, 4px);
+}
+
+.etsy-thumbnail-card.real .etsy-thumbnail-crop {
+    border: 2px solid var(--primary);
+}
+
+.etsy-thumbnail-crop .preview-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+}
+
+.etsy-thumbnail-placeholder-bar {
+    height: 0.6rem;
+    border-radius: var(--radius-sm, 4px);
+    background: var(--border);
+}
+
+.etsy-thumbnail-placeholder-bar.short {
+    width: 60%;
+}
+
+.etsy-thumbnail-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-align: center;
+}
