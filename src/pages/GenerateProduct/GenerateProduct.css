@@ -32,3 +32,63 @@
 #generate-pdf-page .image-preview:hover .btn.btn-remove {
     opacity: 1;
 }
+
+#generate-pdf-page .product-queue {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--surface);
+}
+
+#generate-pdf-page .product-queue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+#generate-pdf-page .product-queue-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+#generate-pdf-page .product-queue-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 4px);
+    font-size: var(--font-size-sm);
+}
+
+#generate-pdf-page .product-queue-name {
+    font-weight: var(--font-weight-medium);
+}
+
+#generate-pdf-page .product-queue-count {
+    color: var(--text-secondary);
+}
+
+#generate-pdf-page .product-queue-status {
+    margin-left: auto;
+    color: var(--text-secondary);
+}
+
+#generate-pdf-page .product-queue-status.completed {
+    color: var(--success);
+}
+
+#generate-pdf-page .product-queue-status.failed {
+    color: var(--danger);
+}
+
+#generate-pdf-page .product-queue-item.processing {
+    border-color: var(--primary);
+}

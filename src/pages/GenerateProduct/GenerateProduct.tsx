@@ -10,69 +10,36 @@ import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import Tooltip from "@components/Tooltip/Tooltip";
 import ValidationFeedback from "@components/ValidationFeedback/ValidationFeedback";
 import EtsySeoPanel from "@components/GenerateProduct/EtsySeoPanel";
+import PrintPreviewGrid from "@components/GenerateProduct/PrintPreviewGrid";
+import DuplicateWarnings from "@components/GenerateProduct/DuplicateWarnings";
+import WatermarkSamplesPanel from "@components/GenerateProduct/WatermarkSamplesPanel";
 
 // Hooks
 import { useToast } from "@hooks/useToast";
 
 // Utils
 import { validateImageFiles } from "@utils/fileValidation";
+import { runGenerateProductJob, triggerBlobDownload } from "@utils/generateProductJob";
 
-type JobStatus = "queued" | "processing" | "completed" | "failed";
-
-interface JobProgress {
-    phase: string;
-    completed: number;
-    total: number;
+interface QueueItem {
+    id: string;
+    title: string;
+    description: string;
+    images: File[];
+    status: "waiting" | "processing" | "completed" | "failed";
+    error?: string;
 }
-
-interface JobStatusResponse {
-    jobId: string;
-    status: JobStatus;
-    progress: JobProgress | null;
-    error?: { message: string; statusCode: number };
-}
-
-const PHASE_LABELS: Record<string, string> = {
-    "image-processing": "A processar imagens",
-    "svg-vectorization": "A vetorizar",
-    "svg-rasterization": "A rasterizar",
-    "pdf-generation": "A gerar PDF",
-    "page-images": "A gerar imagens de página",
-    zip: "A compactar ficheiro",
-};
-
-const POLL_INTERVAL_MS = 2000;
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const fetchWithTimeout = (
-    input: string,
-    init: RequestInit,
-    timeoutMs: number,
-) => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-    return fetch(input, { ...init, signal: controller.signal }).finally(() =>
-        clearTimeout(timeoutId),
-    );
-};
-
-const describeProgress = (progress: JobProgress | null): string => {
-    if (!progress) return "A iniciar...";
-
-    const label = PHASE_LABELS[progress.phase] ?? progress.phase;
-    return progress.total > 0
-        ? `${label} (${progress.completed}/${progress.total})`
-        : label;
-};
 
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [images, setImages] = useState<File[]>([]);
+    const [sampleFiles, setSampleFiles] = useState<Set<File>>(new Set());
     const [isLoading, setIsLoading] = useState(false);
     const [progressLabel, setProgressLabel] = useState("");
+
+    const [queue, setQueue] = useState<QueueItem[]>([]);
+    const [processingQueue, setProcessingQueue] = useState(false);
 
     const cancelledRef = useRef(false);
 
@@ -126,165 +93,143 @@ const GenerateProduct = () => {
         setImages(newImages);
     };
 
-    const handleResize = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Mantém a seleção de amostras alinhada com a lista de imagens (usa o
+    // próprio File como chave, não o índice, porque remover uma imagem
+    // desloca os índices das restantes).
+    useEffect(() => {
+        setSampleFiles((prev) => new Set([...prev].filter((f) => images.includes(f))));
+    }, [images]);
 
+    const toggleSampleFile = (file: File) => {
+        setSampleFiles((prev) => {
+            const next = new Set(prev);
+            if (next.has(file)) {
+                next.delete(file);
+            } else if (next.size < 4) {
+                next.add(file);
+            }
+            return next;
+        });
+    };
+
+    const validateForm = (): boolean => {
         if (!images || images.length === 0) {
             showWarning("Selecione pelo menos uma imagem.");
-            return;
+            return false;
         }
 
         // Segunda validação de segurança, caso o estado tenha sido
         // alterado por outra via entretanto.
         const validation = validateImageFiles(images);
         if (!validation.valid) {
-            showError(
-                validation.message ?? "Uma ou mais imagens são inválidas.",
-            );
-            return;
+            showError(validation.message ?? "Uma ou mais imagens são inválidas.");
+            return false;
         }
 
-        const formData = new FormData();
-        Array.from(images).forEach((image) => {
-            formData.append("images", image);
-        });
-        formData.append("pdfTitle", title);
-        formData.append("pdfDescription", description);
+        return true;
+    };
 
-        const baseUrl = import.meta.env.VITE_API_URL;
-        if (!baseUrl) {
-            showError(
-                "VITE_API_URL não está configurado. Verifique o ficheiro .env.",
-            );
-            return;
-        }
+    const handleResize = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-        const apiKey = import.meta.env.VITE_IMGTOOLS_API_KEY;
-        const authHeaders: HeadersInit = apiKey
-            ? { "X-Api-Key": apiKey }
-            : {};
+        if (!validateForm()) return;
 
         cancelledRef.current = false;
 
         try {
             setIsLoading(true);
             setProgressLabel("A iniciar...");
-            setBtnSubmit({
-                value: "A gerar...",
-                disabled: true,
-            });
+            setBtnSubmit({ value: "A gerar...", disabled: true });
 
             showInfo("A gerar o produto...");
 
-            // 1. Cria o job — responde de imediato (202) enquanto o
-            // processamento (multi-minuto) corre em background no servidor.
-            const startResponse = await fetchWithTimeout(
-                `${baseUrl}/imgtools/generate-product`,
-                { method: "POST", body: formData, headers: authHeaders },
-                120000,
+            const { blob, filename } = await runGenerateProductJob(
+                { images, title, description },
+                setProgressLabel,
+                () => cancelledRef.current,
             );
 
-            if (!startResponse.ok) {
-                const errorText = await startResponse.text();
-                throw new Error(
-                    `Erro ao iniciar a geração do produto: ${startResponse.status} ${startResponse.statusText}\n${errorText}`,
-                );
-            }
-
-            const { jobId } = (await startResponse.json()) as {
-                jobId: string;
-            };
-
-            // 2. Faz polling ao estado do job até terminar (completed/failed).
-            let job: JobStatusResponse;
-            for (;;) {
-                if (cancelledRef.current) return;
-
-                const statusResponse = await fetchWithTimeout(
-                    `${baseUrl}/imgtools/generate-product/${jobId}/status`,
-                    { headers: authHeaders },
-                    10000,
-                );
-
-                if (!statusResponse.ok) {
-                    const errorText = await statusResponse.text();
-                    throw new Error(
-                        `Erro ao consultar o estado do job: ${statusResponse.status} ${statusResponse.statusText}\n${errorText}`,
-                    );
-                }
-
-                job = (await statusResponse.json()) as JobStatusResponse;
-                setProgressLabel(describeProgress(job.progress));
-
-                if (job.status === "completed" || job.status === "failed") {
-                    break;
-                }
-
-                await sleep(POLL_INTERVAL_MS);
-            }
-
-            if (job.status === "failed") {
-                throw new Error(
-                    job.error?.message ?? "A geração do produto falhou.",
-                );
-            }
-
-            // 3. Job concluído — descarrega o ficheiro (.zip) resultante.
-            const downloadResponse = await fetchWithTimeout(
-                `${baseUrl}/imgtools/generate-product/${jobId}/download`,
-                { headers: authHeaders },
-                30000,
-            );
-
-            if (!downloadResponse.ok) {
-                const errorText = await downloadResponse.text();
-                throw new Error(
-                    `Erro ao descarregar o produto: ${downloadResponse.status} ${downloadResponse.statusText}\n${errorText}`,
-                );
-            }
-
-            const blob = await downloadResponse.blob();
-
-            const contentDisposition = downloadResponse.headers.get(
-                "Content-Disposition",
-            );
-            const headerFilename =
-                contentDisposition?.match(/filename="?([^"]+)"?/)?.[1];
-            const fallbackFilename =
-                downloadResponse.headers.get("X-Filename") || "output.zip";
-
-            const filename = headerFilename || fallbackFilename;
-
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-
+            triggerBlobDownload(blob, filename);
             showSuccess("Produto gerado com sucesso!");
         } catch (error) {
+            if (error instanceof Error && error.message === "__cancelled__") return;
+
             console.error(error);
-            if (error instanceof DOMException && error.name === "AbortError") {
-                showError("O pedido demorou demasiado tempo (timeout).");
-            } else {
-                showError(
-                    error instanceof Error
-                        ? error.message
-                        : "Erro ao processar pedido",
-                );
-            }
+            showError(error instanceof Error ? error.message : "Erro ao processar pedido");
         } finally {
             if (!cancelledRef.current) {
                 setIsLoading(false);
                 setProgressLabel("");
-                setBtnSubmit({
-                    value: "Gerar Produto",
-                    disabled: false,
-                });
+                setBtnSubmit({ value: "Gerar Produto", disabled: false });
             }
         }
     };
+
+    const handleAddToQueue = () => {
+        if (!validateForm()) return;
+
+        setQueue((prev) => [
+            ...prev,
+            {
+                id: `${Date.now()}-${Math.random()}`,
+                title,
+                description,
+                images,
+                status: "waiting",
+            },
+        ]);
+
+        setTitle("");
+        setDescription("");
+        setImages([]);
+        showSuccess("Produto adicionado à fila.");
+    };
+
+    const handleRemoveFromQueue = (id: string) => {
+        setQueue((prev) => prev.filter((item) => item.id !== id));
+    };
+
+    const handleProcessQueue = async () => {
+        setProcessingQueue(true);
+
+        try {
+            // Processa sequencialmente — reflete a natureza sequencial do
+            // próprio backend (um job de cada vez) e evita ambiguidade de
+            // progresso entre vários itens em simultâneo.
+            for (const item of queue) {
+                if (item.status !== "waiting") continue;
+
+                setQueue((prev) =>
+                    prev.map((q) => (q.id === item.id ? { ...q, status: "processing" } : q)),
+                );
+
+                try {
+                    const { blob, filename } = await runGenerateProductJob({
+                        images: item.images,
+                        title: item.title,
+                        description: item.description,
+                    });
+
+                    triggerBlobDownload(blob, filename);
+
+                    setQueue((prev) =>
+                        prev.map((q) => (q.id === item.id ? { ...q, status: "completed" } : q)),
+                    );
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : "Erro ao processar pedido";
+                    setQueue((prev) =>
+                        prev.map((q) => (q.id === item.id ? { ...q, status: "failed", error: message } : q)),
+                    );
+                }
+            }
+
+            showSuccess("Fila processada.");
+        } finally {
+            setProcessingQueue(false);
+        }
+    };
+
+    const waitingCount = queue.filter((item) => item.status === "waiting").length;
 
     return (
         <div id="generate-pdf-page">
@@ -303,6 +248,14 @@ const GenerateProduct = () => {
                             <label className="form-label">Imagens</label>
                         </Tooltip>
                         <ImageUploader onChange={handleImagesChange} />
+                        <PrintPreviewGrid
+                            images={images}
+                            selectedFiles={sampleFiles}
+                            onToggleSelect={toggleSampleFile}
+                            maxSelectable={4}
+                        />
+                        <DuplicateWarnings images={images} />
+                        <WatermarkSamplesPanel images={images} selectedFiles={sampleFiles} />
                     </div>
 
                     <div className="mb-3">
@@ -342,11 +295,64 @@ const GenerateProduct = () => {
 
                     <EtsySeoPanel theme={title} pageCount={images.length} />
 
-                    <ButtonSubmit
-                        disabled={btnSumbit.disabled}
-                        description={btnSumbit.value}
-                    />
+                    <div className="d-flex gap-2 mb-3">
+                        <ButtonSubmit
+                            disabled={btnSumbit.disabled}
+                            description={btnSumbit.value}
+                        />
+                        <button
+                            type="button"
+                            className="btn btn-outline-primary"
+                            onClick={handleAddToQueue}
+                            disabled={btnSumbit.disabled}
+                        >
+                            Adicionar à fila
+                        </button>
+                    </div>
                 </form>
+
+                {queue.length > 0 && (
+                    <div className="product-queue">
+                        <div className="product-queue-header">
+                            <h5 className="mb-0">Fila de produtos</h5>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={handleProcessQueue}
+                                disabled={processingQueue || waitingCount === 0}
+                            >
+                                {processingQueue ? "A processar..." : `Processar fila (${waitingCount})`}
+                            </button>
+                        </div>
+
+                        <ul className="product-queue-list">
+                            {queue.map((item, index) => (
+                                <li key={item.id} className={`product-queue-item ${item.status}`}>
+                                    <span className="product-queue-name">
+                                        {item.title.trim() || `Produto ${index + 1}`}
+                                    </span>
+                                    <span className="product-queue-count">{item.images.length} imagens</span>
+                                    <span className={`product-queue-status ${item.status}`}>
+                                        {item.status === "waiting" && "Em espera"}
+                                        {item.status === "processing" && "A processar…"}
+                                        {item.status === "completed" && "Concluído"}
+                                        {item.status === "failed" && `Falhou: ${item.error}`}
+                                    </span>
+                                    {item.status === "waiting" && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm btn-transparent text-danger"
+                                            onClick={() => handleRemoveFromQueue(item.id)}
+                                            aria-label={`Remover "${item.title || `Produto ${index + 1}`}" da fila`}
+                                        >
+                                            <i className="bi bi-trash" aria-hidden="true"></i>
+                                        </button>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );
