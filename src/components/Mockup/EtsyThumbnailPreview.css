@@ -4,6 +4,21 @@
     margin-bottom: var(--spacing-md);
 }
 
+.etsy-thumbnail-section + .etsy-thumbnail-section {
+    margin-top: var(--spacing-lg);
+}
+
+.etsy-thumbnail-heading {
+    font-size: var(--font-size-base, 1rem);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-sm);
+}
+
+.etsy-thumbnail-heading span {
+    color: var(--text-secondary);
+    font-weight: normal;
+}
+
 .etsy-thumbnail-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -19,7 +34,6 @@
 .etsy-thumbnail-crop {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
     overflow: hidden;
     background: var(--surface);
     border-radius: var(--radius-sm, 4px);
