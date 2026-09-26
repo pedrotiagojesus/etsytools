@@ -1,0 +1,110 @@
+/* Família "ocean": azul + amarelo, títulos Anton — igual a ocean-cover e ocean-info. */
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb 55%, #38bdf8);
+    overflow: hidden;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+.blob-1 {
+    width: 1500px;
+    height: 1500px;
+    top: -520px;
+    right: -420px;
+    background: rgba(250, 204, 21, 0.22);
+}
+.blob-2 {
+    width: 1100px;
+    height: 1100px;
+    bottom: -560px;
+    left: -300px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.text-container {
+    position: absolute;
+    top: 70px;
+    left: 218px;
+    right: 218px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 40px;
+    z-index: 2;
+}
+
+.text1 {
+    font-family: "Anton";
+    font-size: 200px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: #ffffff;
+    text-shadow: 8px 8px 0 #f59e0b;
+    white-space: nowrap;
+}
+
+.text2 {
+    color: #fde68a;
+    font-weight: 700;
+    font-size: 54px;
+    text-align: right;
+    letter-spacing: 0.04em;
+}
+
+.image {
+    position: absolute;
+    background-color: #fff;
+    border: 8px solid #fff;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+    z-index: 2;
+}
+
+.image-hero {
+    top: 340px;
+    left: 218px;
+    width: 1236px;
+    height: 1749px;
+}
+
+.ribbon {
+    position: absolute;
+    top: 400px;
+    left: 178px;
+    background: #facc15;
+    color: #1e293b;
+    font-weight: 900;
+    font-size: 48px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 16px 44px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+}
+
+.image-thumb {
+    width: 604px;
+    height: 855px;
+}
+.thumb-1 { top: 340px;  left: 1534px; }
+.thumb-2 { top: 340px;  left: 2178px; }
+.thumb-3 { top: 1235px; left: 1534px; }
+.thumb-4 { top: 1235px; left: 2178px; }
