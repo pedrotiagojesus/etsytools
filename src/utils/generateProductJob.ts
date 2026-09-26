@@ -1,4 +1,7 @@
-type JobStatus = "queued" | "processing" | "completed" | "failed";
+import type { JobAnalysis } from "./difficulty";
+import type { PaperSize } from "./paperSizes";
+
+type JobStatus ="queued" | "processing" | "completed" | "failed";
 
 interface JobProgress {
     phase: string;
@@ -11,6 +14,7 @@ interface JobStatusResponse {
     status: JobStatus;
     progress: JobProgress | null;
     error?: { message: string; statusCode: number };
+    analysis?: JobAnalysis;
 }
 
 const PHASE_LABELS: Record<string, string> = {
@@ -40,15 +44,32 @@ const describeProgress = (progress: JobProgress | null): string => {
     return progress.total > 0 ? `${label} (${progress.completed}/${progress.total})` : label;
 };
 
+export interface ProductOptions {
+    includeTerms: boolean;
+    includePrintInstructions: boolean;
+    includeCoverPage: boolean;
+    paperSizes: PaperSize[];
+}
+
+export const DEFAULT_PRODUCT_OPTIONS: ProductOptions = {
+    includeTerms: true,
+    includePrintInstructions: true,
+    includeCoverPage: true,
+    paperSizes: ["a4", "letter"],
+};
+
 export interface GenerateProductInput {
     images: File[];
     title: string;
     description: string;
+    options: ProductOptions;
 }
 
 export interface GenerateProductJobResult {
     blob: Blob;
     filename: string;
+    /** Estimativa de dificuldade; ausente se o backend não a conseguiu calcular. */
+    analysis?: JobAnalysis;
 }
 
 /**
@@ -68,6 +89,10 @@ export async function runGenerateProductJob(
     });
     formData.append("pdfTitle", input.title);
     formData.append("pdfDescription", input.description);
+    formData.append("includeTerms", String(input.options.includeTerms));
+    formData.append("includePrintInstructions", String(input.options.includePrintInstructions));
+    formData.append("includeCoverPage", String(input.options.includeCoverPage));
+    formData.append("paperSizes", input.options.paperSizes.join(","));
 
     const baseUrl = import.meta.env.VITE_API_URL;
     if (!baseUrl) {
@@ -150,7 +175,9 @@ export async function runGenerateProductJob(
         const fallbackFilename = downloadResponse.headers.get("X-Filename") || "output.zip";
         const filename = headerFilename || fallbackFilename;
 
-        return { blob, filename };
+        // A análise só existe no `status` (o backend remove o job depois do
+        // download), por isso é lida do último estado, antes de descarregar.
+        return { blob, filename, analysis: job.analysis };
     } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
             throw new Error("O pedido demorou demasiado tempo (timeout).");

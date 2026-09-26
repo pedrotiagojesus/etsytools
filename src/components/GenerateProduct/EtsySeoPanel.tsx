@@ -7,6 +7,7 @@ import {
     type EtsyAudience,
 } from "@utils/etsySeo";
 import { generateListingDescription } from "@utils/listingDescription";
+import type { PaperSize } from "@utils/paperSizes";
 import { useToast } from "@hooks/useToast";
 
 // CSS
@@ -15,11 +16,19 @@ import "./EtsySeoPanel.css";
 interface EtsySeoPanelProps {
     theme: string;
     pageCount: number;
+    paperSizes?: PaperSize[];
+    /** Público-alvo sugerido pela análise de dificuldade da última geração. */
+    suggestedAudience?: EtsyAudience;
 }
 
 const AUDIENCE_OPTIONS = Object.keys(AUDIENCE_LABELS) as EtsyAudience[];
 
-const EtsySeoPanel: React.FC<EtsySeoPanelProps> = ({ theme, pageCount }) => {
+const EtsySeoPanel: React.FC<EtsySeoPanelProps> = ({
+    theme,
+    pageCount,
+    paperSizes,
+    suggestedAudience,
+}) => {
     const [audience, setAudience] = useState<EtsyAudience>("all");
     const { showSuccess, showError } = useToast();
 
@@ -29,8 +38,8 @@ const EtsySeoPanel: React.FC<EtsySeoPanelProps> = ({ theme, pageCount }) => {
     );
 
     const description = useMemo(
-        () => generateListingDescription({ theme, pageCount, audience }),
-        [theme, pageCount, audience],
+        () => generateListingDescription({ theme, pageCount, audience, paperSizes }),
+        [theme, pageCount, audience, paperSizes],
     );
 
     const copyToClipboard = async (text: string, successMessage: string) => {
@@ -67,6 +76,18 @@ const EtsySeoPanel: React.FC<EtsySeoPanelProps> = ({ theme, pageCount }) => {
                         </option>
                     ))}
                 </select>
+                {suggestedAudience && suggestedAudience !== audience && (
+                    <div className="form-text">
+                        A dificuldade estimada sugere <strong>{AUDIENCE_LABELS[suggestedAudience]}</strong>.{" "}
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-transparent p-0 align-baseline"
+                            onClick={() => setAudience(suggestedAudience)}
+                        >
+                            Aplicar
+                        </button>
+                    </div>
+                )}
             </div>
 
             {!theme.trim() ? (

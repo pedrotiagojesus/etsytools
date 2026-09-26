@@ -12,29 +12,41 @@ import ValidationFeedback from "@components/ValidationFeedback/ValidationFeedbac
 import EtsySeoPanel from "@components/GenerateProduct/EtsySeoPanel";
 import PrintPreviewGrid from "@components/GenerateProduct/PrintPreviewGrid";
 import DuplicateWarnings from "@components/GenerateProduct/DuplicateWarnings";
-import WatermarkSamplesPanel from "@components/GenerateProduct/WatermarkSamplesPanel";
+import ProductOptionsPanel from "@components/GenerateProduct/ProductOptionsPanel";
+import DifficultyReport from "@components/GenerateProduct/DifficultyReport";
 
 // Hooks
 import { useToast } from "@hooks/useToast";
 
 // Utils
+import { DIFFICULTY_LABELS, suggestAudience, type JobAnalysis } from "@utils/difficulty";
 import { validateImageFiles } from "@utils/fileValidation";
-import { runGenerateProductJob, triggerBlobDownload } from "@utils/generateProductJob";
+import {
+    DEFAULT_PRODUCT_OPTIONS,
+    runGenerateProductJob,
+    triggerBlobDownload,
+    type ProductOptions,
+} from "@utils/generateProductJob";
 
 interface QueueItem {
     id: string;
     title: string;
     description: string;
     images: File[];
+    options: ProductOptions;
     status: "waiting" | "processing" | "completed" | "failed";
     error?: string;
+    analysis?: JobAnalysis;
 }
 
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [images, setImages] = useState<File[]>([]);
-    const [sampleFiles, setSampleFiles] = useState<Set<File>>(new Set());
+    const [options, setOptions] = useState<ProductOptions>(DEFAULT_PRODUCT_OPTIONS);
+    // Guarda também as imagens a que a análise se refere: se o utilizador
+    // mudar a seleção depois de gerar, a análise deixa de valer e não se mostra.
+    const [lastResult, setLastResult] = useState<{ images: File[]; analysis: JobAnalysis } | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [progressLabel, setProgressLabel] = useState("");
 
@@ -93,25 +105,6 @@ const GenerateProduct = () => {
         setImages(newImages);
     };
 
-    // Mantém a seleção de amostras alinhada com a lista de imagens (usa o
-    // próprio File como chave, não o índice, porque remover uma imagem
-    // desloca os índices das restantes).
-    useEffect(() => {
-        setSampleFiles((prev) => new Set([...prev].filter((f) => images.includes(f))));
-    }, [images]);
-
-    const toggleSampleFile = (file: File) => {
-        setSampleFiles((prev) => {
-            const next = new Set(prev);
-            if (next.has(file)) {
-                next.delete(file);
-            } else if (next.size < 4) {
-                next.add(file);
-            }
-            return next;
-        });
-    };
-
     const validateForm = (): boolean => {
         if (!images || images.length === 0) {
             showWarning("Selecione pelo menos uma imagem.");
@@ -143,12 +136,13 @@ const GenerateProduct = () => {
 
             showInfo("A gerar o produto...");
 
-            const { blob, filename } = await runGenerateProductJob(
-                { images, title, description },
+            const { blob, filename, analysis } = await runGenerateProductJob(
+                { images, title, description, options },
                 setProgressLabel,
                 () => cancelledRef.current,
             );
 
+            setLastResult(analysis ? { images, analysis } : null);
             triggerBlobDownload(blob, filename);
             showSuccess("Produto gerado com sucesso!");
         } catch (error) {
@@ -175,6 +169,7 @@ const GenerateProduct = () => {
                 title,
                 description,
                 images,
+                options,
                 status: "waiting",
             },
         ]);
@@ -204,16 +199,17 @@ const GenerateProduct = () => {
                 );
 
                 try {
-                    const { blob, filename } = await runGenerateProductJob({
+                    const { blob, filename, analysis } = await runGenerateProductJob({
                         images: item.images,
                         title: item.title,
                         description: item.description,
+                        options: item.options,
                     });
 
                     triggerBlobDownload(blob, filename);
 
                     setQueue((prev) =>
-                        prev.map((q) => (q.id === item.id ? { ...q, status: "completed" } : q)),
+                        prev.map((q) => (q.id === item.id ? { ...q, status: "completed", analysis } : q)),
                     );
                 } catch (error) {
                     const message = error instanceof Error ? error.message : "Erro ao processar pedido";
@@ -230,6 +226,7 @@ const GenerateProduct = () => {
     };
 
     const waitingCount = queue.filter((item) => item.status === "waiting").length;
+    const analysis = lastResult?.images === images ? lastResult.analysis : null;
 
     return (
         <div id="generate-pdf-page">
@@ -248,14 +245,8 @@ const GenerateProduct = () => {
                             <label className="form-label">Imagens</label>
                         </Tooltip>
                         <ImageUploader onChange={handleImagesChange} />
-                        <PrintPreviewGrid
-                            images={images}
-                            selectedFiles={sampleFiles}
-                            onToggleSelect={toggleSampleFile}
-                            maxSelectable={4}
-                        />
+                        <PrintPreviewGrid images={images} paperSizes={options.paperSizes} />
                         <DuplicateWarnings images={images} />
-                        <WatermarkSamplesPanel images={images} selectedFiles={sampleFiles} />
                     </div>
 
                     <div className="mb-3">
@@ -293,7 +284,14 @@ const GenerateProduct = () => {
                         ></textarea>
                     </div>
 
-                    <EtsySeoPanel theme={title} pageCount={images.length} />
+                    <ProductOptionsPanel options={options} onChange={setOptions} />
+
+                    <EtsySeoPanel
+                        theme={title}
+                        pageCount={images.length}
+                        paperSizes={options.paperSizes}
+                        suggestedAudience={analysis ? suggestAudience(analysis.overall) : undefined}
+                    />
 
                     <div className="d-flex gap-2 mb-3">
                         <ButtonSubmit
@@ -310,6 +308,8 @@ const GenerateProduct = () => {
                         </button>
                     </div>
                 </form>
+
+                {analysis && <DifficultyReport analysis={analysis} />}
 
                 {queue.length > 0 && (
                     <div className="product-queue">
@@ -332,6 +332,14 @@ const GenerateProduct = () => {
                                         {item.title.trim() || `Produto ${index + 1}`}
                                     </span>
                                     <span className="product-queue-count">{item.images.length} imagens</span>
+                                    {item.analysis && (
+                                        <span
+                                            className={`difficulty-badge ${item.analysis.overall}`}
+                                            title="Dificuldade estimada"
+                                        >
+                                            {DIFFICULTY_LABELS[item.analysis.overall]}
+                                        </span>
+                                    )}
                                     <span className={`product-queue-status ${item.status}`}>
                                         {item.status === "waiting" && "Em espera"}
                                         {item.status === "processing" && "A processar…"}

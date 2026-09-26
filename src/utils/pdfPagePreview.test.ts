@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { computePagePreviewLayout, PDF_PAGE } from "./pdfPagePreview";
+import { computePagePreviewLayout, PDF_PAGES } from "./pdfPagePreview";
+
+const A4 = PDF_PAGES.a4;
+const LETTER = PDF_PAGES.letter;
 
 describe("computePagePreviewLayout", () => {
     it("nunca excede 100% mesmo com imagens minúsculas (upscale capado)", () => {
@@ -10,19 +13,16 @@ describe("computePagePreviewLayout", () => {
 
     it("respeita o cap de upscale de 3x do backend", () => {
         // Área útil é muito maior que a imagem; sem cap, o scale ultrapassaria 3x.
-        const innerWidthPt =
-            PDF_PAGE.widthPt - 2 * PDF_PAGE.marginPt - PDF_PAGE.borderWidthPt;
+        const innerWidthPt = A4.widthPt - 2 * A4.marginPt - A4.borderWidthPt;
         const tinyWidth = innerWidthPt / 10; // scale "natural" seria 10x
         const layout = computePagePreviewLayout(tinyWidth, tinyWidth);
-        const expectedPercent = (PDF_PAGE.maxImageUpscale * tinyWidth) / innerWidthPt * 100;
+        const expectedPercent = (A4.maxImageUpscale * tinyWidth) / innerWidthPt * 100;
         expect(layout.widthPercent).toBeCloseTo(expectedPercent, 5);
     });
 
     it("imagem com a proporção exata da área útil ocupa quase 100% em ambos os eixos", () => {
-        const innerWidthPt =
-            PDF_PAGE.widthPt - 2 * PDF_PAGE.marginPt - PDF_PAGE.borderWidthPt;
-        const innerHeightPt =
-            PDF_PAGE.heightPt - 2 * PDF_PAGE.marginPt - PDF_PAGE.borderWidthPt;
+        const innerWidthPt = A4.widthPt - 2 * A4.marginPt - A4.borderWidthPt;
+        const innerHeightPt = A4.heightPt - 2 * A4.marginPt - A4.borderWidthPt;
 
         const layout = computePagePreviewLayout(innerWidthPt, innerHeightPt);
 
@@ -45,10 +45,27 @@ describe("computePagePreviewLayout", () => {
     });
 
     it("usa as constantes reais do backend (studio-base-api/src/config/pdf.ts)", () => {
-        expect(PDF_PAGE.widthPt).toBe(595.28);
-        expect(PDF_PAGE.heightPt).toBe(841.89);
-        expect(PDF_PAGE.marginPt).toBe(12);
-        expect(PDF_PAGE.borderWidthPt).toBe(2);
-        expect(PDF_PAGE.maxImageUpscale).toBe(3);
+        expect(A4.widthPt).toBe(595.28);
+        expect(A4.heightPt).toBe(841.89);
+        expect(LETTER.widthPt).toBe(612);
+        expect(LETTER.heightPt).toBe(792);
+
+        for (const page of [A4, LETTER]) {
+            expect(page.marginPt).toBe(12);
+            expect(page.borderWidthPt).toBe(2);
+            expect(page.maxImageUpscale).toBe(3);
+        }
+    });
+
+    it("em Letter, uma imagem com a proporção da área útil A4 deixa espaço nas laterais", () => {
+        // A área útil do Letter é mais larga/baixa do que a do A4: a mesma
+        // imagem A4 fica limitada pela altura e não preenche a largura toda.
+        const innerWidthA4 = A4.widthPt - 2 * A4.marginPt - A4.borderWidthPt;
+        const innerHeightA4 = A4.heightPt - 2 * A4.marginPt - A4.borderWidthPt;
+
+        const layout = computePagePreviewLayout(innerWidthA4, innerHeightA4, "letter");
+
+        expect(layout.heightPercent).toBeCloseTo(100, 5);
+        expect(layout.widthPercent).toBeLessThan(100);
     });
 });

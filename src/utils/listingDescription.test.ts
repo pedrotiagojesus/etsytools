@@ -37,4 +37,32 @@ describe("generateListingDescription", () => {
         const text = generateListingDescription({ theme: "Space", pageCount: 0, audience: "all" });
         expect(text).not.toContain("pages");
     });
+
+    it("por omissão descreve só o formato A4", () => {
+        const text = generateListingDescription({ theme: "Space", pageCount: 10, audience: "all" });
+        expect(text).toContain("A4 (21 x 29.7 cm)");
+        expect(text).not.toContain("Letter");
+    });
+
+    it("descreve só Letter quando é o único formato", () => {
+        const text = generateListingDescription({
+            theme: "Space",
+            pageCount: 10,
+            audience: "all",
+            paperSizes: ["letter"],
+        });
+        expect(text).toContain("US Letter (8.5 x 11 in)");
+        expect(text).not.toContain("A4");
+    });
+
+    it("menciona os dois formatos quando ambos são gerados", () => {
+        const text = generateListingDescription({
+            theme: "Space",
+            pageCount: 10,
+            audience: "all",
+            paperSizes: ["a4", "letter"],
+        });
+        expect(text).toContain("A4 (21 x 29.7 cm)");
+        expect(text).toContain("US Letter (8.5 x 11 in)");
+    });
 });

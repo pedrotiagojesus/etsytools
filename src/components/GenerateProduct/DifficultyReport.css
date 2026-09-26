@@ -1,0 +1,41 @@
+.difficulty-report {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--surface);
+}
+
+.difficulty-report-head {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.difficulty-badge {
+    display: inline-block;
+    padding: 1px 10px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.difficulty-badge.easy {
+    color: var(--success);
+}
+
+.difficulty-badge.medium {
+    color: var(--warning);
+}
+
+.difficulty-badge.hard {
+    color: var(--danger);
+}
+
+.difficulty-report-table {
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+    font-variant-numeric: tabular-nums;
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { computePagePreviewLayout } from "@utils/pdfPagePreview";
+import { computePagePreviewLayout, PDF_PAGES } from "@utils/pdfPagePreview";
+import { PAPER_LABELS, type PaperSize } from "@utils/paperSizes";
 import { useImageDimensions } from "@hooks/useImageDimensions";
 
 // CSS
@@ -7,19 +8,20 @@ import "./PrintPreviewGrid.css";
 
 interface PrintPreviewGridProps {
     images: File[];
-    selectedFiles?: Set<File>;
-    onToggleSelect?: (file: File) => void;
-    maxSelectable?: number;
+    /** Formatos que o ZIP vai incluir; com mais de um, dá para alternar a vista. */
+    paperSizes: PaperSize[];
 }
 
-const PrintPreviewGrid: React.FC<PrintPreviewGridProps> = ({
-    images,
-    selectedFiles,
-    onToggleSelect,
-    maxSelectable,
-}) => {
+const PrintPreviewGrid: React.FC<PrintPreviewGridProps> = ({ images, paperSizes }) => {
     const dimensions = useImageDimensions(images);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+    const [viewedSize, setViewedSize] = useState<PaperSize>(paperSizes[0]);
+
+    // A vista escolhida pode deixar de existir se o formato for desmarcado.
+    const paperSize = paperSizes.includes(viewedSize) ? viewedSize : paperSizes[0];
+    const page = PDF_PAGES[paperSize];
+    const insetX = `${(page.marginPt / page.widthPt) * 100}%`;
+    const insetY = `${(page.marginPt / page.heightPt) * 100}%`;
 
     useEffect(() => {
         const urls = images.map((file) => URL.createObjectURL(file));
@@ -35,40 +37,44 @@ const PrintPreviewGrid: React.FC<PrintPreviewGridProps> = ({
     return (
         <div className="print-preview">
             <p className="print-preview-note">
-                Pré-visualização de como cada imagem vai ficar na página A4 do PDF (margens e borda incluídas).
-                Hoje só é gerado A4 — formato Letter ainda não está disponível.
+                Pré-visualização de como cada imagem vai ficar na página {PAPER_LABELS[paperSize]} do PDF
+                (margens e borda incluídas).
             </p>
+            {paperSizes.length > 1 && (
+                <div
+                    className="btn-group btn-group-sm print-preview-sizes"
+                    role="group"
+                    aria-label="Formato da pré-visualização"
+                >
+                    {paperSizes.map((size) => (
+                        <button
+                            key={size}
+                            type="button"
+                            className={`btn ${size === paperSize ? "btn-primary" : "btn-outline-primary"}`}
+                            aria-pressed={size === paperSize}
+                            onClick={() => setViewedSize(size)}
+                        >
+                            {PAPER_LABELS[size]}
+                        </button>
+                    ))}
+                </div>
+            )}
             <div className="print-preview-grid">
                 {dimensions.map(({ file, naturalWidth, naturalHeight, loading }, index) => {
                     const layout = loading
                         ? null
-                        : computePagePreviewLayout(naturalWidth, naturalHeight);
-
-                    const isSelected = selectedFiles?.has(file) ?? false;
-                    const selectionDisabled =
-                        !isSelected &&
-                        maxSelectable !== undefined &&
-                        (selectedFiles?.size ?? 0) >= maxSelectable;
+                        : computePagePreviewLayout(naturalWidth, naturalHeight, paperSize);
 
                     return (
                         <div
                             key={`${file.name}-${index}`}
                             className={`print-preview-page${loading ? " loading" : ""}`}
+                            style={{ aspectRatio: `${page.widthPt} / ${page.heightPt}` }}
                         >
-                            {onToggleSelect && (
-                                <label
-                                    className="print-preview-select"
-                                    title="Marcar como página de amostra"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={isSelected}
-                                        disabled={selectionDisabled}
-                                        onChange={() => onToggleSelect(file)}
-                                    />
-                                </label>
-                            )}
-                            <div className="print-preview-border">
+                            <div
+                                className="print-preview-border"
+                                style={{ top: insetY, bottom: insetY, left: insetX, right: insetX }}
+                            >
                                 {layout && previewUrls[index] && (
                                     <img
                                         src={previewUrls[index]}
