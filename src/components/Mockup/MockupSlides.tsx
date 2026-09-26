@@ -22,6 +22,11 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
     const [progress, setProgress] = useState<ExportProgress | null>(null);
     const [specWarnings, setSpecWarnings] = useState<SpecWarning[]>([]);
 
+    const [watermarkEnabled, setWatermarkEnabled] = useState(false);
+    const [watermarkText, setWatermarkText] = useState("PREVIEW");
+    // Texto vazio com a opção ligada não deve gerar uma marca "invisível".
+    const activeWatermark = watermarkEnabled && watermarkText.trim() ? watermarkText.trim() : undefined;
+
     const [generatingSocial, setGeneratingSocial] = useState(false);
     const [progressSocial, setProgressSocial] = useState<ExportProgress | null>(null);
 
@@ -38,7 +43,7 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
         setSpecWarnings([]);
 
         try {
-            const result = await exportSlidesAsZip(slides, setProgress);
+            const result = await exportSlidesAsZip(slides, setProgress, activeWatermark);
             setSpecWarnings(result.specWarnings);
 
             if (result.failed.length === 0) {
@@ -63,7 +68,7 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
         setProgressSocial(null);
 
         try {
-            const result = await exportSocialFormatsZip(slides, setProgressSocial);
+            const result = await exportSocialFormatsZip(slides, setProgressSocial, activeWatermark);
 
             if (result.failed.length === 0) {
                 showSuccess(`Imagens para redes sociais geradas (${result.ok.length} slides)!`);
@@ -129,6 +134,30 @@ const MockupSlides: React.FC<MockupSlidesProps> = ({ editor }) => {
                         </>
                     )}
                 </button>
+            </div>
+
+            <div className="watermark-option">
+                <div className="form-check mb-0">
+                    <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="watermark-enabled"
+                        checked={watermarkEnabled}
+                        onChange={(e) => setWatermarkEnabled(e.target.checked)}
+                    />
+                    <label className="form-check-label" htmlFor="watermark-enabled">
+                        Marca de água nas imagens exportadas
+                    </label>
+                </div>
+                <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    value={watermarkText}
+                    onChange={(e) => setWatermarkText(e.target.value)}
+                    disabled={!watermarkEnabled}
+                    maxLength={30}
+                    aria-label="Texto da marca de água"
+                />
             </div>
 
             {specWarnings.length > 0 && (

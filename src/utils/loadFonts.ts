@@ -35,7 +35,7 @@ export const loadFont = async (fontName: string): Promise<void> => {
  * Extrai todos os font-family usados num bloco de CSS (incluindo fallbacks)
  * e despoleta o carregamento de cada um.
  */
-export const loadFontsFromCss = (css: string): void => {
+export const loadFontsFromCss = async (css: string): Promise<void> => {
     if (!css) return;
 
     const regex = /font-family:\s*([^;}]+)/g;
@@ -50,7 +50,7 @@ export const loadFontsFromCss = (css: string): void => {
             .forEach((f) => names.add(f));
     }
 
-    names.forEach((name) => loadFont(name));
+    await Promise.all([...names].map((name) => loadFont(name)));
 };
 
 /**

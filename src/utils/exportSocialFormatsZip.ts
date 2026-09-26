@@ -1,6 +1,7 @@
 import JSZip from "jszip";
-import { captureSlideAsDataUrl, slugify, type ExportProgress } from "@utils/exportSlidesAsZip";
+import { captureSlideAsDataUrl, isolateExportStyles, slugify, type ExportProgress } from "@utils/exportSlidesAsZip";
 import { cropDataUrlToFormat, SOCIAL_FORMATS } from "@utils/socialFormats";
+import { applyWatermarkToDataUrl } from "@utils/watermark";
 import type { Slide } from "@hooks/useMockupEditor";
 
 export interface SocialExportResult {
@@ -16,6 +17,7 @@ export interface SocialExportResult {
 export const exportSocialFormatsZip = async (
     slides: Slide[],
     onProgress?: (progress: ExportProgress) => void,
+    watermarkText?: string,
 ): Promise<SocialExportResult> => {
     const container = document.createElement("div");
     container.style.position = "fixed";
@@ -28,6 +30,7 @@ export const exportSocialFormatsZip = async (
     const styleTag = document.createElement("style");
     styleTag.id = "mockup-social-export-style";
     document.head.appendChild(styleTag);
+    const restorePreviewStyles = isolateExportStyles();
 
     const zip = new JSZip();
     const ok: string[] = [];
@@ -43,7 +46,9 @@ export const exportSocialFormatsZip = async (
 
                 for (const format of SOCIAL_FORMATS) {
                     const cropped = await cropDataUrlToFormat(dataUrl, format.width, format.height);
-                    const base64 = cropped.split(",")[1] ?? "";
+                    // Depois do recorte, para a marca de água ter o tamanho certo no formato final.
+                    const finalImage = watermarkText ? await applyWatermarkToDataUrl(cropped, watermarkText) : cropped;
+                    const base64 = finalImage.split(",")[1] ?? "";
                     const filename = `${String(i + 1).padStart(2, "0")}-${slugify(slide.name)}-${format.key}.jpg`;
                     zip.file(filename, base64, { base64: true });
                 }
@@ -54,6 +59,7 @@ export const exportSocialFormatsZip = async (
             }
         }
     } finally {
+        restorePreviewStyles();
         container.remove();
         styleTag.remove();
     }

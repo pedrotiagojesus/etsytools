@@ -55,6 +55,18 @@
     margin-block: var(--spacing-md);
 }
 
+#mockup-page #slides .watermark-option {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+#mockup-page #slides .watermark-option input[type="text"] {
+    max-width: 12rem;
+}
+
 #mockup-page #slides .add-slide-form {
     display: flex;
     gap: var(--spacing-sm);

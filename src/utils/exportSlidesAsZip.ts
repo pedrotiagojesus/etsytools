@@ -2,6 +2,8 @@ import JSZip from "jszip";
 import { toJpeg } from "html-to-image";
 import injectPatternStyle from "@utils/injectPatternStyle";
 import { checkImageSpecs } from "@utils/etsyImageSpecs";
+import { applyWatermarkToDataUrl } from "@utils/watermark";
+import { loadFontsFromCss } from "@utils/loadFonts";
 import type { Slide } from "@hooks/useMockupEditor";
 
 export interface ExportProgress {
@@ -78,6 +80,26 @@ export const slugify = (name: string): string =>
         .replace(/(^-|-$)/g, "") || "slide";
 
 /**
+ * Desativa as tags <style> dos previews (o slide ativo no editor, etc.)
+ * enquanto se exporta. Os templates partilham nomes de classe, por isso o CSS
+ * do slide que está aberto no editor "vazaria" para a captura dos outros
+ * slides em tudo o que o template exportado não redefine (ex: um flex-direction
+ * herdado de outro template). Devolve a função que os volta a ativar.
+ */
+export const isolateExportStyles = (): (() => void) => {
+    const previewStyles = Array.from(document.querySelectorAll<HTMLStyleElement>('style[id^="mockup-style-"]'));
+    previewStyles.forEach((style) => {
+        if (style.sheet) style.sheet.disabled = true;
+    });
+
+    return () => {
+        previewStyles.forEach((style) => {
+            if (style.sheet) style.sheet.disabled = false;
+        });
+    };
+};
+
+/**
  * Monta um slide num container offscreen já preparado (innerHTML + CSS +
  * padrões) e captura-o como dataURL — extraído para ser reaproveitado por
  * qualquer exportação que precise da imagem "limpa" de um slide (ex:
@@ -95,10 +117,16 @@ export const captureSlideAsDataUrl = async (
         if (css) injectPatternStyle(css, `pattern-style-${patternIndex}`);
     });
 
+    // Um slide que nunca foi aberto no editor ainda não teve as suas fontes
+    // carregadas (só o slide ativo as carrega) — sem isto, sairia na fonte de
+    // recurso em vez da do template.
+    await loadFontsFromCss(slide.previewCss);
+
     // Espera dois frames para o browser aplicar estilos/imagens antes de
     // capturar (mesma margem de segurança que qualquer captura de DOM
     // baseada em html-to-image precisa).
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await document.fonts.ready;
 
     return toJpeg(container, { quality: 0.95, backgroundColor: "#ffffff" });
 };
@@ -112,6 +140,7 @@ export const captureSlideAsDataUrl = async (
 export const exportSlidesAsZip = async (
     slides: Slide[],
     onProgress?: (progress: ExportProgress) => void,
+    watermarkText?: string,
 ): Promise<ExportResult> => {
     // position:fixed + top/left:0 (em vez de deslocado para muito longe do
     // ecrã) — offsets muito grandes fazem o html-to-image rasterizar em
@@ -129,6 +158,7 @@ export const exportSlidesAsZip = async (
     const styleTag = document.createElement("style");
     styleTag.id = "mockup-export-style";
     document.head.appendChild(styleTag);
+    const restorePreviewStyles = isolateExportStyles();
 
     const zip = new JSZip();
     const ok: string[] = [];
@@ -141,7 +171,8 @@ export const exportSlidesAsZip = async (
             onProgress?.({ current: i + 1, total: slides.length, slideName: slide.name });
 
             try {
-                const dataUrl = await captureSlideAsDataUrl(container, styleTag, slide);
+                const captured = await captureSlideAsDataUrl(container, styleTag, slide);
+                const dataUrl = watermarkText ? await applyWatermarkToDataUrl(captured, watermarkText) : captured;
                 const base64 = dataUrl.split(",")[1] ?? "";
                 const filename = `${String(i + 1).padStart(2, "0")}-${slugify(slide.name)}.jpg`;
 
@@ -160,6 +191,7 @@ export const exportSlidesAsZip = async (
             }
         }
     } finally {
+        restorePreviewStyles();
         container.remove();
         styleTag.remove();
     }
