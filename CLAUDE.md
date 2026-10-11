@@ -16,7 +16,7 @@ Segue as convenções partilhadas em @conventions/CONVENTIONS.md
 - `src/pages/`: one folder per page (`Page.tsx` + `Page.css`)
 - `src/components/`: reusable components, each in its own folder with its own `.css`
 - `src/contexts/` and `src/hooks/`: theme and toast state
-- `src/templates/mockups/`: HTML/CSS mockup templates (`example.html` + `example.css`)
+- `src/templates/mockups/`: one folder per mockup template, named `NN-kebab-name` (e.g. `04-new-york`), each with `template.html` + `template.css`
 - `src/templates/patterns/`: CSS background patterns
 - `src/assets/`: global CSS (theme, variables) and local fonts
 

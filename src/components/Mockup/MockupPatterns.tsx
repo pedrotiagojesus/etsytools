@@ -1,5 +1,5 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
-import ModalPatterns from "./ModalPatterns";
+import MockupPatternsModal from "./MockupPatternsModal";
 
 interface Pattern {
     name: string;
@@ -131,7 +131,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
                         );
                     })}
 
-                    <ModalPatterns
+                    <MockupPatternsModal
                         previewCss={previewCss}
                         previewHtml={previewHtml}
                         setPreviewHtml={setPreviewHtml}

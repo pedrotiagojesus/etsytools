@@ -41,10 +41,6 @@ Desktop.ini
 # Optional: Ignore coverage reports if using Jest or other test tools
 coverage/
 
-# Optional: Ignore generated pngs or screenshots (if you save previews for download)
-*.png
-*.jpg
-
 # Optional: Ignore vite-plugin cache if you use plugins with cache
 .cache/
 

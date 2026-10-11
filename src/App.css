@@ -1,5 +1,0 @@
-/* Ensure smooth transitions */
-main {
-    min-height: calc(100vh - 200px);
-    transform: translateZ(0);
-}

@@ -7,7 +7,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 // CSS
-import "@assets/css/bootstrap.min.css";
+import "@assets/css/bootswatch-united.min.css";
 import "@assets/css/theme.css";
 
 // Fonts

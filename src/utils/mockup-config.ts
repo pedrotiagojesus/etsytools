@@ -1,3 +1,5 @@
+export const DEFAULT_MOCKUP_TEMPLATE = "01-before-after";
+
 export interface MockupConfig {
     version: 1;
     template: string;
@@ -80,7 +82,7 @@ export const readMockupConfigFile = (file: File): Promise<MockupConfig> => {
 
                 resolve({
                     version: 1,
-                    template: parsed.template ?? "main",
+                    template: parsed.template ?? DEFAULT_MOCKUP_TEMPLATE,
                     previewHtml: parsed.previewHtml,
                     previewCss: parsed.previewCss,
                     patternStyles: parsed.patternStyles ?? {},

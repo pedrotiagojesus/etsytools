@@ -10,7 +10,7 @@ interface Pattern {
     css: string;
 }
 
-interface ModalPatternsProps {
+interface MockupPatternsModalProps {
     previewCss: string;
     previewHtml: string;
     setPreviewHtml: (html: string) => void;
@@ -22,7 +22,7 @@ interface ModalPatternsProps {
     setPatternCssList: Dispatch<SetStateAction<string[]>>;
 }
 
-const ModalPatterns: React.FC<ModalPatternsProps> = ({
+const MockupPatternsModal: React.FC<MockupPatternsModalProps> = ({
     previewCss,
     previewHtml,
     setPreviewHtml,
@@ -189,4 +189,4 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
     return createPortal(modalContent, document.body);
 };
 
-export default ModalPatterns;
+export default MockupPatternsModal;

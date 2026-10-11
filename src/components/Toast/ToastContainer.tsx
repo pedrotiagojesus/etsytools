@@ -1,14 +1,9 @@
 import Toast from "./Toast";
+import type { Toast as ToastItem } from "@contexts/ToastContext";
 import "./ToastContainer.css";
 
-export interface ToastData {
-    id: string;
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-}
-
 interface ToastContainerProps {
-    toasts: ToastData[];
+    toasts: ToastItem[];
     onRemoveToast: (id: string) => void;
 }
 

@@ -14,7 +14,12 @@ import "./Mockup.css";
 // Utils
 import downloadPng from "@utils/download-files";
 import injectPatternStyle from "@utils/inject-pattern-style";
-import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockup-config";
+import {
+    buildMockupConfig,
+    DEFAULT_MOCKUP_TEMPLATE,
+    downloadMockupConfig,
+    readMockupConfigFile,
+} from "@utils/mockup-config";
 
 // Hooks
 import { useToast } from "@hooks/use-toast";
@@ -26,7 +31,7 @@ interface Pattern {
 
 const Mockup = () => {
     const [mockupTemplate, setMockupTemplate] = useState<string[]>([]);
-    const [mockupTemplateSelected, setMockupTemplateSelected] = useState<string>("01-before-after");
+    const [mockupTemplateSelected, setMockupTemplateSelected] = useState<string>(DEFAULT_MOCKUP_TEMPLATE);
     const [previewHtml, setPreviewHtml] = useState("");
     const [previewCss, setPreviewCss] = useState("");
     const [images, setImages] = useState<{ name: string; bg: string | null }[]>([]);

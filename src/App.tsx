@@ -8,9 +8,6 @@ import ToastContainer from "@components/Toast/ToastContainer";
 // Hooks
 import { useToast } from "@hooks/use-toast";
 
-// CSS
-import "./App.css";
-
 function App() {
     const { toasts, removeToast } = useToast();
 
