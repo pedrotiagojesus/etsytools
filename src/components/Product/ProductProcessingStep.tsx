@@ -1,4 +1,11 @@
 import type { JobPhase, JobStatusResponse, ProductPage } from "@utils/imgtools-api";
+import {
+    ETSY_MAX_DIGITAL_FILE_BYTES,
+    ETSY_MAX_DIGITAL_FILES,
+    estimateDataUrlBytes,
+    exceedsDigitalFileLimit,
+    formatMegabytes,
+} from "@utils/etsy-limits";
 
 const PHASES: { id: JobPhase; label: string }[] = [
     { id: "image-processing", label: "A converter e ajustar as imagens" },
@@ -35,6 +42,25 @@ const getProgress = (jobStatus: JobStatusResponse | null): { percent: number; la
     return { percent, label };
 };
 
+interface FileSizeRowProps {
+    label: string;
+    bytes: number;
+    isEstimate: boolean;
+}
+
+const FileSizeRow = ({ label, bytes, isEstimate }: FileSizeRowProps) => {
+    const isTooBig = exceedsDigitalFileLimit(bytes);
+
+    return (
+        <li className={isTooBig ? "text-danger" : undefined}>
+            <i className={`bi ${isTooBig ? "bi-x-circle-fill" : "bi-check-circle-fill text-success"}`} aria-hidden="true"></i>{" "}
+            {label}: {isEstimate ? "cerca de " : ""}
+            {formatMegabytes(bytes)}
+            {isTooBig && " — acima do limite do Etsy"}
+        </li>
+    );
+};
+
 const ProductProcessingStep = ({
     jobStatus,
     pages,
@@ -48,6 +74,10 @@ const ProductProcessingStep = ({
 }: ProductProcessingStepProps) => {
     const { percent, label } = getProgress(jobStatus);
     const isCompleted = jobStatus?.status === "completed";
+    const productZipBytes = jobStatus?.resultSizeBytes ?? null;
+    const imagesZipBytes = pages.reduce((total, page) => total + estimateDataUrlBytes(page.image), 0);
+    const isAnyFileTooBig =
+        (productZipBytes !== null && exceedsDigitalFileLimit(productZipBytes)) || exceedsDigitalFileLimit(imagesZipBytes);
 
     return (
         <div className="product-processing">
@@ -78,6 +108,25 @@ const ProductProcessingStep = ({
 
             {isCompleted && (
                 <>
+                    <section className="etsy-limits mb-3" aria-label="Limites do Etsy">
+                        <ul className="list-unstyled mb-1">
+                            {productZipBytes !== null && (
+                                <FileSizeRow label="Produto (ZIP)" bytes={productZipBytes} isEstimate={false} />
+                            )}
+                            {pages.length > 0 && <FileSizeRow label="Imagens (ZIP)" bytes={imagesZipBytes} isEstimate />}
+                        </ul>
+                        <small className="text-muted">
+                            O Etsy aceita até {ETSY_MAX_DIGITAL_FILES} ficheiros por produto digital, cada um com até{" "}
+                            {formatMegabytes(ETSY_MAX_DIGITAL_FILE_BYTES)}.
+                        </small>
+                        {isAnyFileTooBig && (
+                            <div className="alert alert-warning mt-2 mb-0" role="alert">
+                                Um dos ficheiros passa o limite. Divide as páginas em dois produtos (ou em dois ZIPs) antes
+                                de os carregar no Etsy.
+                            </div>
+                        )}
+                    </section>
+
                     <div className="btn-list mb-4">
                         <button type="button" className="btn btn-primary" onClick={onDownloadProduct} disabled={isDownloading}>
                             <i className="bi bi-file-earmark-zip" aria-hidden="true"></i> Descarregar produto (ZIP)
