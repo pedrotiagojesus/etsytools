@@ -13,7 +13,7 @@ Segue as convenções partilhadas em @conventions/CONVENTIONS.md
 ## Structure
 
 - `src/main.tsx`: router (`/calculator`, `/product`; the old `/generate-product` and `/mockup` redirect to `/product`) and providers
-- `src/pages/Product/`: the whole product flow in 3 steps: upload → API processing (progress, ZIP, page images) → mockup slides (export all as a ZIP)
+- `src/pages/Product/`: the whole product flow in 4 steps: upload (vectorization threshold preview, PDF cover/terms) → API processing (progress, ZIP, page images, Etsy size limits) → mockup slides (auto slides, export all as a ZIP, MP4 video recorded in the browser) → listing text
 - `src/components/Product/`: the upload and processing steps; `src/components/Mockup/`: the slide list and the slide editor (`MockupWorkspace`, rendered with `key={slide.id}`)
 - `src/pages/`: one folder per page (`Page.tsx` + `Page.css`)
 - `src/components/`: reusable components, each in its own folder with its own `.css`
@@ -23,6 +23,9 @@ Segue as convenções partilhadas em @conventions/CONVENTIONS.md
 - `src/assets/`: global CSS (theme, variables) and local fonts
 - `src/utils/mockup-slides.ts`: slide model, template/pattern loading; pattern CSS is scoped by index (`.pattern-N`), so only the visible slide's pattern styles are in the page
 - `src/utils/mockup-config.ts`: slides JSON export/import (version 2; version 1 files become one slide)
+- `src/templates/listing/`: user-editable templates for the Etsy listing text (`title.txt`, `tags.txt`, `description.txt`, placeholders `{titulo}`, `{paginas}`, `{descricao}`, `{tema}`) and the default PDF terms page (`terms.txt`)
+- `src/utils/etsy-limits.ts`: Etsy limits used across the app (file size, title/tags, video length)
+- No Claude/LLM API and no browser persistence: generated text comes from the templates; state is in memory, saved only via explicit downloads
 
 ## Backend
 

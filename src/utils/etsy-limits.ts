@@ -26,3 +26,7 @@ export const estimateDataUrlBytes = (dataUrl: string): number => {
 };
 
 export const exceedsDigitalFileLimit = (bytes: number): boolean => bytes > ETSY_MAX_DIGITAL_FILE_BYTES;
+
+// Listing video length accepted by Etsy
+export const ETSY_VIDEO_MIN_SECONDS = 5;
+export const ETSY_VIDEO_MAX_SECONDS = 15;

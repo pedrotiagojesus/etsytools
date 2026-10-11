@@ -21,6 +21,8 @@ import { downloadProductZip, fetchPageImage, startProductJob, waitForJob } from 
 import type { JobStatusResponse, ProductJobOptions, ProductPage } from "@utils/imgtools-api";
 import { resizeImageUrl } from "@utils/resize-image";
 import { padPosition, renderElementToBlob, saveBlob, saveUrl, toFileSlug } from "@utils/download-files";
+import { createSlideshowVideo, getSupportedVideoMimeType } from "@utils/slideshow-video";
+import { ETSY_VIDEO_MAX_SECONDS, ETSY_VIDEO_MIN_SECONDS } from "@utils/etsy-limits";
 import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockup-config";
 import {
     createAutoSlides,
@@ -44,6 +46,11 @@ const STEPS: { id: Step; label: string }[] = [
 ];
 
 const THUMBNAIL_MAX_SIZE = 320;
+
+// 4:3 like the slides, taller than Full HD
+const VIDEO_WIDTH = 1920;
+const VIDEO_HEIGHT = 1440;
+const VIDEO_DURATIONS = [ETSY_VIDEO_MIN_SECONDS, 10, ETSY_VIDEO_MAX_SECONDS];
 
 // Fonts are loaded asynchronously by MockupPreview; give them a moment
 // after the slide is painted before capturing it.
@@ -88,7 +95,7 @@ const Product = () => {
     const [hasEditedSlides, setHasEditedSlides] = useState(false);
     const importInputRef = useRef<HTMLInputElement>(null);
 
-    const { showError, showSuccess } = useToast();
+    const { showError, showInfo, showSuccess } = useToast();
 
     const activeSlide = slides.find((slide) => slide.id === activeSlideId);
     const activeSlidePosition = slides.findIndex((slide) => slide.id === activeSlideId) + 1;
@@ -296,21 +303,33 @@ const Product = () => {
 
     /**
      * Shows each slide in turn (pattern styles are per slide, so only the
-     * visible one renders correctly) and captures it into a ZIP named in
-     * listing order: 01.jpg, 02.jpg…
+     * visible one renders correctly) and captures it as a JPEG, in order.
+     * Restores the slide that was active before.
      */
-    const handleExportAllSlides = async () => {
+    const captureAllSlides = async (): Promise<Blob[]> => {
         const originalSlideId = activeSlideId;
-        setIsExporting(true);
+        const captures: Blob[] = [];
 
         try {
-            const zip = new JSZip();
-
-            for (const [index, slide] of slides.entries()) {
+            for (const slide of slides) {
                 flushSync(() => setActiveSlideId(slide.id));
                 await waitForSlideRender();
-                zip.file(`${padPosition(index + 1)}.jpg`, await renderElementToBlob(MOCKUP_PREVIEW_DISPLAY_ID, "jpeg"));
+                captures.push(await renderElementToBlob(MOCKUP_PREVIEW_DISPLAY_ID, "jpeg"));
             }
+        } finally {
+            setActiveSlideId(originalSlideId);
+        }
+
+        return captures;
+    };
+
+    // Downloads every slide in a ZIP named in listing order: 01.jpg, 02.jpg…
+    const handleExportAllSlides = async () => {
+        setIsExporting(true);
+        try {
+            const zip = new JSZip();
+            const captures = await captureAllSlides();
+            captures.forEach((capture, index) => zip.file(`${padPosition(index + 1)}.jpg`, capture));
 
             saveBlob(await zip.generateAsync({ type: "blob" }), `${fileSlug}-mockups.zip`);
             showSuccess(`${slides.length} slides exportados.`);
@@ -318,7 +337,31 @@ const Product = () => {
             console.error("Erro ao exportar os slides:", error);
             showError("Não foi possível exportar os slides.");
         } finally {
-            setActiveSlideId(originalSlideId);
+            setIsExporting(false);
+        }
+    };
+
+    const handleCreateVideo = async (durationSeconds: number) => {
+        if (!getSupportedVideoMimeType()) {
+            showError("Este browser não grava vídeo MP4. Usa o Chrome ou o Edge.");
+            return;
+        }
+
+        setIsExporting(true);
+        try {
+            const captures = await captureAllSlides();
+            showInfo(`A gravar o vídeo (${durationSeconds} s). Mantém este separador visível.`);
+            const video = await createSlideshowVideo(captures, {
+                durationSeconds,
+                width: VIDEO_WIDTH,
+                height: VIDEO_HEIGHT,
+            });
+            saveBlob(video, `${fileSlug}-video.mp4`);
+            showSuccess("Vídeo criado.");
+        } catch (error) {
+            console.error("Erro ao criar o vídeo:", error);
+            showError(errorMessageOf(error, "Não foi possível criar o vídeo."));
+        } finally {
             setIsExporting(false);
         }
     };
@@ -447,6 +490,31 @@ const Product = () => {
                         <button type="button" className="btn btn-primary" onClick={handleExportAllSlides} disabled={isExporting}>
                             <i className="bi bi-file-earmark-zip" aria-hidden="true"></i> Exportar todos (ZIP)
                         </button>
+                        <div className="dropdown">
+                            <button
+                                className="btn btn-outline-primary dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                disabled={isExporting}
+                                title="Vídeo do anúncio a partir dos slides (MP4)"
+                            >
+                                <i className="bi bi-camera-video" aria-hidden="true"></i> Vídeo
+                            </button>
+                            <ul className="dropdown-menu">
+                                {VIDEO_DURATIONS.map((duration) => (
+                                    <li key={duration}>
+                                        <button
+                                            type="button"
+                                            className="dropdown-item"
+                                            onClick={() => handleCreateVideo(duration)}
+                                        >
+                                            {duration} segundos
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                         <button
                             type="button"
                             className="btn btn-outline-secondary ms-auto"
