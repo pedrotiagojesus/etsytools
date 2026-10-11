@@ -9,6 +9,7 @@ import "./Product.css";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import ProductUploadStep from "@components/Product/ProductUploadStep";
 import ProductProcessingStep from "@components/Product/ProductProcessingStep";
+import ProductListingStep from "@components/Product/ProductListingStep";
 import MockupSlides from "@components/Mockup/MockupSlides";
 import MockupWorkspace from "@components/Mockup/MockupWorkspace";
 
@@ -31,12 +32,13 @@ import {
 } from "@utils/mockup-slides";
 import type { MockupSlide, MockupTab, Pattern } from "@utils/mockup-slides";
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4;
 
 const STEPS: { id: Step; label: string }[] = [
     { id: 1, label: "Imagens" },
     { id: 2, label: "Processamento" },
     { id: 3, label: "Mockups" },
+    { id: 4, label: "Anúncio" },
 ];
 
 const THUMBNAIL_MAX_SIZE = 320;
@@ -62,6 +64,7 @@ const Product = () => {
 
     // Processing
     const [productTitle, setProductTitle] = useState("");
+    const [productDescription, setProductDescription] = useState("");
     const [jobId, setJobId] = useState<string | null>(null);
     const [jobStatus, setJobStatus] = useState<JobStatusResponse | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -116,6 +119,7 @@ const Product = () => {
         abortControllerRef.current = controller;
 
         setProductTitle(options.title);
+        setProductDescription(options.description);
         setJobId(null);
         setJobStatus(null);
         setProcessingError("");
@@ -338,6 +342,15 @@ const Product = () => {
             {/* Kept mounted so the selected images survive switching steps */}
             <div className="container-fluid" hidden={step !== 1}>
                 <ProductUploadStep isProcessing={isProcessing} onSubmit={handleProcess} />
+            </div>
+
+            {/* Kept mounted so the edited listing text survives switching steps */}
+            <div className="container-fluid" hidden={step !== 4}>
+                <ProductListingStep
+                    productTitle={productTitle}
+                    productDescription={productDescription}
+                    pageCount={pages.length}
+                />
             </div>
 
             {step === 2 && (

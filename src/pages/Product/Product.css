@@ -352,3 +352,35 @@
     border: 1px solid var(--border);
     background-color: var(--background);
 }
+
+/** LISTING STEP **/
+
+.product-listing .listing-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+.product-listing .listing-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--surface);
+}
+
+.product-listing .listing-tag small {
+    color: var(--text-secondary);
+}
+
+.product-listing .listing-tag.is-invalid {
+    border-color: var(--bs-danger);
+    color: var(--bs-danger);
+}
+
+.product-listing .listing-tag .btn-close {
+    font-size: 0.6rem;
+}
