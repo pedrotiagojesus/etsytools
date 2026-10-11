@@ -12,7 +12,7 @@ const normalize = (name: string) =>
  * O nome deve corresponder (case-insensitive, sem espaços) ao nome da pasta
  * em src/assets/fonts/<nome>/.
  */
-export const loadFont = async (fontName: string): Promise<void> => {
+const loadFont = async (fontName: string): Promise<void> => {
     const key = normalize(fontName);
     if (loadedFonts.has(key)) return;
 

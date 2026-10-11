@@ -102,13 +102,6 @@ textarea:focus-visible,
     opacity: 1;
 }
 
-/* Focus for breadcrumb links */
-.breadcrumb-item a:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-    border-radius: var(--radius-sm);
-}
-
 /* ===================================
    Keyboard Navigation Helpers
    =================================== */
@@ -162,7 +155,6 @@ textarea:focus-visible,
     }
 
     /* Icon-only buttons */
-    .btn.icon-only,
     .theme-toggle,
     .toast-close {
         min-height: 44px;
@@ -178,7 +170,6 @@ textarea:focus-visible,
    =================================== */
 
 /* Visually hidden but accessible to screen readers */
-.sr-only,
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -191,8 +182,7 @@ textarea:focus-visible,
     border-width: 0;
 }
 
-/* Allow focus on sr-only elements */
-.sr-only-focusable:focus,
+/* Allow focus on visually hidden elements */
 .visually-hidden-focusable:focus {
     position: static;
     width: auto;
@@ -348,13 +338,13 @@ textarea:disabled:focus {
 /* Profit indicators use both color and icons - implemented in Calculator component */
 
 /* Link underlines for better identification */
-a:not(.btn):not(.nav-link):not(.navbar-brand):not(.breadcrumb-item a) {
+a:not(.btn):not(.nav-link):not(.navbar-brand) {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
 }
 
-a:not(.btn):not(.nav-link):not(.navbar-brand):not(.breadcrumb-item a):hover {
+a:not(.btn):not(.nav-link):not(.navbar-brand):hover {
     text-decoration-thickness: 2px;
 }
 
@@ -380,8 +370,7 @@ a:hover {
 
 /* Remove underline from navigation links */
 .nav-link,
-.navbar-brand,
-.breadcrumb-item a {
+.navbar-brand {
     text-decoration: none;
 }
 
