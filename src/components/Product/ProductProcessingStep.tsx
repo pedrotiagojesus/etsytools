@@ -26,6 +26,7 @@ interface ProductProcessingStepProps {
     onDownloadImages: () => void;
     onDownloadPage: (pageIndex: number) => void;
     onGoToMockups: () => void;
+    onCreateAutoSlides: () => void;
 }
 
 const getProgress = (jobStatus: JobStatusResponse | null): { percent: number; label: string } => {
@@ -71,6 +72,7 @@ const ProductProcessingStep = ({
     onDownloadImages,
     onDownloadPage,
     onGoToMockups,
+    onCreateAutoSlides,
 }: ProductProcessingStepProps) => {
     const { percent, label } = getProgress(jobStatus);
     const isCompleted = jobStatus?.status === "completed";
@@ -138,6 +140,15 @@ const ProductProcessingStep = ({
                             disabled={isDownloading || pages.length === 0}
                         >
                             <i className="bi bi-images" aria-hidden="true"></i> Descarregar imagens
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-outline-success"
+                            onClick={onCreateAutoSlides}
+                            disabled={pages.length === 0}
+                            title="Cria um conjunto de slides já preenchido com as páginas"
+                        >
+                            <i className="bi bi-magic" aria-hidden="true"></i> Criar slides automáticos
                         </button>
                         <button type="button" className="btn btn-success" onClick={onGoToMockups}>
                             Criar mockups <i className="bi bi-arrow-right" aria-hidden="true"></i>

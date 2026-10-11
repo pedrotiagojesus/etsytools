@@ -150,6 +150,9 @@
     height: 100%;
 }
 
+/* Etsy shows the first listing photo cropped to a centered square in
+   search results: on a 4:3 slide that is the middle 75% of the width.
+   Everything outside it is dimmed. */
 #guide-lines {
     position: absolute;
     top: 50%;
@@ -158,10 +161,21 @@
     height: 100%;
     max-width: 75%;
     transform: translate(-50%, -50%);
-    border: 2px dotted red;
-    border-top: 0;
-    border-bottom: 0;
+    border: 6px dashed #fff;
+    box-shadow: 0 0 0 3000px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
     z-index: 1;
+}
+
+#guide-lines::after {
+    content: "Corte quadrado do Etsy";
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    padding: 8px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 48px;
 }
 
 #mockup-page #image {

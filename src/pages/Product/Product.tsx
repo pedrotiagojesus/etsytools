@@ -23,11 +23,13 @@ import { resizeImageUrl } from "@utils/resize-image";
 import { padPosition, renderElementToBlob, saveBlob, saveUrl, toFileSlug } from "@utils/download-files";
 import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockup-config";
 import {
+    createAutoSlides,
     createSlide,
     DEFAULT_MOCKUP_TEMPLATE,
     duplicateSlide,
     listMockupTemplates,
     loadPatternLibrary,
+    MOCKUP_IMAGE_MAX_SIZE,
     MOCKUP_PREVIEW_DISPLAY_ID,
 } from "@utils/mockup-slides";
 import type { MockupSlide, MockupTab, Pattern } from "@utils/mockup-slides";
@@ -81,6 +83,9 @@ const Product = () => {
     const [activeSlideId, setActiveSlideId] = useState("");
     const [activeTab, setActiveTab] = useState<MockupTab>("html");
     const [isExporting, setIsExporting] = useState(false);
+    const [isCreatingSlides, setIsCreatingSlides] = useState(false);
+    // Only the untouched default slide exists: replacing it needs no confirmation
+    const [hasEditedSlides, setHasEditedSlides] = useState(false);
     const importInputRef = useRef<HTMLInputElement>(null);
 
     const { showError, showSuccess } = useToast();
@@ -198,13 +203,39 @@ const Product = () => {
 
     const updateSlide = useCallback((slideId: string, update: (slide: MockupSlide) => Partial<MockupSlide>) => {
         setSlides((prev) => prev.map((slide) => (slide.id === slideId ? { ...slide, ...update(slide) } : slide)));
+        setHasEditedSlides(true);
     }, []);
+
+    const replaceSlides = (newSlides: MockupSlide[]) => {
+        setSlides(newSlides);
+        setActiveSlideId(newSlides[0]?.id ?? "");
+    };
+
+    const handleCreateAutoSlides = async () => {
+        if (hasEditedSlides && !window.confirm("Os slides automáticos substituem os slides atuais. Continuar?")) return;
+
+        setIsCreatingSlides(true);
+        try {
+            const images = await Promise.all(
+                pages.map((page) => resizeImageUrl(page.image, MOCKUP_IMAGE_MAX_SIZE, MOCKUP_IMAGE_MAX_SIZE)),
+            );
+            replaceSlides(await createAutoSlides(images));
+            setHasEditedSlides(true);
+            setStep(3);
+        } catch (error) {
+            console.error("Erro ao criar os slides automáticos:", error);
+            showError("Não foi possível criar os slides automáticos.");
+        } finally {
+            setIsCreatingSlides(false);
+        }
+    };
 
     const handleAddSlide = async (template: string) => {
         try {
             const slide = await createSlide(template);
             setSlides((prev) => [...prev, slide]);
             setActiveSlideId(slide.id);
+            setHasEditedSlides(true);
         } catch (error) {
             console.error(`Erro ao carregar o template "${template}":`, error);
             showError(`Erro ao carregar o template "${template}"`);
@@ -219,6 +250,7 @@ const Product = () => {
         const copy = duplicateSlide(original);
         setSlides([...slides.slice(0, index + 1), copy, ...slides.slice(index + 1)]);
         setActiveSlideId(copy.id);
+        setHasEditedSlides(true);
     };
 
     const handleDeleteSlide = (slideId: string) => {
@@ -227,6 +259,7 @@ const Product = () => {
         const index = slides.findIndex((slide) => slide.id === slideId);
         const remaining = slides.filter((slide) => slide.id !== slideId);
         setSlides(remaining);
+        setHasEditedSlides(true);
 
         if (slideId === activeSlideId) {
             const neighbour = remaining[Math.min(index, remaining.length - 1)];
@@ -242,6 +275,7 @@ const Product = () => {
             const replacement = await createSlide(template);
             setSlides((prev) => prev.map((slide) => (slide.id === activeSlide.id ? replacement : slide)));
             setActiveSlideId(replacement.id);
+            setHasEditedSlides(true);
         } catch (error) {
             console.error(`Erro ao carregar o template "${template}":`, error);
             showError(`Erro ao carregar o template "${template}"`);
@@ -306,8 +340,8 @@ const Product = () => {
 
         try {
             const importedSlides = await readMockupConfigFile(file);
-            setSlides(importedSlides);
-            setActiveSlideId(importedSlides[0]?.id ?? "");
+            replaceSlides(importedSlides);
+            setHasEditedSlides(true);
             showSuccess(`Configuração importada: ${importedSlides.length} slides.`);
         } catch (error) {
             console.error("Erro ao importar a configuração:", error);
@@ -337,7 +371,7 @@ const Product = () => {
                 </nav>
             </div>
 
-            {isExporting && <LoadingSpinner isOverlay size="lg" />}
+            {(isExporting || isCreatingSlides) && <LoadingSpinner isOverlay size="lg" />}
 
             {/* Kept mounted so the selected images survive switching steps */}
             <div className="container-fluid" hidden={step !== 1}>
@@ -365,6 +399,7 @@ const Product = () => {
                         onDownloadImages={handleDownloadImages}
                         onDownloadPage={handleDownloadPage}
                         onGoToMockups={() => setStep(3)}
+                        onCreateAutoSlides={handleCreateAutoSlides}
                     />
                 </div>
             )}
@@ -397,6 +432,15 @@ const Product = () => {
                             </ul>
                         </div>
 
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary"
+                            onClick={handleCreateAutoSlides}
+                            disabled={isExporting || isCreatingSlides || pages.length === 0}
+                            title={pages.length === 0 ? "Processa o produto primeiro" : "Cria slides já preenchidos com as páginas"}
+                        >
+                            <i className="bi bi-magic" aria-hidden="true"></i> Slides automáticos
+                        </button>
                         <button type="button" className="btn btn-outline-secondary" onClick={handleDownloadSlide} disabled={isExporting}>
                             <i className="bi bi-image" aria-hidden="true"></i> Descarregar slide
                         </button>
@@ -441,7 +485,10 @@ const Product = () => {
                                 onAdd={handleAddSlide}
                                 onDuplicate={handleDuplicateSlide}
                                 onDelete={handleDeleteSlide}
-                                onReorder={setSlides}
+                                onReorder={(reordered) => {
+                                    setSlides(reordered);
+                                    setHasEditedSlides(true);
+                                }}
                             />
                         </div>
                         <div className="col-xl-10 h-100">

@@ -5,6 +5,17 @@ export const MOCKUP_PREVIEW_DISPLAY_ID = "preview-display";
 
 export type MockupTab = "html" | "css" | "images" | "patterns" | "fonts";
 
+// Slides created by "Criar slides automáticos", in listing order. Edit this
+// list to change the default set (01-before-after is left out: it needs a
+// coloured version of a page).
+export const AUTO_SLIDE_TEMPLATES = ["13-paris", "02-contact-sheet", "03-product-details", "17-sketchbook-stack"];
+
+const IMAGE_SLOT_SELECTOR = "div[data-img]";
+
+// Processed pages are 2480x3508; this is enough for a 3000x2250 mockup
+// without making the slide HTML huge.
+export const MOCKUP_IMAGE_MAX_SIZE = 1600;
+
 export interface MockupSlide {
     id: string;
     template: string;
@@ -58,6 +69,46 @@ export const createSlide = async (template: string): Promise<MockupSlide> => {
     const [html, css] = await Promise.all([loadTemplateFile(template, "html"), loadTemplateFile(template, "css")]);
 
     return { id: createSlideId(), template, html, css, activePatterns: [], patternCssList: [] };
+};
+
+/**
+ * Sets the background image of one image slot (div[data-img], by index) of a
+ * slide's HTML and returns the new HTML.
+ */
+export const setSlotImage = (html: string, slotIndex: number, imageUrl: string): string => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const slot = doc.querySelectorAll<HTMLDivElement>(IMAGE_SLOT_SELECTOR)[slotIndex];
+    if (!slot) return html;
+
+    slot.style.backgroundImage = `url(${imageUrl})`;
+    return doc.body.innerHTML;
+};
+
+export const countImageSlots = (html: string): number =>
+    new DOMParser().parseFromString(html, "text/html").querySelectorAll(IMAGE_SLOT_SELECTOR).length;
+
+/**
+ * Creates the AUTO_SLIDE_TEMPLATES slides with their image slots filled with
+ * the given images, in order. Each slide continues where the previous one
+ * stopped, and the images repeat when there are more slots than images.
+ */
+export const createAutoSlides = async (images: string[]): Promise<MockupSlide[]> => {
+    const slides = await Promise.all(AUTO_SLIDE_TEMPLATES.map(createSlide));
+    if (images.length === 0) return slides;
+
+    let nextImage = 0;
+    return slides.map((slide) => {
+        let html = slide.html;
+        const slotCount = countImageSlots(html);
+
+        for (let slotIndex = 0; slotIndex < slotCount; slotIndex++) {
+            const image = images[nextImage % images.length];
+            if (image) html = setSlotImage(html, slotIndex, image);
+            nextImage += 1;
+        }
+
+        return { ...slide, html };
+    });
 };
 
 export const duplicateSlide = (slide: MockupSlide): MockupSlide => ({

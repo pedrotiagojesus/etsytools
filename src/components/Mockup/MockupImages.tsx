@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { resizeImageToBase64, resizeImageUrl } from "@utils/resize-image";
 import type { ProductPage } from "@utils/imgtools-api";
+import { MOCKUP_IMAGE_MAX_SIZE, setSlotImage } from "@utils/mockup-slides";
 
-// Processed pages are 2480x3508; this is enough for a 3000x2250 mockup
-// without making the slide HTML huge.
-const PAGE_MAX_SIZE = 1600;
+
 
 interface MockupImagesProps {
     previewHtml: string;
@@ -46,16 +45,7 @@ const MockupImages: React.FC<MockupImagesProps> = ({
 
         try {
             const base64 = await loadImage();
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(previewHtml, "text/html");
-            const divs = Array.from(doc.querySelectorAll<HTMLDivElement>("div[data-img]"));
-
-            const div = divs[index];
-            if (div) {
-                div.style.backgroundImage = `url(${base64})`;
-                setPreviewHtml(doc.documentElement.innerHTML);
-            }
+            setPreviewHtml(setSlotImage(previewHtml, index, base64));
         } catch (err) {
             console.error(
                 `Erro ao processar imagem "${images[index]?.name}":`,
@@ -109,7 +99,7 @@ const MockupImages: React.FC<MockupImagesProps> = ({
                                             className="page-picker-item"
                                             disabled={loadingIndex === index}
                                             onClick={() =>
-                                                applyImage(index, () => resizeImageUrl(page.image, PAGE_MAX_SIZE, PAGE_MAX_SIZE))
+                                                applyImage(index, () => resizeImageUrl(page.image, MOCKUP_IMAGE_MAX_SIZE, MOCKUP_IMAGE_MAX_SIZE))
                                             }
                                             aria-label={`Usar a página ${pageIndex + 1} em ${img.name}`}
                                             title={`Página ${pageIndex + 1}`}

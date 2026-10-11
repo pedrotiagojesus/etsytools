@@ -42,11 +42,11 @@ const MockupToolbar: React.FC<ToolbarProps> = ({
             <button
                 className={`btn ${isGuideLineVisible ? "btn-success" : "btn-primary"}`}
                 onClick={() => setIsGuideLineVisible(!isGuideLineVisible)}
-                aria-label={isGuideLineVisible ? "Hide guidelines" : "Show guidelines"}
+                aria-label="Mostrar o corte quadrado do Etsy"
                 aria-pressed={isGuideLineVisible}
-                title={isGuideLineVisible ? "Hide guidelines" : "Show guidelines"}
+                title="Corte quadrado do Etsy (miniatura nos resultados de pesquisa)"
             >
-                <i className="bi bi-rulers" aria-hidden="true"></i>
+                <i className="bi bi-crop" aria-hidden="true"></i>
             </button>
         </div>
     );
