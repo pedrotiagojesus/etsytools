@@ -32,10 +32,27 @@ const downloadHtmlAsImage = async (
         });
     }
 
+    saveUrl(dataUrl, `${fileName}.${format}`);
+};
+
+/**
+ * Triggers the browser download of a URL (data URL or object URL).
+ */
+export const saveUrl = (url: string, fileName: string): void => {
     const link = document.createElement("a");
-    link.download = `${fileName}.${format}`;
-    link.href = dataUrl;
+    link.download = fileName;
+    link.href = url;
     link.click();
+};
+
+/**
+ * Triggers the browser download of a Blob.
+ */
+export const saveBlob = (blob: Blob, fileName: string): void => {
+    const url = URL.createObjectURL(blob);
+    saveUrl(url, fileName);
+    // Revoking right away can cancel the download in some browsers
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 
 export default downloadHtmlAsImage;

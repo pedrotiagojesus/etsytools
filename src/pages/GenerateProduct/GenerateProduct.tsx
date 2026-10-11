@@ -15,6 +15,12 @@ import { useToast } from "@hooks/use-toast";
 
 // Utils
 import { validateImageFiles } from "@utils/file-validation";
+import { downloadProductZip, startProductJob, waitForJob } from "@utils/imgtools-api";
+import { saveBlob } from "@utils/download-files";
+
+// Limits enforced by the API (generateProductSchema in studio-base-api)
+const TITLE_MAX_LENGTH = 100;
+const DESCRIPTION_MAX_LENGTH = 500;
 
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");
@@ -32,7 +38,7 @@ const GenerateProduct = () => {
         message: "",
     });
 
-    const { showSuccess, showError, showWarning, showInfo } = useToast();
+    const { showSuccess, showError, showWarning } = useToast();
 
     const handleTitleChange = (value: string) => {
         setTitle(value);
@@ -41,6 +47,11 @@ const GenerateProduct = () => {
             setTitleValidation({
                 isValid: false,
                 message: "O título deve ter pelo menos 3 caracteres",
+            });
+        } else if (value.length > TITLE_MAX_LENGTH) {
+            setTitleValidation({
+                isValid: false,
+                message: `O título deve ter no máximo ${TITLE_MAX_LENGTH} caracteres`,
             });
         } else {
             setTitleValidation({ isValid: true, message: "" });
@@ -74,6 +85,11 @@ const GenerateProduct = () => {
             return;
         }
 
+        if (!title.trim() || !titleValidation.isValid) {
+            showWarning("Indique um título válido.");
+            return;
+        }
+
         // Segunda validação de segurança, caso o estado tenha sido
         // alterado por outra via entretanto.
         const validation = validateImageFiles(images);
@@ -84,13 +100,6 @@ const GenerateProduct = () => {
             return;
         }
 
-        const formData = new FormData();
-        Array.from(images).forEach((image) => {
-            formData.append("images", image);
-        });
-        formData.append("pdfTitle", title);
-        formData.append("pdfSubject", description);
-
         try {
             setIsLoading(true);
             setSubmitButton({
@@ -98,66 +107,16 @@ const GenerateProduct = () => {
                 isDisabled: true,
             });
 
-            showInfo("A gerar o produto...");
+            const jobId = await startProductJob(images, title.trim(), description.trim());
+            await waitForJob(jobId, () => undefined);
 
-            const baseUrl = import.meta.env.VITE_API_URL;
-            if (!baseUrl) {
-                showError(
-                    "VITE_API_URL não está configurado. Verifique o ficheiro .env.",
-                );
-                return;
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-            const endpoint = `${baseUrl}/generate-product`;
-            const response = await fetch(endpoint, {
-                method: "POST",
-                body: formData,
-                signal: controller.signal,
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(
-                    `Erro ao gerar produto: ${response.status} ${response.statusText}\n${errorText}`,
-                );
-            }
-
-            const blob = await response.blob();
-
-            const contentDisposition = response.headers.get(
-                "Content-Disposition",
-            );
-            const headerFilename =
-                contentDisposition?.match(/filename="?([^"]+)"?/)?.[1];
-            const fallbackFilename =
-                response.headers.get("X-Filename") || "output.pdf";
-
-            const filename = headerFilename || fallbackFilename;
-
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
+            const { blob, filename } = await downloadProductZip(jobId);
+            saveBlob(blob, filename);
 
             showSuccess("Produto gerado com sucesso!");
         } catch (error) {
             console.error(error);
-            if (error instanceof DOMException && error.name === "AbortError") {
-                showError("O pedido demorou demasiado tempo (timeout de 30s).");
-            } else {
-                showError(
-                    error instanceof Error
-                        ? error.message
-                        : "Erro ao processar pedido",
-                );
-            }
+            showError(error instanceof Error ? error.message : "Erro ao processar pedido");
         } finally {
             setIsLoading(false);
             setSubmitButton({
@@ -214,6 +173,7 @@ const GenerateProduct = () => {
                             className="form-control"
                             id="description"
                             rows={3}
+                            maxLength={DESCRIPTION_MAX_LENGTH}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
