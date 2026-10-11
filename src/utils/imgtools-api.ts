@@ -26,7 +26,20 @@ export interface JobStatusResponse {
     progress: JobProgress | null;
     error?: { message: string; statusCode: number };
     pageCount: number | null;
+    resultSizeBytes: number | null;
 }
+
+export interface ProductJobOptions {
+    title: string;
+    description: string;
+    // Vectorization luminance cut-off (1-254); higher keeps thicker lines
+    threshold: number;
+    hasCoverPage: boolean;
+    // Closing PDF page; empty = no page
+    termsText: string;
+}
+
+export const DEFAULT_VECTORIZE_THRESHOLD = 220;
 
 interface StartJobResponse {
     jobId: string;
@@ -100,11 +113,14 @@ const blobToDataUrl = (blob: Blob): Promise<string> =>
 /**
  * Uploads the images and starts the product job. Returns the job id.
  */
-export const startProductJob = async (images: File[], title: string, description: string): Promise<string> => {
+export const startProductJob = async (images: File[], options: ProductJobOptions): Promise<string> => {
     const formData = new FormData();
     images.forEach((image) => formData.append("images", image));
-    formData.append("pdfTitle", title);
-    formData.append("pdfDescription", description);
+    formData.append("pdfTitle", options.title);
+    formData.append("pdfDescription", options.description);
+    formData.append("threshold", String(options.threshold));
+    formData.append("hasCoverPage", String(options.hasCoverPage));
+    formData.append("termsText", options.termsText);
 
     const response = await request("", { method: "POST", body: formData });
     const body: StartJobResponse = await response.json();
@@ -137,6 +153,19 @@ export const waitForJob = async (
 
         await wait(POLL_INTERVAL_MS, signal);
     }
+};
+
+/**
+ * Vectorizes one image with the given threshold, like the job does, and
+ * returns the SVG as a Blob (to show a before/after comparison).
+ */
+export const previewVectorization = async (image: File, threshold: number): Promise<Blob> => {
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("threshold", String(threshold));
+
+    const response = await request("/preview", { method: "POST", body: formData });
+    return response.blob();
 };
 
 /**

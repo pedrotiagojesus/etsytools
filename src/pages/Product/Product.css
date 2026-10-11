@@ -341,3 +341,14 @@
     border-top: 1px solid var(--border);
     font-size: var(--font-size-sm);
 }
+
+/** UPLOAD STEP **/
+
+.vectorize-preview .vectorize-image {
+    display: block;
+    width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+}

@@ -17,7 +17,7 @@ import { useToast } from "@hooks/use-toast";
 
 // Utils
 import { downloadProductZip, fetchPageImage, startProductJob, waitForJob } from "@utils/imgtools-api";
-import type { JobStatusResponse, ProductPage } from "@utils/imgtools-api";
+import type { JobStatusResponse, ProductJobOptions, ProductPage } from "@utils/imgtools-api";
 import { resizeImageUrl } from "@utils/resize-image";
 import { padPosition, renderElementToBlob, saveBlob, saveUrl, toFileSlug } from "@utils/download-files";
 import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockup-config";
@@ -110,12 +110,12 @@ const Product = () => {
 
     // ---------- Processing ----------
 
-    const handleProcess = async (images: File[], title: string, description: string) => {
+    const handleProcess = async (images: File[], options: ProductJobOptions) => {
         abortControllerRef.current?.abort();
         const controller = new AbortController();
         abortControllerRef.current = controller;
 
-        setProductTitle(title);
+        setProductTitle(options.title);
         setJobId(null);
         setJobStatus(null);
         setProcessingError("");
@@ -124,7 +124,7 @@ const Product = () => {
         setStep(2);
 
         try {
-            const newJobId = await startProductJob(images, title, description);
+            const newJobId = await startProductJob(images, options);
             setJobId(newJobId);
 
             const finalStatus = await waitForJob(newJobId, setJobStatus, controller.signal);
