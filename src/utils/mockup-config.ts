@@ -1,106 +1,105 @@
-export const DEFAULT_MOCKUP_TEMPLATE = "01-before-after";
+import { DEFAULT_MOCKUP_TEMPLATE, duplicateSlide } from "@utils/mockup-slides";
+import type { MockupSlide } from "@utils/mockup-slides";
+import { saveBlob } from "@utils/download-files";
+
+type ConfigSlide = Omit<MockupSlide, "id">;
 
 export interface MockupConfig {
-    version: 1;
-    template: string;
-    previewHtml: string;
-    previewCss: string;
-    patternStyles: Record<string, string>; // { "pattern-style-0": "...css..." }
-    activePatterns: string[]; // nomes dos padrões ativos, por índice
+    version: 2;
+    slides: ConfigSlide[];
     exportedAt: string;
 }
 
-/**
- * Recolhe o CSS de todos os <style id="pattern-style-N"> injetados no DOM.
- */
-const collectPatternStyles = (): Record<string, string> => {
-    const styles: Record<string, string> = {};
-    document.querySelectorAll('style[id^="pattern-style-"]').forEach((el) => {
-        styles[el.id] = el.innerHTML;
-    });
-    return styles;
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
+
+const toStringArray = (value: unknown): string[] =>
+    Array.isArray(value) ? value.map((item) => (typeof item === "string" ? item : "")) : [];
+
+const parseSlide = (value: unknown, position: number): ConfigSlide => {
+    if (!isRecord(value) || typeof value.html !== "string" || typeof value.css !== "string") {
+        throw new Error(`Ficheiro inválido: o slide ${position} não tem html/css.`);
+    }
+
+    return {
+        template: typeof value.template === "string" ? value.template : DEFAULT_MOCKUP_TEMPLATE,
+        html: value.html,
+        css: value.css,
+        activePatterns: toStringArray(value.activePatterns),
+        patternCssList: toStringArray(value.patternCssList),
+    };
 };
 
-export const buildMockupConfig = (
-    template: string,
-    previewHtml: string,
-    previewCss: string,
-    activePatterns: string[],
-): MockupConfig => ({
-    version: 1,
-    template,
-    previewHtml,
-    previewCss,
-    patternStyles: collectPatternStyles(),
-    activePatterns,
+/**
+ * Version 1 files held a single mockup, with pattern CSS keyed by the
+ * <style> id ("pattern-style-N").
+ */
+const parseVersion1 = (parsed: Record<string, unknown>): ConfigSlide => {
+    if (typeof parsed.previewHtml !== "string" || typeof parsed.previewCss !== "string") {
+        throw new Error("Ficheiro inválido: faltam previewHtml/previewCss.");
+    }
+
+    const activePatterns = toStringArray(parsed.activePatterns);
+    const patternStyles = isRecord(parsed.patternStyles) ? parsed.patternStyles : {};
+    const patternCssList = activePatterns.map((_, index) => {
+        const css = patternStyles[`pattern-style-${index}`];
+        return typeof css === "string" ? css : "";
+    });
+
+    return {
+        template: typeof parsed.template === "string" ? parsed.template : DEFAULT_MOCKUP_TEMPLATE,
+        html: parsed.previewHtml,
+        css: parsed.previewCss,
+        activePatterns,
+        patternCssList,
+    };
+};
+
+export const buildMockupConfig = (slides: MockupSlide[]): MockupConfig => ({
+    version: 2,
+    slides: slides.map(({ template, html, css, activePatterns, patternCssList }) => ({
+        template,
+        html,
+        css,
+        activePatterns,
+        patternCssList,
+    })),
     exportedAt: new Date().toISOString(),
 });
 
-export const downloadMockupConfig = (
-    config: MockupConfig,
-    filename = "mockup-config",
-): void => {
-    const blob = new Blob([JSON.stringify(config, null, 2)], {
-        type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${filename}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+export const downloadMockupConfig = (config: MockupConfig, filename = "mockup-config"): void => {
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: "application/json" });
+    saveBlob(blob, `${filename}.json`);
 };
 
 /**
- * Lê e valida um ficheiro JSON de configuração.
- * Lança erro com mensagem legível se algo estiver mal formado.
+ * Reads a configuration file (version 1 or 2) and returns its slides.
+ * Throws with a readable message when the file is malformed.
  */
-export const readMockupConfigFile = (file: File): Promise<MockupConfig> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+export const readMockupConfigFile = async (file: File): Promise<MockupSlide[]> => {
+    let parsed: unknown;
+    try {
+        parsed = JSON.parse(await file.text());
+    } catch {
+        throw new Error("Ficheiro inválido: não é JSON.");
+    }
 
-        reader.onload = () => {
-            try {
-                const parsed = JSON.parse(reader.result as string);
+    if (!isRecord(parsed)) {
+        throw new Error("Ficheiro inválido: não é um objeto JSON.");
+    }
 
-                if (!parsed || typeof parsed !== "object") {
-                    throw new Error("Ficheiro inválido: não é um objeto JSON.");
-                }
-                if (parsed.version !== 1) {
-                    throw new Error(
-                        `Versão de configuração não suportada: ${parsed.version}`,
-                    );
-                }
-                if (
-                    typeof parsed.previewHtml !== "string" ||
-                    typeof parsed.previewCss !== "string"
-                ) {
-                    throw new Error(
-                        "Ficheiro inválido: faltam previewHtml/previewCss.",
-                    );
-                }
+    let slides: ConfigSlide[];
+    if (parsed.version === 1) {
+        slides = [parseVersion1(parsed)];
+    } else if (parsed.version === 2 && Array.isArray(parsed.slides)) {
+        slides = parsed.slides.map((slide, index) => parseSlide(slide, index + 1));
+    } else {
+        throw new Error(`Versão de configuração não suportada: ${String(parsed.version)}`);
+    }
 
-                resolve({
-                    version: 1,
-                    template: parsed.template ?? DEFAULT_MOCKUP_TEMPLATE,
-                    previewHtml: parsed.previewHtml,
-                    previewCss: parsed.previewCss,
-                    patternStyles: parsed.patternStyles ?? {},
-                    activePatterns: Array.isArray(parsed.activePatterns)
-                        ? parsed.activePatterns
-                        : [],
-                    exportedAt: parsed.exportedAt ?? "",
-                });
-            } catch (err) {
-                reject(
-                    err instanceof Error
-                        ? err
-                        : new Error("Erro ao ler o ficheiro de configuração."),
-                );
-            }
-        };
+    if (slides.length === 0) {
+        throw new Error("Ficheiro inválido: não tem slides.");
+    }
 
-        reader.onerror = () => reject(new Error("Erro ao ler o ficheiro."));
-        reader.readAsText(file);
-    });
+    // duplicateSlide gives each imported slide a fresh id
+    return slides.map((slide) => duplicateSlide({ ...slide, id: "" }));
 };

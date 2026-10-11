@@ -4,8 +4,129 @@
     );
 }
 
+#mockup-page {
+    --mockup-toolbar-height: 38px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+#mockup-page .mockup-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    min-height: var(--mockup-toolbar-height);
+}
+
+#mockup-page .mockup-body {
+    flex: 1;
+    min-height: 0;
+}
+
 #mockup-page .row.main-row {
-    height: calc(100% - var(--sub-header-margin-bottom));
+    height: 100%;
+}
+
+#mockup-page .mockup-tabs {
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+#mockup-page .mockup-tab-panel {
+    min-height: 0;
+}
+
+/** SLIDES **/
+
+#mockup-page .slide-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+#mockup-page .slide-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    padding: var(--spacing-xs);
+}
+
+#mockup-page .slide-item.active {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 1px var(--bs-primary);
+}
+
+#mockup-page .slide-drag-handle {
+    border: 0;
+    background: none;
+    color: var(--text-secondary);
+    cursor: grab;
+    padding: 0 var(--spacing-xs);
+    touch-action: none;
+}
+
+#mockup-page .slide-select {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 0;
+    background: none;
+    color: inherit;
+    text-align: left;
+    padding: 0;
+}
+
+#mockup-page .slide-number {
+    font-weight: var(--font-weight-bold);
+}
+
+#mockup-page .slide-template {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#mockup-page .slide-actions {
+    display: flex;
+}
+
+/** PAGE PICKER (images tab) **/
+
+#mockup-page .page-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+}
+
+#mockup-page .page-picker-item {
+    width: 56px;
+    aspect-ratio: 210 / 297;
+    padding: 0;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+}
+
+#mockup-page .page-picker-item:hover,
+#mockup-page .page-picker-item:focus-visible {
+    border-color: var(--bs-primary);
+}
+
+#mockup-page .page-picker-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 #mockup-page .preview-section {
@@ -44,8 +165,6 @@
 }
 
 #mockup-page #image {
-    height: 100%;
-    overflow-y: auto;
     padding-inline: var(--spacing-md);
 }
 
@@ -192,4 +311,33 @@
 
 #modal-patterns .pattern-preview.active {
     border-color: var(--bs-primary);
+}
+/** PROCESSING STEP **/
+
+.product-processing .btn-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.product-processing .page-thumbnail {
+    margin: 0;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+}
+
+.product-processing .page-thumbnail img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 210 / 297;
+    object-fit: contain;
+}
+
+.product-processing .page-thumbnail figcaption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-top: 1px solid var(--border);
+    font-size: var(--font-size-sm);
 }

@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 // Bootstrap
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -20,8 +20,7 @@ import { ToastProvider } from "@contexts/ToastContext";
 // Pages
 import App from "./App";
 import Calculator from "@pages/Calculator/Calculator";
-import GenerateProduct from "@pages/GenerateProduct/GenerateProduct";
-import Mockup from "@pages/Mockup/Mockup";
+import Product from "@pages/Product/Product";
 
 const router = createBrowserRouter(
     [
@@ -38,12 +37,17 @@ const router = createBrowserRouter(
                     element: <Calculator />,
                 },
                 {
+                    path: "/product",
+                    element: <Product />,
+                },
+                // Old pages, merged into /product
+                {
                     path: "/generate-product",
-                    element: <GenerateProduct />,
+                    element: <Navigate to="/product" replace />,
                 },
                 {
                     path: "/mockup",
-                    element: <Mockup />,
+                    element: <Navigate to="/product" replace />,
                 },
             ],
         },

@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { resizeImageToBase64 } from "@utils/resize-image";
+import { resizeImageToBase64, resizeImageUrl } from "@utils/resize-image";
+import type { ProductPage } from "@utils/imgtools-api";
+
+// Processed pages are 2480x3508; this is enough for a 3000x2250 mockup
+// without making the slide HTML huge.
+const PAGE_MAX_SIZE = 1600;
 
 interface MockupImagesProps {
     previewHtml: string;
     setPreviewHtml: (html: string) => void;
     images: { name: string; bg: string | null }[];
     setImages: (imgs: { name: string; bg: string | null }[]) => void;
+    // Processed product pages (data URLs) the user can pick from
+    pages: ProductPage[];
 }
 
 const MockupImages: React.FC<MockupImagesProps> = ({
@@ -13,6 +20,7 @@ const MockupImages: React.FC<MockupImagesProps> = ({
     setImages,
     previewHtml,
     setPreviewHtml,
+    pages,
 }) => {
     const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
@@ -32,12 +40,12 @@ const MockupImages: React.FC<MockupImagesProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [previewHtml]);
 
-    const handleFileSelect = async (index: number, file: File) => {
+    const applyImage = async (index: number, loadImage: () => Promise<string>) => {
         setErrorIndex(null);
         setLoadingIndex(index);
 
         try {
-            const base64 = await resizeImageToBase64(file);
+            const base64 = await loadImage();
 
             const parser = new DOMParser();
             const doc = parser.parseFromString(previewHtml, "text/html");
@@ -87,11 +95,30 @@ const MockupImages: React.FC<MockupImagesProps> = ({
                                 onChange={async (e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
-                                        await handleFileSelect(index, file);
+                                        await applyImage(index, () => resizeImageToBase64(file));
                                     }
                                     e.target.value = "";
                                 }}
                             />
+                            {pages.length > 0 && (
+                                <div className="page-picker" role="group" aria-label={`Páginas do produto para ${img.name}`}>
+                                    {pages.map((page, pageIndex) => (
+                                        <button
+                                            key={pageIndex}
+                                            type="button"
+                                            className="page-picker-item"
+                                            disabled={loadingIndex === index}
+                                            onClick={() =>
+                                                applyImage(index, () => resizeImageUrl(page.image, PAGE_MAX_SIZE, PAGE_MAX_SIZE))
+                                            }
+                                            aria-label={`Usar a página ${pageIndex + 1} em ${img.name}`}
+                                            title={`Página ${pageIndex + 1}`}
+                                        >
+                                            <img src={page.thumbnail} alt="" />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                             {loadingIndex === index && (
                                 <div className="text-muted mt-1" role="status">
                                     <small>A processar imagem...</small>

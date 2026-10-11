@@ -76,57 +76,19 @@ const Header = () => {
                         </li>
                         <li className="nav-item">
                             <NavLink
-                                to="/generate-product"
+                                to="/product"
                                 className={({ isActive }) =>
                                     `nav-link ${isActive ? "active" : ""}`
                                 }
-                                aria-label="Product Generator"
+                                aria-label="Product"
                             >
                                 <i
                                     className="bi bi-box-seam nav-icon"
                                     aria-hidden="true"
                                 ></i>
-                                <span className="nav-text">
-                                    Gerador do Produto
-                                </span>
+                                <span className="nav-text">Produto</span>
                             </NavLink>
                         </li>
-                        <li className="nav-item">
-                            <NavLink
-                                to="/mockup"
-                                className={({ isActive }) =>
-                                    `nav-link ${isActive ? "active" : ""}`
-                                }
-                                aria-label="Mockup"
-                            >
-                                <i
-                                    className="bi bi-image nav-icon"
-                                    aria-hidden="true"
-                                ></i>
-                                <span className="nav-text">Mockup</span>
-                            </NavLink>
-                        </li>
-                        {/*
-                        <li className="nav-item">
-                            <NavLink to="/image-fixer" className="nav-link">
-                                Image Fixer
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/generate-pdf" className="nav-link">
-                                Gerador de PDF
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/convert-svg" className="nav-link">
-                                Conversor para SVG
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/midjourney-prompt" className="nav-link">
-                                Midjourney Prompt
-                            </NavLink>
-                        </li> */}
                     </ul>
                 </div>
             </div>

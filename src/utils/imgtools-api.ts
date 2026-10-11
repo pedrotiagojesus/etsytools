@@ -39,6 +39,12 @@ interface ApiErrorResponse {
     requestId?: string;
 }
 
+// A processed page: full resolution PNG and a small preview, both data URLs
+export interface ProductPage {
+    image: string;
+    thumbnail: string;
+}
+
 export interface DownloadedFile {
     blob: Blob;
     filename: string;
