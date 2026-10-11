@@ -1,16 +1,16 @@
 // CSS
 import "./ButtonSubmit.css";
 
-type ButtonSubmitProps = {
-    disabled: boolean;
+interface ButtonSubmitProps {
+    isDisabled: boolean;
     description: string | null;
-};
+}
 
-const ButtonSubmit = ({ disabled, description }: ButtonSubmitProps) => {
+const ButtonSubmit = ({ isDisabled, description }: ButtonSubmitProps) => {
     if (!description) return null;
 
     return (
-        <button type="submit" className="btn btn-primary" disabled={disabled}>
+        <button type="submit" className="btn btn-primary" disabled={isDisabled}>
             {description}
         </button>
     );

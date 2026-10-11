@@ -13,7 +13,7 @@ export function validatePrice(value: string | number): ValidationResult {
     const numValue = typeof value === "string" ? parseFloat(value) : value;
 
     // Check if empty or not a number
-    if (value === "" || value === null || value === undefined) {
+    if ((value ?? "") === "") {
         return { isValid: true }; // Empty is valid (optional field)
     }
 
@@ -49,7 +49,7 @@ export function validateDiscount(value: string | number): ValidationResult {
     const numValue = typeof value === "string" ? parseFloat(value) : value;
 
     // Check if empty or not a number
-    if (value === "" || value === null || value === undefined) {
+    if ((value ?? "") === "") {
         return { isValid: true }; // Empty is valid (optional field)
     }
 

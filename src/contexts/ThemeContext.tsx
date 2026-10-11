@@ -1,14 +1,14 @@
 import { createContext, useState, useEffect } from "react";
-import type { ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 
 type Theme = "light" | "dark";
 
-interface ThemeContextType {
+export interface ThemeContextType {
     theme: Theme;
     toggleTheme: () => void;
 }
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(
+const ThemeContext = createContext<ThemeContextType | undefined>(
     undefined,
 );
 
@@ -16,7 +16,7 @@ interface ThemeProviderProps {
     children: ReactNode;
 }
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+export const ThemeProvider = ({ children }: ThemeProviderProps): JSX.Element => {
     const [theme, setTheme] = useState<Theme>(() => {
         // Check localStorage first
         const savedTheme = localStorage.getItem("estytools-theme");
@@ -72,3 +72,5 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
         </ThemeContext.Provider>
     );
 };
+
+export default ThemeContext;

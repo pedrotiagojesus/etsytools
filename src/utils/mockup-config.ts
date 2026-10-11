@@ -37,7 +37,7 @@ export const buildMockupConfig = (
 export const downloadMockupConfig = (
     config: MockupConfig,
     filename = "mockup-config",
-) => {
+): void => {
     const blob = new Blob([JSON.stringify(config, null, 2)], {
         type: "application/json",
     });

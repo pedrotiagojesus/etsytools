@@ -40,9 +40,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(
-            doc.querySelectorAll("div[data-pattern]"),
-        ) as HTMLDivElement[];
+        const divs = Array.from(doc.querySelectorAll<HTMLDivElement>("div[data-pattern]"));
 
         const ptns = divs.map((div, i) => ({
             name: div.getAttribute("data-title") ?? `Padrão ${i + 1}`,
@@ -57,9 +55,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
     const handlePatternRemove = (index: number) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(
-            doc.querySelectorAll("div[data-pattern]"),
-        ) as HTMLDivElement[];
+        const divs = Array.from(doc.querySelectorAll<HTMLDivElement>("div[data-pattern]"));
         const targetDiv = divs[index];
         if (!targetDiv) return;
 

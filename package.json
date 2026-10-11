@@ -7,6 +7,7 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "type-check": "tsc -b --noEmit",
+        "typecheck": "npm run type-check",
         "type-check:watch": "tsc -b --noEmit --watch",
         "lint": "eslint .",
         "preview": "vite preview"

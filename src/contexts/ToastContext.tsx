@@ -1,5 +1,5 @@
-import { createContext, useReducer } from "react";
-import type { ReactNode } from "react";
+import { createContext, useCallback, useReducer } from "react";
+import type { JSX, ReactNode } from "react";
 
 export interface Toast {
     id: string;
@@ -42,28 +42,28 @@ interface ToastProviderProps {
     children: ReactNode;
 }
 
-export const ToastProvider = ({ children }: ToastProviderProps) => {
+export const ToastProvider = ({ children }: ToastProviderProps): JSX.Element => {
     const [toasts, dispatch] = useReducer(toastReducer, []);
 
-    const addToast = (
-        message: string,
-        type: Toast["type"],
-        duration: number = 5000,
-    ) => {
-        const id = generateId();
-        const toast: Toast = { id, message, type, duration };
-
-        dispatch({ type: "ADD_TOAST", payload: toast });
-
-        // Auto-dismiss after duration
-        setTimeout(() => {
-            removeToast(id);
-        }, duration);
-    };
-
-    const removeToast = (id: string) => {
+    // Stable references so consumers can use them in effect dependencies
+    const removeToast = useCallback((id: string) => {
         dispatch({ type: "REMOVE_TOAST", payload: id });
-    };
+    }, []);
+
+    const addToast = useCallback(
+        (message: string, type: Toast["type"], duration: number = 5000) => {
+            const id = generateId();
+            const toast: Toast = { id, message, type, duration };
+
+            dispatch({ type: "ADD_TOAST", payload: toast });
+
+            // Auto-dismiss after duration
+            setTimeout(() => {
+                removeToast(id);
+            }, duration);
+        },
+        [removeToast],
+    );
 
     return (
         <ToastContext.Provider value={{ toasts, addToast, removeToast }}>

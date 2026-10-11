@@ -3,12 +3,12 @@ import "./LoadingSpinner.css";
 
 interface LoadingSpinnerProps {
     size?: "sm" | "md" | "lg";
-    overlay?: boolean;
+    isOverlay?: boolean;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     size = "md",
-    overlay = false,
+    isOverlay = false,
 }) => {
     const spinner = (
         <div
@@ -24,7 +24,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         </div>
     );
 
-    if (overlay) {
+    if (isOverlay) {
         return (
             <div
                 className="loading-spinner-overlay"

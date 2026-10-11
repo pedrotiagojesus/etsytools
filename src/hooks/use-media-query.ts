@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
  * @returns boolean indicating if the media query matches
  */
 export const useMediaQuery = (query: string): boolean => {
-    const [matches, setMatches] = useState<boolean>(() => {
+    const [isMatching, setIsMatching] = useState<boolean>(() => {
         // Check if window is available (SSR safety)
         if (typeof window !== "undefined") {
             return window.matchMedia(query).matches;
@@ -23,11 +23,11 @@ export const useMediaQuery = (query: string): boolean => {
         const mediaQuery = window.matchMedia(query);
 
         // Update state if initial value is different
-        setMatches(mediaQuery.matches);
+        setIsMatching(mediaQuery.matches);
 
         // Event handler for media query changes
         const handleChange = (event: MediaQueryListEvent) => {
-            setMatches(event.matches);
+            setIsMatching(event.matches);
         };
 
         // Add event listener for window resize
@@ -39,5 +39,5 @@ export const useMediaQuery = (query: string): boolean => {
         };
     }, [query]);
 
-    return matches;
+    return isMatching;
 };

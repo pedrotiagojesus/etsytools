@@ -1,13 +1,15 @@
+interface Transform {
+    x: number;
+    y: number;
+    scale: number;
+}
+
 export const centerContent = (
     setTransform: (x: number, y: number, scale: number) => void,
     previewId = "preview-section",
-) => {
-    const container = document.querySelector(
-        `#${previewId}`,
-    ) as HTMLDivElement | null;
-    const content = container?.querySelector(
-        ".preview-content",
-    ) as HTMLDivElement | null;
+): Transform => {
+    const container = document.querySelector<HTMLDivElement>(`#${previewId}`);
+    const content = container?.querySelector<HTMLDivElement>(".preview-content");
     if (!container || !content) return { x: 0, y: 0, scale: 1 };
 
     const margin = 40;

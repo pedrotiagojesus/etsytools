@@ -20,6 +20,12 @@ const MockupEditor: React.FC<MockupEditorProps> = ({
     const [localValue, setLocalValue] = useState(preview);
     const debounceTimer = useRef<number | null>(null);
     const isInternalChange = useRef(false);
+    const pendingValue = useRef(preview);
+    const setPreviewRef = useRef(setPreview);
+
+    useEffect(() => {
+        setPreviewRef.current = setPreview;
+    }, [setPreview]);
 
     // Sincroniza o valor local quando o preview muda por fora
     // (ex: trocar de template, upload de imagem, seleção de padrão)
@@ -32,6 +38,7 @@ const MockupEditor: React.FC<MockupEditorProps> = ({
 
     const handleChange = (value: string) => {
         setLocalValue(value); // feedback instantâneo no editor
+        pendingValue.current = value;
 
         if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
@@ -43,13 +50,14 @@ const MockupEditor: React.FC<MockupEditorProps> = ({
         }, debounceMs);
     };
 
-    // Garante que a última alteração não se perde ao trocar de aba/desmontar
+    // Garante que a última alteração não se perde ao trocar de aba/desmontar.
+    // Usa refs porque a limpeza só corre no fim e veria valores do primeiro render.
     useEffect(() => {
         return () => {
             if (debounceTimer.current) {
                 clearTimeout(debounceTimer.current);
                 isInternalChange.current = true;
-                setPreview(localValue);
+                setPreviewRef.current(pendingValue.current);
             }
         };
     }, []);

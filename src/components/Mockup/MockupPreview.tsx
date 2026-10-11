@@ -1,7 +1,8 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useEffect, useRef, useState } from "react";
-import { centerContent } from "@utils/centerMockuptPreview";
-import { loadFontsFromCss } from "@utils/loadFonts";
+import { centerContent } from "@utils/center-mockup-preview";
+import { loadFontsFromCss } from "@utils/load-fonts";
+import { useToast } from "@hooks/use-toast";
 import MockupToolbar from "./MockupToolbar";
 
 interface MockupPreviewProps {
@@ -17,16 +18,29 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
     previewHtml,
     previewCss,
 }) => {
+    const { showError } = useToast();
+    // O CSS muda a cada edição; evita repetir o aviso para a mesma fonte
+    const reportedFonts = useRef(new Set<string>());
+
     useEffect(() => {
         const styleTag = document.getElementById("mockup-style") || document.createElement("style");
         styleTag.id = "mockup-style";
         styleTag.innerHTML = `${previewCss ?? ""}`;
         document.head.appendChild(styleTag);
 
-        loadFontsFromCss(previewCss);
-    }, [previewCss]);
+        const loadPreviewFonts = async () => {
+            const failedFonts = await loadFontsFromCss(previewCss);
+            const newFailures = failedFonts.filter((font) => !reportedFonts.current.has(font));
+            if (newFailures.length === 0) return;
 
-    const [guideLine, setGuideLine] = useState(false);
+            newFailures.forEach((font) => reportedFonts.current.add(font));
+            showError(`Não foi possível carregar as fontes: ${newFailures.join(", ")}`);
+        };
+
+        loadPreviewFonts();
+    }, [previewCss, showError]);
+
+    const [isGuideLineVisible, setIsGuideLineVisible] = useState(false);
     const initialScaleRef = useRef<number>(1);
     const currentScaleRef = useRef<number>(1);
     const MARGIN = 40;
@@ -47,8 +61,8 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                     currentScaleRef.current = state.scale;
                 }}
                 onPanningStop={({ state, setTransform }) => {
-                    const container = document.querySelector(`#${previewId}`) as HTMLDivElement;
-                    const content = container?.querySelector(".preview-content") as HTMLDivElement;
+                    const container = document.querySelector<HTMLDivElement>(`#${previewId}`);
+                    const content = container?.querySelector<HTMLDivElement>(".preview-content");
                     if (!container || !content) return;
 
                     const containerRect = container.getBoundingClientRect();
@@ -73,8 +87,8 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                 {({ zoomIn, zoomOut, setTransform }) => (
                     <>
                         <MockupToolbar
-                            guideLine={guideLine}
-                            setGuideLine={setGuideLine}
+                            isGuideLineVisible={isGuideLineVisible}
+                            setIsGuideLineVisible={setIsGuideLineVisible}
                             zoomIn={() => {
                                 zoomIn();
                             }}
@@ -97,7 +111,7 @@ const MockupPreview: React.FC<MockupPreviewProps> = ({
                                     __html: previewHtml,
                                 }}
                             ></div>
-                            {guideLine && <div className="guide-lines" id="guide-lines"></div>}
+                            {isGuideLineVisible && <div className="guide-lines" id="guide-lines"></div>}
                         </TransformComponent>
                     </>
                 )}

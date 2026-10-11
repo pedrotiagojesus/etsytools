@@ -11,10 +11,10 @@ import Tooltip from "@components/Tooltip/Tooltip";
 import ValidationFeedback from "@components/ValidationFeedback/ValidationFeedback";
 
 // Hooks
-import { useToast } from "@hooks/useToast";
+import { useToast } from "@hooks/use-toast";
 
 // Utils
-import { validateImageFiles } from "@utils/fileValidation";
+import { validateImageFiles } from "@utils/file-validation";
 
 const GenerateProduct = () => {
     const [title, setTitle] = useState<string>("");
@@ -22,8 +22,8 @@ const GenerateProduct = () => {
     const [images, setImages] = useState<File[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const [btnSumbit, setBtnSubmit] = useState({
-        disabled: false,
+    const [submitButton, setSubmitButton] = useState({
+        isDisabled: false,
         value: "Gerar Produto",
     });
 
@@ -56,7 +56,7 @@ const GenerateProduct = () => {
         }
 
         const validation = validateImageFiles(newImages);
-        if (!validation.valid) {
+        if (!validation.isValid) {
             showError(
                 validation.message ?? "Uma ou mais imagens são inválidas.",
             );
@@ -77,7 +77,7 @@ const GenerateProduct = () => {
         // Segunda validação de segurança, caso o estado tenha sido
         // alterado por outra via entretanto.
         const validation = validateImageFiles(images);
-        if (!validation.valid) {
+        if (!validation.isValid) {
             showError(
                 validation.message ?? "Uma ou mais imagens são inválidas.",
             );
@@ -93,9 +93,9 @@ const GenerateProduct = () => {
 
         try {
             setIsLoading(true);
-            setBtnSubmit({
+            setSubmitButton({
                 value: "A gerar...",
-                disabled: true,
+                isDisabled: true,
             });
 
             showInfo("A gerar o produto...");
@@ -160,9 +160,9 @@ const GenerateProduct = () => {
             }
         } finally {
             setIsLoading(false);
-            setBtnSubmit({
+            setSubmitButton({
                 value: "Gerar Produto",
-                disabled: false,
+                isDisabled: false,
             });
         }
     };
@@ -174,7 +174,7 @@ const GenerateProduct = () => {
             </div>
 
             <div className="container-fluid">
-                {isLoading && <LoadingSpinner overlay size="lg" />}
+                {isLoading && <LoadingSpinner isOverlay size="lg" />}
 
                 <form onSubmit={handleResize}>
                     <div className="mb-3">
@@ -200,7 +200,7 @@ const GenerateProduct = () => {
                         <ValidationFeedback
                             isValid={titleValidation.isValid}
                             message={titleValidation.message}
-                            showValidState={false}
+                            shouldShowValidState={false}
                         />
                     </div>
 
@@ -220,8 +220,8 @@ const GenerateProduct = () => {
                     </div>
 
                     <ButtonSubmit
-                        disabled={btnSumbit.disabled}
-                        description={btnSumbit.value}
+                        isDisabled={submitButton.isDisabled}
+                        description={submitButton.value}
                     />
                 </form>
             </div>

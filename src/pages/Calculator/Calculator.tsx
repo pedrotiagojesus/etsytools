@@ -3,7 +3,7 @@ import Tooltip from "@components/Tooltip/Tooltip";
 
 // CSS
 import "./Calculator.css";
-import { calculateProfit } from "@utils/profitCalculator";
+import { calculateProfit } from "@utils/profit-calculator";
 
 function Calculator() {
     const COMMISSION_PER_ADVERTISEMENT = 0.19;

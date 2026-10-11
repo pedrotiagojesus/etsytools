@@ -12,12 +12,12 @@ import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import "./Mockup.css";
 
 // Utils
-import downloadPng from "@utils/downloadFiles";
-import injectPatternStyle from "@utils/injectPatternStyle";
-import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockupConfig";
+import downloadPng from "@utils/download-files";
+import injectPatternStyle from "@utils/inject-pattern-style";
+import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockup-config";
 
 // Hooks
-import { useToast } from "@hooks/useToast";
+import { useToast } from "@hooks/use-toast";
 
 interface Pattern {
     name: string;
@@ -32,7 +32,7 @@ const Mockup = () => {
     const [images, setImages] = useState<{ name: string; bg: string | null }[]>([]);
     const [patternsInput, setPatternsInput] = useState<{ name: string }[]>([]);
     const [patterns, setPatterns] = useState<Pattern[]>([]);
-    const [loadingTemplate, setLoadingTemplate] = useState(false);
+    const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
 
     const [activePatterns, setActivePatterns] = useState<string[]>([]);
     const [patternCssList, setPatternCssList] = useState<string[]>([]);
@@ -50,31 +50,31 @@ const Mockup = () => {
         }
 
         (async () => {
-            setLoadingTemplate(true);
+            setIsLoadingTemplate(true);
 
             try {
                 const mockupTemplateFiles = import.meta.glob("/src/templates/mockups/*/*", { as: "raw" });
 
                 for (const path in mockupTemplateFiles) {
-                    let htmlLoaded = false;
-                    let cssLoaded = false;
+                    let isHtmlLoaded = false;
+                    let isCssLoaded = false;
 
                     if (path.includes(`/src/templates/mockups/${mockupTemplateSelected}/`)) {
                         const loader = mockupTemplateFiles[path];
                         const content = await loader();
                         const extension = path.split("/")?.pop()?.split(".").pop() || "unknown";
 
-                        if (extension === "html" && !htmlLoaded) {
+                        if (extension === "html" && !isHtmlLoaded) {
                             setPreviewHtml(content);
-                            htmlLoaded = true;
+                            isHtmlLoaded = true;
                         }
 
-                        if (extension === "css" && !cssLoaded) {
+                        if (extension === "css" && !isCssLoaded) {
                             setPreviewCss(content);
-                            cssLoaded = true;
+                            isCssLoaded = true;
                         }
 
-                        if (htmlLoaded && cssLoaded) break;
+                        if (isHtmlLoaded && isCssLoaded) break;
                     }
                 }
 
@@ -86,7 +86,7 @@ const Mockup = () => {
                 setPreviewCss("body { background: red; }");
                 showError(`Erro ao carregar o template "${mockupTemplateSelected}"`);
             } finally {
-                setLoadingTemplate(false);
+                setIsLoadingTemplate(false);
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,7 +145,12 @@ const Mockup = () => {
     }, []);
 
     const handleDownload = async () => {
-        await downloadPng("preview-display", "mockup", "jpeg");
+        try {
+            await downloadPng("preview-display", "mockup", "jpeg");
+        } catch (err) {
+            console.error("Erro ao gerar imagem:", err);
+            showError("Não foi possível gerar a imagem do mockup.");
+        }
     };
 
     const handleExportConfig = () => {
@@ -298,8 +303,8 @@ const Mockup = () => {
             <div id="mockup-page" className="container-fluid">
                 <div className="row main-row">
                     <div className="col-xl-7 h-100">
-                        {loadingTemplate ? (
-                            <LoadingSpinner overlay size="lg" />
+                        {isLoadingTemplate ? (
+                            <LoadingSpinner isOverlay size="lg" />
                         ) : (
                             <MockupPreview previewHtml={previewHtml} previewCss={previewCss} />
                         )}

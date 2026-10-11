@@ -2,10 +2,10 @@
 import "./EndpointFeedback.css";
 
 type StatusType = "success" | "error" | "warning" | "info" | "danger" | null;
-type EndpointFeedbackProps = {
+interface EndpointFeedbackProps {
     status: StatusType;
     description: string | null;
-};
+}
 
 const EndpointFeedback = ({ status, description }: EndpointFeedbackProps) => {
     if (!status || !description) return null;

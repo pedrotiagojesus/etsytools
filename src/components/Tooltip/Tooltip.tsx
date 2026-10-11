@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
 import "./Tooltip.css";
 
@@ -23,7 +23,7 @@ const Tooltip = ({
     const showTimeoutRef = useRef<number | null>(null);
     const hideTimeoutRef = useRef<number | null>(null);
 
-    const calculatePosition = () => {
+    const calculatePosition = useCallback(() => {
         if (!triggerRef.current || !tooltipRef.current) return;
 
         const triggerRect = triggerRef.current.getBoundingClientRect();
@@ -107,7 +107,7 @@ const Tooltip = ({
 
         setCalculatedPosition(finalPosition);
         setCoords({ top, left });
-    };
+    }, [position]);
 
     const handleShow = () => {
         if (hideTimeoutRef.current) {
@@ -157,7 +157,7 @@ const Tooltip = ({
         if (isVisible) {
             calculatePosition();
         }
-    }, [isVisible]);
+    }, [isVisible, calculatePosition]);
 
     useEffect(() => {
         return () => {

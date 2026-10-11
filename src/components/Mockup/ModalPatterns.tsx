@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy, Suspense, type Dispatch, type SetStateAction } from "react";
 import { createPortal } from "react-dom";
 import MockupEditor from "./MockupEditor";
-import injectPatternStyle from "@utils/injectPatternStyle";
+import injectPatternStyle from "@utils/inject-pattern-style";
 
 const MockupPreview = lazy(() => import("./MockupPreview"));
 
@@ -78,7 +78,7 @@ const ModalPatterns: React.FC<ModalPatternsProps> = ({
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(doc.querySelectorAll("div[data-pattern]")) as HTMLDivElement[];
+        const divs = Array.from(doc.querySelectorAll<HTMLDivElement>("div[data-pattern]"));
         const targetDiv = divs[index];
         if (!targetDiv) return;
 

@@ -18,16 +18,16 @@ import { CSS } from "@dnd-kit/utilities";
 // CSS
 import "./ImageUploader.css";
 
-type ImageItem = {
+interface ImageItem {
     id: string;
     file: File;
     preview: string;
-};
+}
 
-type Props = {
+interface ImageUploaderProps {
     onChange: (images: File[]) => void;
     renderOverlay?: (file: File) => React.ReactNode;
-};
+}
 
 function SortableImage({
     id,
@@ -94,7 +94,7 @@ function SortableImage({
     );
 }
 
-const ImageUploader: React.FC<Props> = ({ onChange, renderOverlay }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange, renderOverlay }) => {
     const [images, setImages] = useState<ImageItem[]>([]);
 
     const sensors = useSensors(useSensor(PointerSensor));

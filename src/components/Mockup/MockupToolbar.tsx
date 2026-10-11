@@ -1,14 +1,14 @@
 interface ToolbarProps {
-    guideLine: boolean;
-    setGuideLine: (v: boolean) => void;
+    isGuideLineVisible: boolean;
+    setIsGuideLineVisible: (v: boolean) => void;
     zoomIn: () => void;
     zoomOut: () => void;
     center: () => void;
 }
 
 const MockupToolbar: React.FC<ToolbarProps> = ({
-    guideLine,
-    setGuideLine,
+    isGuideLineVisible,
+    setIsGuideLineVisible,
     zoomIn,
     zoomOut,
     center,
@@ -40,11 +40,11 @@ const MockupToolbar: React.FC<ToolbarProps> = ({
                 <i className="bi bi-arrow-clockwise" aria-hidden="true"></i>
             </button>
             <button
-                className={`btn ${guideLine ? "btn-success" : "btn-primary"}`}
-                onClick={() => setGuideLine(!guideLine)}
-                aria-label={guideLine ? "Hide guidelines" : "Show guidelines"}
-                aria-pressed={guideLine}
-                title={guideLine ? "Hide guidelines" : "Show guidelines"}
+                className={`btn ${isGuideLineVisible ? "btn-success" : "btn-primary"}`}
+                onClick={() => setIsGuideLineVisible(!isGuideLineVisible)}
+                aria-label={isGuideLineVisible ? "Hide guidelines" : "Show guidelines"}
+                aria-pressed={isGuideLineVisible}
+                title={isGuideLineVisible ? "Hide guidelines" : "Show guidelines"}
             >
                 <i className="bi bi-rulers" aria-hidden="true"></i>
             </button>

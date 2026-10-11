@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { resizeImageToBase64 } from "@utils/resizeImage";
+import { resizeImageToBase64 } from "@utils/resize-image";
 
 interface MockupImagesProps {
     previewHtml: string;
@@ -22,9 +22,7 @@ const MockupImages: React.FC<MockupImagesProps> = ({
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(previewHtml, "text/html");
-        const divs = Array.from(
-            doc.querySelectorAll("div[data-img]"),
-        ) as HTMLDivElement[];
+        const divs = Array.from(doc.querySelectorAll<HTMLDivElement>("div[data-img]"));
 
         const imgs = divs.map((div, i) => ({
             name: div.getAttribute("data-title") || `Imagem ${i + 1}`,
@@ -43,9 +41,7 @@ const MockupImages: React.FC<MockupImagesProps> = ({
 
             const parser = new DOMParser();
             const doc = parser.parseFromString(previewHtml, "text/html");
-            const divs = Array.from(
-                doc.querySelectorAll("div[data-img]"),
-            ) as HTMLDivElement[];
+            const divs = Array.from(doc.querySelectorAll<HTMLDivElement>("div[data-img]"));
 
             const div = divs[index];
             if (div) {

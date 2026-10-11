@@ -23,20 +23,32 @@ export const loadFont = async (fontName: string): Promise<void> => {
 
     if (!match) return; // fonte não disponível localmente (ex: "sans-serif", "Impact")
 
-    try {
-        await fontModules[match](); // efeito colateral: injeta o <style>/chunk CSS correto
-        loadedFonts.add(key);
-    } catch (err) {
-        console.error(`Erro ao carregar a fonte "${fontName}":`, err);
-    }
+    await fontModules[match](); // efeito colateral: injeta o <style>/chunk CSS correto
+    loadedFonts.add(key);
 };
 
 /**
- * Extrai todos os font-family usados num bloco de CSS (incluindo fallbacks)
- * e despoleta o carregamento de cada um.
+ * Carrega várias fontes em paralelo e devolve os nomes das que falharam,
+ * para quem chama poder avisar o utilizador uma só vez.
  */
-export const loadFontsFromCss = (css: string): void => {
-    if (!css) return;
+export const loadFonts = async (fontNames: string[]): Promise<string[]> => {
+    const results = await Promise.allSettled(fontNames.map(loadFont));
+
+    return fontNames.filter((fontName, index) => {
+        const result = results[index];
+        if (result.status === "fulfilled") return false;
+
+        console.error(`Erro ao carregar a fonte "${fontName}":`, result.reason);
+        return true;
+    });
+};
+
+/**
+ * Extrai todos os font-family usados num bloco de CSS (incluindo fallbacks),
+ * carrega cada um e devolve os nomes das que falharam.
+ */
+export const loadFontsFromCss = async (css: string): Promise<string[]> => {
+    if (!css) return [];
 
     const regex = /font-family:\s*([^;}]+)/g;
     const names = new Set<string>();
@@ -50,7 +62,7 @@ export const loadFontsFromCss = (css: string): void => {
             .forEach((f) => names.add(f));
     }
 
-    names.forEach((name) => loadFont(name));
+    return loadFonts(Array.from(names));
 };
 
 /**

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { listAvailableFonts, loadFont } from "@utils/loadFonts";
+import { listAvailableFonts, loadFonts } from "@utils/load-fonts";
+import { useToast } from "@hooks/use-toast";
 
 const MockupFonts = () => {
     const [fontList, setFontList] = useState<string[]>([]);
+    const { showError } = useToast();
 
     useEffect(() => {
         const fonts = listAvailableFonts();
@@ -11,10 +13,15 @@ const MockupFonts = () => {
         // Este separador é especificamente um "browser" de fontes,
         // por isso faz sentido carregá-las todas aqui — mas só aqui,
         // e não no arranque global da app.
-        fonts.forEach((font) => {
-            loadFont(font);
-        });
-    }, []);
+        const loadAllFonts = async () => {
+            const failedFonts = await loadFonts(fonts);
+            if (failedFonts.length > 0) {
+                showError(`Não foi possível carregar as fontes: ${failedFonts.join(", ")}`);
+            }
+        };
+
+        loadAllFonts();
+    }, [showError]);
 
     return (
         <div>

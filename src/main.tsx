@@ -46,14 +46,6 @@ const router = createBrowserRouter(
                     path: "/mockup",
                     element: <Mockup />,
                 },
-                // {
-                //     path: "/midjourney-prompt",
-                //     element: <MidjourneyPrompt />,
-                // },
-                // {
-                //     path: "/test",
-                //     element: <Test />,
-                // },
             ],
         },
     ],
@@ -62,7 +54,12 @@ const router = createBrowserRouter(
     },
 );
 
-createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+    throw new Error('Elemento "#root" não encontrado no index.html');
+}
+
+createRoot(rootElement).render(
     <StrictMode>
         <ThemeProvider>
             <ToastProvider>

@@ -4,16 +4,16 @@ import "./ValidationFeedback.css";
 interface ValidationFeedbackProps {
     isValid: boolean;
     message?: string;
-    showValidState?: boolean;
+    shouldShowValidState?: boolean;
 }
 
 const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
     isValid,
     message,
-    showValidState = true,
+    shouldShowValidState = true,
 }) => {
-    // Don't show anything if valid and showValidState is false
-    if (isValid && !showValidState) {
+    // Don't show anything if valid and shouldShowValidState is false
+    if (isValid && !shouldShowValidState) {
         return null;
     }
 
@@ -29,7 +29,7 @@ const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
                     <span>{message}</span>
                 </div>
             )}
-            {isValid && showValidState && (
+            {isValid && shouldShowValidState && (
                 <div
                     className="validation-message success"
                     role="status"
