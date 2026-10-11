@@ -13,6 +13,7 @@ interface Pattern {
 interface MockupPatternsModalProps {
     previewCss: string;
     previewHtml: string;
+    previewDisplayHtml: string;
     setPreviewHtml: (html: string) => void;
     patterns: Pattern[];
     editingIndex: number | null;
@@ -25,6 +26,7 @@ interface MockupPatternsModalProps {
 const MockupPatternsModal: React.FC<MockupPatternsModalProps> = ({
     previewCss,
     previewHtml,
+    previewDisplayHtml,
     setPreviewHtml,
     patterns,
     editingIndex,
@@ -126,7 +128,7 @@ const MockupPatternsModal: React.FC<MockupPatternsModalProps> = ({
                                         <MockupPreview
                                             previewId="modal-pattern-preview"
                                             previewDisplayId="modal-pattern-display"
-                                            previewHtml={previewHtml}
+                                            previewHtml={previewDisplayHtml}
                                             previewCss={previewCss}
                                         />
                                     </Suspense>

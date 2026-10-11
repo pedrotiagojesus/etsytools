@@ -25,7 +25,13 @@ export interface MockupSlide {
     // and the CSS scoped to that div (".pattern-N")
     activePatterns: string[];
     patternCssList: string[];
+    // Images used by the slide, by id. The HTML only references them as
+    // url("image:<id>"), so it stays small enough to edit; they are put back
+    // with resolveSlideImages before rendering.
+    images: Record<string, string>;
 }
+
+export type SlideImageChange = Pick<MockupSlide, "html" | "images">;
 
 export interface Pattern {
     name: string;
@@ -43,6 +49,12 @@ const patternFiles = import.meta.glob<string>("/src/templates/patterns/*.css", {
 });
 
 const PATTERN_STYLE_PREFIX = "pattern-style-";
+
+const IMAGE_REFERENCE_PREFIX = "image:";
+const IMAGE_REFERENCE = /image:([\w-]+)/g;
+// Inline data URLs inside url(...), as left by older configuration files.
+// Quotes inside a style attribute are serialized as &quot;
+const INLINE_DATA_URL = /url\((&quot;|["']?)(data:image\/[^"')&]+)\1\)/g;
 
 const folderName = (path: string): string => path.split("/").slice(-2, -1)[0] ?? "";
 
@@ -68,20 +80,63 @@ const loadTemplateFile = async (template: string, extension: "html" | "css"): Pr
 export const createSlide = async (template: string): Promise<MockupSlide> => {
     const [html, css] = await Promise.all([loadTemplateFile(template, "html"), loadTemplateFile(template, "css")]);
 
-    return { id: createSlideId(), template, html, css, activePatterns: [], patternCssList: [] };
+    return { id: createSlideId(), template, html, css, activePatterns: [], patternCssList: [], images: {} };
 };
 
 /**
- * Sets the background image of one image slot (div[data-img], by index) of a
- * slide's HTML and returns the new HTML.
+ * Replaces the url("image:<id>") references with the slide's images, for
+ * rendering. Unknown ids are left as they are.
  */
-export const setSlotImage = (html: string, slotIndex: number, imageUrl: string): string => {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    const slot = doc.querySelectorAll<HTMLDivElement>(IMAGE_SLOT_SELECTOR)[slotIndex];
-    if (!slot) return html;
+export const resolveSlideImages = (html: string, images: Record<string, string>): string =>
+    html.replace(IMAGE_REFERENCE, (match, id: string) => images[id] ?? match);
 
-    slot.style.backgroundImage = `url(${imageUrl})`;
-    return doc.body.innerHTML;
+/**
+ * Keeps only the images the HTML still references.
+ */
+export const pruneSlideImages = (html: string, images: Record<string, string>): Record<string, string> => {
+    const referencedIds = new Set(Array.from(html.matchAll(IMAGE_REFERENCE), ([, id]) => id));
+    return Object.fromEntries(Object.entries(images).filter(([id]) => referencedIds.has(id)));
+};
+
+// Reuses the id when the same image is already in the slide (e.g. a page
+// repeated on a contact sheet), so it is stored only once
+const addSlideImage = (images: Record<string, string>, imageUrl: string): { id: string; images: Record<string, string> } => {
+    const existingId = Object.entries(images).find(([, url]) => url === imageUrl)?.[0];
+    if (existingId) return { id: existingId, images };
+
+    const id = crypto.randomUUID();
+    return { id, images: { ...images, [id]: imageUrl } };
+};
+
+/**
+ * Sets the background image of one image slot (div[data-img], by index).
+ */
+export const setSlotImage = (slide: SlideImageChange, slotIndex: number, imageUrl: string): SlideImageChange => {
+    const doc = new DOMParser().parseFromString(slide.html, "text/html");
+    const slot = doc.querySelectorAll<HTMLDivElement>(IMAGE_SLOT_SELECTOR)[slotIndex];
+    if (!slot) return slide;
+
+    const { id, images } = addSlideImage(slide.images, imageUrl);
+    slot.style.backgroundImage = `url("${IMAGE_REFERENCE_PREFIX}${id}")`;
+    const html = doc.body.innerHTML;
+
+    return { html, images: pruneSlideImages(html, images) };
+};
+
+/**
+ * Moves inline data URLs out of the HTML into the slide's images (older
+ * configuration files stored them inline).
+ */
+export const extractInlineImages = (slide: SlideImageChange): SlideImageChange => {
+    let images = slide.images;
+    // Keeps the original quoting: a raw " would end the style attribute
+    const html = slide.html.replace(INLINE_DATA_URL, (_match, quote: string, dataUrl: string) => {
+        const added = addSlideImage(images, dataUrl);
+        images = added.images;
+        return `url(${quote}${IMAGE_REFERENCE_PREFIX}${added.id}${quote})`;
+    });
+
+    return { html, images };
 };
 
 export const countImageSlots = (html: string): number =>
@@ -98,16 +153,16 @@ export const createAutoSlides = async (images: string[]): Promise<MockupSlide[]>
 
     let nextImage = 0;
     return slides.map((slide) => {
-        let html = slide.html;
-        const slotCount = countImageSlots(html);
+        let content: SlideImageChange = { html: slide.html, images: slide.images };
+        const slotCount = countImageSlots(slide.html);
 
         for (let slotIndex = 0; slotIndex < slotCount; slotIndex++) {
             const image = images[nextImage % images.length];
-            if (image) html = setSlotImage(html, slotIndex, image);
+            if (image) content = setSlotImage(content, slotIndex, image);
             nextImage += 1;
         }
 
-        return { ...slide, html };
+        return { ...slide, ...content };
     });
 };
 

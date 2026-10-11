@@ -9,6 +9,8 @@ interface Pattern {
 interface MockupPatternsProps {
     previewCss: string;
     previewHtml: string;
+    // previewHtml with the slide images put back, for the modal preview
+    previewDisplayHtml: string;
     setPreviewHtml: (html: string) => void;
     patternsInput: { name: string }[];
     setPatternsInput: (patterns: { name: string }[]) => void;
@@ -24,6 +26,7 @@ interface MockupPatternsProps {
 const MockupPatterns: React.FC<MockupPatternsProps> = ({
     previewCss,
     previewHtml,
+    previewDisplayHtml,
     setPreviewHtml,
     patternsInput,
     setPatternsInput,
@@ -134,6 +137,7 @@ const MockupPatterns: React.FC<MockupPatternsProps> = ({
                     <MockupPatternsModal
                         previewCss={previewCss}
                         previewHtml={previewHtml}
+                        previewDisplayHtml={previewDisplayHtml}
                         setPreviewHtml={setPreviewHtml}
                         patterns={patterns}
                         editingIndex={currentEditingIndex}

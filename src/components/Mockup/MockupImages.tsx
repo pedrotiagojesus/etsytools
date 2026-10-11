@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { resizeImageToBase64, resizeImageUrl } from "@utils/resize-image";
 import type { ProductPage } from "@utils/imgtools-api";
-import { MOCKUP_IMAGE_MAX_SIZE, setSlotImage } from "@utils/mockup-slides";
-
-
+import { MOCKUP_IMAGE_MAX_SIZE, resolveSlideImages } from "@utils/mockup-slides";
 
 interface MockupImagesProps {
     previewHtml: string;
-    setPreviewHtml: (html: string) => void;
+    // Images referenced by the HTML as url("image:<id>")
+    slideImages: Record<string, string>;
+    onImageChange: (slotIndex: number, imageUrl: string) => void;
     images: { name: string; bg: string | null }[];
     setImages: (imgs: { name: string; bg: string | null }[]) => void;
     // Processed product pages (data URLs) the user can pick from
@@ -18,7 +18,8 @@ const MockupImages: React.FC<MockupImagesProps> = ({
     images,
     setImages,
     previewHtml,
-    setPreviewHtml,
+    slideImages,
+    onImageChange,
     pages,
 }) => {
     const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
@@ -33,19 +34,17 @@ const MockupImages: React.FC<MockupImagesProps> = ({
 
         const imgs = divs.map((div, i) => ({
             name: div.getAttribute("data-title") || `Imagem ${i + 1}`,
-            bg: div.style.backgroundImage || null,
+            bg: div.style.backgroundImage ? resolveSlideImages(div.style.backgroundImage, slideImages) : null,
         }));
         setImages(imgs);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [previewHtml]);
+    }, [previewHtml, slideImages, setImages]);
 
     const applyImage = async (index: number, loadImage: () => Promise<string>) => {
         setErrorIndex(null);
         setLoadingIndex(index);
 
         try {
-            const base64 = await loadImage();
-            setPreviewHtml(setSlotImage(previewHtml, index, base64));
+            onImageChange(index, await loadImage());
         } catch (err) {
             console.error(
                 `Erro ao processar imagem "${images[index]?.name}":`,

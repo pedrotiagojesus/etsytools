@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { SetStateAction } from "react";
 
 // Components
@@ -9,7 +9,13 @@ import MockupPatterns from "@components/Mockup/MockupPatterns";
 import MockupFonts from "@components/Mockup/MockupFonts";
 
 // Utils
-import { applySlidePatternStyles, MOCKUP_PREVIEW_DISPLAY_ID } from "@utils/mockup-slides";
+import {
+    applySlidePatternStyles,
+    MOCKUP_PREVIEW_DISPLAY_ID,
+    pruneSlideImages,
+    resolveSlideImages,
+    setSlotImage,
+} from "@utils/mockup-slides";
 import type { MockupSlide, MockupTab, Pattern } from "@utils/mockup-slides";
 import type { ProductPage } from "@utils/imgtools-api";
 
@@ -49,7 +55,12 @@ const MockupWorkspace = ({ slide, onSlideChange, patterns, pages, activeTab, onT
     }, []);
 
     const slideId = slide.id;
-    const setHtml = (html: string) => onSlideChange(slideId, () => ({ html }));
+    // Images removed from the HTML (by editing or replacing them) are dropped
+    const setHtml = (html: string) =>
+        onSlideChange(slideId, (current) => ({ html, images: pruneSlideImages(html, current.images) }));
+    const setImage = (slotIndex: number, imageUrl: string) =>
+        onSlideChange(slideId, (current) => setSlotImage(current, slotIndex, imageUrl));
+    const displayHtml = useMemo(() => resolveSlideImages(slide.html, slide.images), [slide.html, slide.images]);
     const setCss = (css: string) => onSlideChange(slideId, () => ({ css }));
     const setActivePatterns = (value: SetStateAction<string[]>) =>
         onSlideChange(slideId, (current) => ({ activePatterns: resolveList(value, current.activePatterns) }));
@@ -61,7 +72,7 @@ const MockupWorkspace = ({ slide, onSlideChange, patterns, pages, activeTab, onT
             <div className="col-xl-7 h-100">
                 <MockupPreview
                     previewDisplayId={MOCKUP_PREVIEW_DISPLAY_ID}
-                    previewHtml={slide.html}
+                    previewHtml={displayHtml}
                     previewCss={slide.css}
                 />
             </div>
@@ -91,7 +102,8 @@ const MockupWorkspace = ({ slide, onSlideChange, patterns, pages, activeTab, onT
                                 images={images}
                                 setImages={setImages}
                                 previewHtml={slide.html}
-                                setPreviewHtml={setHtml}
+                                slideImages={slide.images}
+                                onImageChange={setImage}
                                 pages={pages}
                             />
                         </div>
@@ -101,6 +113,7 @@ const MockupWorkspace = ({ slide, onSlideChange, patterns, pages, activeTab, onT
                             <MockupPatterns
                                 previewCss={slide.css}
                                 previewHtml={slide.html}
+                                previewDisplayHtml={displayHtml}
                                 setPreviewHtml={setHtml}
                                 setPatternsInput={setPatternsInput}
                                 patternsInput={patternsInput}
