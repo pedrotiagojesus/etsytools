@@ -89,6 +89,21 @@ const Header = () => {
                                 <span className="nav-text">Produto</span>
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink
+                                to="/responses"
+                                className={({ isActive }) =>
+                                    `nav-link ${isActive ? "active" : ""}`
+                                }
+                                aria-label="Responses"
+                            >
+                                <i
+                                    className="bi bi-chat-left-text nav-icon"
+                                    aria-hidden="true"
+                                ></i>
+                                <span className="nav-text">Respostas</span>
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>

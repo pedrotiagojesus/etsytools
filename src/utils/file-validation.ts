@@ -17,7 +17,7 @@ const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
 /**
  * Valida um único ficheiro de imagem: tipo MIME e tamanho individual.
  */
-const validateImageFile = (file: File): FileValidationResult => {
+export const validateImageFile = (file: File): FileValidationResult => {
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
         return {
             isValid: false,

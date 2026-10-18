@@ -1,0 +1,135 @@
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(160deg, #0f172a, #1e1b4b 70%, #312e81);
+    overflow: hidden;
+}
+
+.glow {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    width: 2200px;
+    height: 2200px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(250, 204, 21, 0.28) 0%, transparent 62%);
+    pointer-events: none;
+}
+
+/* Zona central 75% — sobrevive ao recorte quadrado (1:1) do Etsy. */
+.safe-zone {
+    position: absolute;
+    top: 0;
+    left: 12.5%;
+    width: 75%;
+    height: 100%;
+    z-index: 2;
+}
+
+.text-container {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    text-align: center;
+}
+
+.text1 {
+    font-family: "Bungee";
+    font-size: 200px;
+    line-height: 1.02;
+    text-transform: uppercase;
+    color: #facc15;
+    text-shadow:
+        0 0 40px rgba(250, 204, 21, 0.55),
+        8px 8px 0 #b45309;
+}
+
+.text2 {
+    color: #e0e7ff;
+    font-weight: 700;
+    font-size: 58px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.pages {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    height: 1180px;
+}
+
+.image {
+    position: absolute;
+    bottom: 0;
+    width: 830px;
+    aspect-ratio: 595 / 842;
+    background-color: #fff;
+    border: 6px solid #fff;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+}
+.image-left {
+    left: 260px;
+    transform: rotate(-6deg);
+}
+.image-right {
+    right: 260px;
+    transform: rotate(6deg);
+}
+
+.stamp {
+    position: absolute;
+    left: 40px;
+    bottom: 620px;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: #f43f5e;
+    border: 14px double #fff;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-12deg);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+.stamp-number {
+    font-family: "Anton";
+    font-size: 230px;
+    line-height: 0.95;
+}
+.stamp-label {
+    font-size: 68px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.stamp-sub {
+    margin-top: 10px;
+    font-size: 40px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffe4e6;
+}

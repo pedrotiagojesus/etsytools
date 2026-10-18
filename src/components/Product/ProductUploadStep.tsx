@@ -6,6 +6,8 @@ import ButtonSubmit from "@components/ButtonSubmit/ButtonSubmit";
 import Tooltip from "@components/Tooltip/Tooltip";
 import ValidationFeedback from "@components/ValidationFeedback/ValidationFeedback";
 import VectorizePreview from "@components/Product/VectorizePreview";
+import DuplicateWarnings from "@components/Product/DuplicateWarnings";
+import PrintPreviewGrid from "@components/Product/PrintPreviewGrid";
 
 // Hooks
 import { useToast } from "@hooks/use-toast";
@@ -14,6 +16,8 @@ import { useToast } from "@hooks/use-toast";
 import { validateImageFiles } from "@utils/file-validation";
 import { DEFAULT_VECTORIZE_THRESHOLD } from "@utils/imgtools-api";
 import type { ProductJobOptions } from "@utils/imgtools-api";
+import { PAPER_LABELS, PAPER_SIZES } from "@utils/paper-sizes";
+import type { PaperSize } from "@utils/paper-sizes";
 
 // Templates
 import defaultTermsText from "@templates/listing/terms.txt?raw";
@@ -62,6 +66,8 @@ const ProductUploadStep = ({ isProcessing, onSubmit }: ProductUploadStepProps) =
     const [imageSizes, setImageSizes] = useState<Map<File, ImageSize>>(new Map());
     const [threshold, setThreshold] = useState(DEFAULT_VECTORIZE_THRESHOLD);
     const [hasCoverPage, setHasCoverPage] = useState(true);
+    // Both by default: Etsy buyers in the US print on Letter
+    const [paperSizes, setPaperSizes] = useState<PaperSize[]>([...PAPER_SIZES]);
     const [hasTermsPage, setHasTermsPage] = useState(true);
     const [termsText, setTermsText] = useState(defaultTermsText.trim());
 
@@ -146,11 +152,17 @@ const ProductUploadStep = ({ isProcessing, onSubmit }: ProductUploadStepProps) =
             return;
         }
 
+        if (paperSizes.length === 0) {
+            showWarning("Escolha pelo menos um tamanho de papel.");
+            return;
+        }
+
         onSubmit(images, {
             title: title.trim(),
             description: description.trim(),
             threshold,
             hasCoverPage,
+            paperSizes,
             termsText: hasTermsPage ? termsText.trim() : "",
         });
     };
@@ -162,6 +174,7 @@ const ProductUploadStep = ({ isProcessing, onSubmit }: ProductUploadStepProps) =
                     <label className="form-label">Imagens</label>
                 </Tooltip>
                 <ImageUploader onChange={handleImagesChange} renderOverlay={renderImageInfo} />
+                <DuplicateWarnings images={images} />
             </div>
 
             <VectorizePreview images={images} threshold={threshold} onThresholdChange={setThreshold} />
@@ -198,6 +211,32 @@ const ProductUploadStep = ({ isProcessing, onSubmit }: ProductUploadStepProps) =
                     onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
             </div>
+
+            <fieldset className="mb-3">
+                <legend className="form-label fs-6">Tamanho do papel</legend>
+                <p className="text-muted small mb-1">Um PDF por tamanho no ZIP. A maioria dos compradores do Etsy imprime em US Letter.</p>
+                {PAPER_SIZES.map((size) => (
+                    <div className="form-check form-check-inline" key={size}>
+                        <input
+                            id={`paper-size-${size}`}
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={paperSizes.includes(size)}
+                            onChange={(e) =>
+                                setPaperSizes(
+                                    e.target.checked
+                                        ? PAPER_SIZES.filter((item) => item === size || paperSizes.includes(item))
+                                        : paperSizes.filter((item) => item !== size),
+                                )
+                            }
+                        />
+                        <label htmlFor={`paper-size-${size}`} className="form-check-label">
+                            {PAPER_LABELS[size]}
+                        </label>
+                    </div>
+                ))}
+                {paperSizes.length > 0 && <PrintPreviewGrid images={images} paperSizes={paperSizes} />}
+            </fieldset>
 
             <fieldset className="mb-3">
                 <legend className="form-label fs-6">Páginas extra no PDF</legend>

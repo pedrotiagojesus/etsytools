@@ -66,6 +66,14 @@ export const saveBlob = (blob: Blob, fileName: string): void => {
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 
+export const blobToDataUrl = (blob: Blob): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(reader.error ?? new Error("Erro ao ler a imagem."));
+        reader.readAsDataURL(blob);
+    });
+
 /**
  * Turns a title into a safe file name ("Paris Colouring" -> "paris-colouring").
  */

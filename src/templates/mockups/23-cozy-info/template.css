@@ -1,0 +1,136 @@
+/* Família "cozy": creme + coral + verde-azulado, títulos Pacifico — igual a cozy-cover e cozy-examples. */
+.preview-display {
+    width: 3000px;
+    height: 2250px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.41) 0px 0.5rem 3rem 7px;
+    position: relative;
+    font-family: "Lato", sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: radial-gradient(circle at 50% 100%, #fde68a 0%, #fff7e6 55%, #ffedd5 100%);
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 110px 150px 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.text-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+.text1 {
+    font-family: "Pacifico";
+    font-size: 240px;
+    line-height: 1.05;
+    color: #e11d48;
+    text-shadow:
+        8px 8px 0 #ffffff,
+        14px 14px 30px rgba(159, 18, 57, 0.25);
+}
+
+.text2 {
+    background: #0f766e;
+    color: #fff;
+    font-size: 54px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 14px 44px;
+    border-radius: 100px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.steps {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.step {
+    width: 700px;
+    height: 1180px;
+    position: relative;
+    background: #fff;
+    border-radius: 44px;
+    padding: 110px 50px 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 30px;
+    box-shadow: 0 24px 50px rgba(124, 45, 18, 0.25);
+}
+
+.step-number {
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #facc15;
+    border: 10px dashed #b45309;
+    color: #7c2d12;
+    font-family: "Anton";
+    font-size: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-icon {
+    font-size: 280px;
+    line-height: 1.1;
+}
+
+.step-title {
+    font-family: "Pacifico";
+    font-size: 150px;
+    line-height: 1.1;
+    color: #e11d48;
+}
+
+.step-desc {
+    font-size: 58px;
+    font-weight: 600;
+    color: #7c2d12;
+    line-height: 1.3;
+}
+
+.arrow {
+    align-self: center;
+    font-size: 150px;
+    color: #e11d48;
+    text-shadow: 4px 4px 0 #ffffff;
+}
+
+.info {
+    flex-shrink: 0;
+    background: #0f766e;
+    color: #fff;
+    font-size: 54px;
+    font-weight: 700;
+    padding: 20px 64px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}

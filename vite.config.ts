@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
@@ -16,5 +16,9 @@ export default defineConfig({
             "@assets": path.resolve(__dirname, "./src/assets"),
             "@templates": path.resolve(__dirname, "./src/templates"),
         },
+    },
+    test: {
+        environment: "jsdom",
+        setupFiles: ["./src/test/setup.ts"],
     },
 });

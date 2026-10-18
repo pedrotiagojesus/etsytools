@@ -1,3 +1,6 @@
+import type { PaperSize } from "@utils/paper-sizes";
+import { blobToDataUrl } from "@utils/download-files";
+
 /**
  * Client for the studio-base-api `/imgtools/generate-product` routes.
  * The backend is the source of truth: these types mirror its responses
@@ -35,6 +38,8 @@ export interface ProductJobOptions {
     // Vectorization luminance cut-off (1-254); higher keeps thicker lines
     threshold: number;
     hasCoverPage: boolean;
+    // One PDF per size in the ZIP (at least one)
+    paperSizes: PaperSize[];
     // Closing PDF page; empty = no page
     termsText: string;
 }
@@ -102,14 +107,6 @@ const wait = (ms: number, signal?: AbortSignal): Promise<void> =>
         });
     });
 
-const blobToDataUrl = (blob: Blob): Promise<string> =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = () => reject(reader.error ?? new Error("Erro ao ler a imagem."));
-        reader.readAsDataURL(blob);
-    });
-
 /**
  * Uploads the images and starts the product job. Returns the job id.
  */
@@ -120,6 +117,7 @@ export const startProductJob = async (images: File[], options: ProductJobOptions
     formData.append("pdfDescription", options.description);
     formData.append("threshold", String(options.threshold));
     formData.append("hasCoverPage", String(options.hasCoverPage));
+    formData.append("paperSizes", options.paperSizes.join(","));
     formData.append("termsText", options.termsText);
 
     const response = await request("", { method: "POST", body: formData });

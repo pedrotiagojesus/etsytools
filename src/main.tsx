@@ -19,8 +19,12 @@ import { ToastProvider } from "@contexts/ToastContext";
 
 // Pages
 import App from "./App";
-import Calculator from "@pages/Calculator/Calculator";
-import Product from "@pages/Product/Product";
+
+// Each page is loaded on demand in its own chunk: Product alone pulls in
+// react-ace, @dnd-kit, html-to-image and jszip, which the others don't need
+const loadCalculator = async () => ({ Component: (await import("@pages/Calculator/Calculator")).default });
+const loadProduct = async () => ({ Component: (await import("@pages/Product/Product")).default });
+const loadResponses = async () => ({ Component: (await import("@pages/Responses/Responses")).default });
 
 const router = createBrowserRouter(
     [
@@ -30,15 +34,19 @@ const router = createBrowserRouter(
             children: [
                 {
                     index: true,
-                    element: <Calculator />,
+                    lazy: loadCalculator,
                 },
                 {
                     path: "/calculator",
-                    element: <Calculator />,
+                    lazy: loadCalculator,
                 },
                 {
                     path: "/product",
-                    element: <Product />,
+                    lazy: loadProduct,
+                },
+                {
+                    path: "/responses",
+                    lazy: loadResponses,
                 },
                 // Old pages, merged into /product
                 {

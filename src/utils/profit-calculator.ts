@@ -3,6 +3,8 @@ export interface EtsyRates {
     transaction: number;
     fixedPaymentProcessing: number;
     variablePaymentProcessing: number;
+    /** Taxa de publicação/renovação do Etsy — atualmente €0.20 por anúncio. */
+    listingFee: number;
 }
 
 export interface ProfitResult {
@@ -19,7 +21,9 @@ export function calculateProfit(precoVenda: number, desconto: number, rate: Etsy
     const paymentProcessingRateResult =
         (rate.variablePaymentProcessing / 100) * precoComDesconto + rate.fixedPaymentProcessing;
 
-    const profit = precoComDesconto - (rate.advertisement + transactionRateResult + paymentProcessingRateResult);
+    const profit =
+        precoComDesconto -
+        (rate.advertisement + rate.listingFee + transactionRateResult + paymentProcessingRateResult);
 
     return { precoComDesconto, transactionRateResult, paymentProcessingRateResult, profit };
 }

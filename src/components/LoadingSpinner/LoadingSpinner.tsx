@@ -4,11 +4,14 @@ import "./LoadingSpinner.css";
 interface LoadingSpinnerProps {
     size?: "sm" | "md" | "lg";
     isOverlay?: boolean;
+    // Shown under the spinner in overlay mode (e.g. export progress)
+    label?: string;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     size = "md",
     isOverlay = false,
+    label,
 }) => {
     const spinner = (
         <div
@@ -32,7 +35,10 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
                 aria-modal="false"
                 aria-label="Loading"
             >
-                {spinner}
+                <div className="loading-spinner-overlay-content">
+                    {spinner}
+                    {label && <span className="loading-spinner-label">{label}</span>}
+                </div>
             </div>
         );
     }

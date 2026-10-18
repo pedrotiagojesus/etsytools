@@ -12,6 +12,7 @@ import ProductProcessingStep from "@components/Product/ProductProcessingStep";
 import ProductListingStep from "@components/Product/ProductListingStep";
 import MockupSlides from "@components/Mockup/MockupSlides";
 import MockupWorkspace from "@components/Mockup/MockupWorkspace";
+import ModalEtsyThumbnail from "@components/Mockup/ModalEtsyThumbnail";
 
 // Hooks
 import { useToast } from "@hooks/use-toast";
@@ -20,7 +21,9 @@ import { useToast } from "@hooks/use-toast";
 import { downloadProductZip, fetchPageImage, startProductJob, waitForJob } from "@utils/imgtools-api";
 import type { JobStatusResponse, ProductJobOptions, ProductPage } from "@utils/imgtools-api";
 import { resizeImageUrl } from "@utils/resize-image";
-import { padPosition, renderElementToBlob, saveBlob, saveUrl, toFileSlug } from "@utils/download-files";
+import { blobToDataUrl, padPosition, renderElementToBlob, saveBlob, saveUrl, toFileSlug } from "@utils/download-files";
+import { cropDataUrlToFormat, SOCIAL_FORMATS } from "@utils/social-formats";
+import { applyWatermarkToDataUrl } from "@utils/watermark";
 import { createSlideshowVideo, getSupportedVideoMimeType } from "@utils/slideshow-video";
 import { ETSY_VIDEO_MAX_SECONDS, ETSY_VIDEO_MIN_SECONDS } from "@utils/etsy-limits";
 import { buildMockupConfig, downloadMockupConfig, readMockupConfigFile } from "@utils/mockup-config";
@@ -33,6 +36,7 @@ import {
     loadPatternLibrary,
     MOCKUP_IMAGE_MAX_SIZE,
     MOCKUP_PREVIEW_DISPLAY_ID,
+    resolveSlideImages,
 } from "@utils/mockup-slides";
 import type { MockupSlide, MockupTab, Pattern } from "@utils/mockup-slides";
 
@@ -90,6 +94,9 @@ const Product = () => {
     const [activeSlideId, setActiveSlideId] = useState("");
     const [activeTab, setActiveTab] = useState<MockupTab>("html");
     const [isExporting, setIsExporting] = useState(false);
+    const [exportLabel, setExportLabel] = useState("");
+    const [isWatermarkEnabled, setIsWatermarkEnabled] = useState(false);
+    const [watermarkText, setWatermarkText] = useState("SAMPLE");
     const [isCreatingSlides, setIsCreatingSlides] = useState(false);
     // Only the untouched default slide exists: replacing it needs no confirmation
     const [hasEditedSlides, setHasEditedSlides] = useState(false);
@@ -311,7 +318,8 @@ const Product = () => {
         const captures: Blob[] = [];
 
         try {
-            for (const slide of slides) {
+            for (const [index, slide] of slides.entries()) {
+                setExportLabel(`A capturar o slide ${index + 1} de ${slides.length}...`);
                 flushSync(() => setActiveSlideId(slide.id));
                 await waitForSlideRender();
                 captures.push(await renderElementToBlob(MOCKUP_PREVIEW_DISPLAY_ID, "jpeg"));
@@ -323,13 +331,22 @@ const Product = () => {
         return captures;
     };
 
+    // Draws the watermark (when enabled) on an exported image, after any crop
+    // so its size is relative to the final image
+    const finishExportImage = async (dataUrl: string): Promise<string> =>
+        isWatermarkEnabled && watermarkText.trim() ? applyWatermarkToDataUrl(dataUrl, watermarkText.trim()) : dataUrl;
+
     // Downloads every slide in a ZIP named in listing order: 01.jpg, 02.jpg…
     const handleExportAllSlides = async () => {
         setIsExporting(true);
         try {
             const zip = new JSZip();
             const captures = await captureAllSlides();
-            captures.forEach((capture, index) => zip.file(`${padPosition(index + 1)}.jpg`, capture));
+            setExportLabel("A preparar o ZIP...");
+            for (const [index, capture] of captures.entries()) {
+                const image = await finishExportImage(await blobToDataUrl(capture));
+                zip.file(`${padPosition(index + 1)}.jpg`, dataUrlToBase64(image), { base64: true });
+            }
 
             saveBlob(await zip.generateAsync({ type: "blob" }), `${fileSlug}-mockups.zip`);
             showSuccess(`${slides.length} slides exportados.`);
@@ -338,6 +355,33 @@ const Product = () => {
             showError("Não foi possível exportar os slides.");
         } finally {
             setIsExporting(false);
+            setExportLabel("");
+        }
+    };
+
+    // Every slide cropped to each social network format (Pinterest, Instagram)
+    const handleExportSocialFormats = async () => {
+        setIsExporting(true);
+        try {
+            const zip = new JSZip();
+            const captures = await captureAllSlides();
+            setExportLabel("A recortar para as redes sociais...");
+            for (const [index, capture] of captures.entries()) {
+                const dataUrl = await blobToDataUrl(capture);
+                for (const format of SOCIAL_FORMATS) {
+                    const image = await finishExportImage(await cropDataUrlToFormat(dataUrl, format.width, format.height));
+                    zip.file(`${padPosition(index + 1)}-${format.key}.jpg`, dataUrlToBase64(image), { base64: true });
+                }
+            }
+
+            saveBlob(await zip.generateAsync({ type: "blob" }), `${fileSlug}-redes-sociais.zip`);
+            showSuccess(`${slides.length} slides exportados para ${SOCIAL_FORMATS.map((format) => format.label).join(" e ")}.`);
+        } catch (error) {
+            console.error("Erro ao exportar para as redes sociais:", error);
+            showError("Não foi possível exportar para as redes sociais.");
+        } finally {
+            setIsExporting(false);
+            setExportLabel("");
         }
     };
 
@@ -414,7 +458,7 @@ const Product = () => {
                 </nav>
             </div>
 
-            {(isExporting || isCreatingSlides) && <LoadingSpinner isOverlay size="lg" />}
+            {(isExporting || isCreatingSlides) && <LoadingSpinner isOverlay size="lg" label={exportLabel} />}
 
             {/* Kept mounted so the selected images survive switching steps */}
             <div className="container-fluid" hidden={step !== 1}>
@@ -490,6 +534,48 @@ const Product = () => {
                         <button type="button" className="btn btn-primary" onClick={handleExportAllSlides} disabled={isExporting}>
                             <i className="bi bi-file-earmark-zip" aria-hidden="true"></i> Exportar todos (ZIP)
                         </button>
+                        <button
+                            type="button"
+                            className="btn btn-outline-primary"
+                            onClick={handleExportSocialFormats}
+                            disabled={isExporting}
+                            title={`Todos os slides recortados para ${SOCIAL_FORMATS.map((format) => format.label).join(" e ")}`}
+                        >
+                            <i className="bi bi-share" aria-hidden="true"></i> Redes sociais
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal-etsy-thumbnail"
+                            disabled={!activeSlide || isExporting}
+                            title="Como o slide aparece na grelha de pesquisa do Etsy"
+                        >
+                            <i className="bi bi-grid-3x3-gap" aria-hidden="true"></i> Miniatura
+                        </button>
+                        <div className="input-group input-group-sm w-auto watermark-control">
+                            <div className="input-group-text">
+                                <input
+                                    id="watermark-enabled"
+                                    type="checkbox"
+                                    className="form-check-input mt-0"
+                                    checked={isWatermarkEnabled}
+                                    onChange={(e) => setIsWatermarkEnabled(e.target.checked)}
+                                    aria-label="Marca de água nas exportações"
+                                />
+                                <label htmlFor="watermark-enabled" className="ms-1">
+                                    Marca de água
+                                </label>
+                            </div>
+                            <input
+                                type="text"
+                                className="form-control"
+                                aria-label="Texto da marca de água"
+                                value={watermarkText}
+                                disabled={!isWatermarkEnabled}
+                                onChange={(e) => setWatermarkText(e.target.value)}
+                            />
+                        </div>
                         <div className="dropdown">
                             <button
                                 className="btn btn-outline-primary dropdown-toggle"
@@ -541,6 +627,13 @@ const Product = () => {
                             onChange={handleImportFile}
                         />
                     </div>
+
+                    {activeSlide && (
+                        <ModalEtsyThumbnail
+                            previewHtml={resolveSlideImages(activeSlide.html, activeSlide.images)}
+                            previewCss={activeSlide.css}
+                        />
+                    )}
 
                     <div className="row mockup-body">
                         <div className="col-xl-2 h-100 overflow-auto">
