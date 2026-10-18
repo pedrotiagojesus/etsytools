@@ -12,7 +12,6 @@ export type JobStatus = "queued" | "processing" | "completed" | "failed";
 export type JobPhase =
     | "image-processing"
     | "svg-vectorization"
-    | "svg-rasterization"
     | "pdf-generation"
     | "page-images"
     | "zip";

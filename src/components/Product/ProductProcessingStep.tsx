@@ -10,7 +10,6 @@ import {
 const PHASES: { id: JobPhase; label: string }[] = [
     { id: "image-processing", label: "A converter e ajustar as imagens" },
     { id: "svg-vectorization", label: "A vetorizar" },
-    { id: "svg-rasterization", label: "A preparar para impressão" },
     { id: "pdf-generation", label: "A criar o PDF" },
     { id: "page-images", label: "A gerar as páginas" },
     { id: "zip", label: "A criar o ZIP" },
