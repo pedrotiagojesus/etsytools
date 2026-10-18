@@ -239,7 +239,7 @@ const ProductUploadStep = ({ isProcessing, onSubmit }: ProductUploadStepProps) =
             </fieldset>
 
             <fieldset className="mb-3">
-                <legend className="form-label fs-6">Páginas extra no PDF</legend>
+                <legend className="form-label fs-6">Capa e termos de uso</legend>
                 <div className="form-check">
                     <input
                         id="has-cover-page"
@@ -261,7 +261,7 @@ const ProductUploadStep = ({ isProcessing, onSubmit }: ProductUploadStepProps) =
                         onChange={(e) => setHasTermsPage(e.target.checked)}
                     />
                     <label htmlFor="has-terms-page" className="form-check-label">
-                        Termos de uso (última página)
+                        Termos de uso (ficheiro TXT à parte no ZIP)
                     </label>
                 </div>
                 {hasTermsPage && (

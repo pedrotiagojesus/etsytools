@@ -26,7 +26,7 @@ Segue as convenções partilhadas em @conventions/CONVENTIONS.md
 - `src/assets/`: global CSS (theme, variables) and local fonts
 - `src/utils/mockup-slides.ts`: slide model, template/pattern loading; pattern CSS is scoped by index (`.pattern-N`), so only the visible slide's pattern styles are in the page
 - `src/utils/mockup-config.ts`: slides JSON export/import (version 2; version 1 files become one slide)
-- `src/templates/listing/`: user-editable templates for the Etsy listing text (`title.txt`, `tags.txt`, `description.txt`, placeholders `{titulo}`, `{paginas}`, `{descricao}`, `{tema}`) and the default PDF terms page (`terms.txt`)
+- `src/templates/listing/`: user-editable templates for the Etsy listing text (`title.txt`, `tags.txt`, `description.txt`, placeholders `{titulo}`, `{paginas}`, `{descricao}`, `{tema}`) and the default terms of use text (`terms.txt`, delivered as a separate TXT file in the ZIP)
 - `src/utils/etsy-limits.ts`: Etsy limits used across the app (file size, title/tags, video length)
 - `src/utils/paper-sizes.ts` and `src/utils/pdf-page-preview.ts` mirror the backend's `PAPER_SIZES`, margin and border (`studio-base-api/src/modules/imgtools/config/pdf.ts`); keep them in sync
 - No Claude/LLM API and no browser persistence: generated text comes from the templates; state is in memory, saved only via explicit downloads

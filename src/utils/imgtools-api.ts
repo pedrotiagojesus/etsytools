@@ -39,7 +39,7 @@ export interface ProductJobOptions {
     hasCoverPage: boolean;
     // One PDF per size in the ZIP (at least one)
     paperSizes: PaperSize[];
-    // Closing PDF page; empty = no page
+    // Saved as a separate TXT file in the ZIP (not a PDF page); empty = no file
     termsText: string;
 }
 
